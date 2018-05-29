@@ -43,9 +43,9 @@ def add_sources(sources, directory):
 env.Append(CPPPATH=[gearvr_path + 'VrApi/Include'])
 target_path = 'demo/bin/arm64/godot_gearvr'
 if bits == '64':
-    env.Append(LIBPATH=[oculus_path + 'VrApi/Libs/Android/arm64-v8a/' + target])
+    env.Append(LIBPATH=[gearvr_path + 'VrApi/Libs/Android/arm64-v8a/' + target])
 else:
-    env.Append(LIBPATH=[oculus_path + 'VrApi/Libs/Android/armeabi-v7a/' + target])
+    env.Append(LIBPATH=[gearvr_path + 'VrApi/Libs/Android/armeabi-v7a/' + target])
     target_path = 'demo/bin/arm32/godot_gearvr'
 
 env.Append(LIBS=['libvrapi'])
@@ -54,7 +54,10 @@ env.Append(LIBS=['libvrapi'])
 env.Append(CPPPATH=['.', godot_headers_path])
 
 sources = []
-add_sources(sources, "src")
+if os.path.isdir('src'):
+    add_sources(sources, "src")
+else:
+    add_sources(sources, "jni")
 # sources.append(godot_glad_path + "/glad.c")
 
 library = env.SharedLibrary(target=target_path, source=sources)
