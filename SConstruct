@@ -33,26 +33,8 @@ def add_sources(sources, directory):
             sources.append(directory + '/' + file)
 
 # have to figure out what to do here....
-if platform == "android":
-    
-    libPaths = [
-    os.getenv('NDK_ROOT') + '/build/cxx-stl/gnu-libstdc++/lib',
-    '/anotherLibPath',
-    '/and/yet/another'
-    ]
-
-    includePaths = [
-        '/pathToNDK/build/cxx-stl/gnu-libstdc++/include',
-        '/anotherIncludePath',
-        '/and/yet/another/include'
-    ]
-
-    env.Append(LIBPATH = libPaths, CPPPATH = includePaths)
-    env.Library(target='yourTarget', source = 'sourceFile.cc')
-    env.Program(target='yourBinary', source = 'yourSource')
-    
-    if target == "debug":
-        env['LINKCOM'] = '$LINK -o $TARGET $__RPATH $SOURCES $LINKFLAGS $_LIBDIRFLAGS $_LIBFLAGS'
+#if platform == "android":
+#    if target == "debug":
 #        env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '/MTd'])
 #    else:
 #        env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '/MT'])
@@ -61,9 +43,9 @@ if platform == "android":
 env.Append(CPPPATH=[gearvr_path + 'VrApi/Include'])
 target_path = 'demo/bin/arm64/godot_gearvr'
 if bits == '64':
-    env.Append(LIBPATH=[gearvr_path + 'VrApi/Libs/Android/arm64-v8a/' + target])
+    env.Append(LIBPATH=[oculus_path + 'VrApi/Libs/Android/arm64-v8a/' + target])
 else:
-    env.Append(LIBPATH=[gearvr_path + 'VrApi/Libs/Android/armeabi-v7a/' + target])
+    env.Append(LIBPATH=[oculus_path + 'VrApi/Libs/Android/armeabi-v7a/' + target])
     target_path = 'demo/bin/arm32/godot_gearvr'
 
 env.Append(LIBS=['libvrapi'])
@@ -72,10 +54,7 @@ env.Append(LIBS=['libvrapi'])
 env.Append(CPPPATH=['.', godot_headers_path])
 
 sources = []
-if os.path.isdir('src'):
-    add_sources(sources, "src")
-else:
-    add_sources(sources, "jni")
+add_sources(sources, "src")
 # sources.append(godot_glad_path + "/glad.c")
 
 library = env.SharedLibrary(target=target_path, source=sources)
