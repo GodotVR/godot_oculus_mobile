@@ -33,8 +33,26 @@ def add_sources(sources, directory):
             sources.append(directory + '/' + file)
 
 # have to figure out what to do here....
-#if platform == "android":
-#    if target == "debug":
+if platform == "android":
+    
+    libPaths = [
+    os.getenv('NDK_ROOT') + '/build/cxx-stl/gnu-libstdc++/lib',
+    '/anotherLibPath',
+    '/and/yet/another'
+    ]
+
+    includePaths = [
+        '/pathToNDK/build/cxx-stl/gnu-libstdc++/include',
+        '/anotherIncludePath',
+        '/and/yet/another/include'
+    ]
+
+    env.Append(LIBPATH = libPaths, CPPPATH = includePaths)
+    env.Library(target='yourTarget', source = 'sourceFile.cc')
+    env.Program(target='yourBinary', source = 'yourSource')
+    
+    if target == "debug":
+        env['LINKCOM'] = '$LINK -o $TARGET $__RPATH $SOURCES $LINKFLAGS $_LIBDIRFLAGS $_LIBFLAGS'
 #        env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '/MTd'])
 #    else:
 #        env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '/MT'])
