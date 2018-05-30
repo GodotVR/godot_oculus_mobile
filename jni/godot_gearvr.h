@@ -16,8 +16,6 @@
 extern "C" {
 #endif
 
-void GDN_EXPORT godot_gearvr_gdnative_init(godot_gdnative_init_options *p_options);
-void GDN_EXPORT godot_gearvr_gdnative_terminate(godot_gdnative_terminate_options *p_options);
 void GDN_EXPORT godot_gearvr_gdnative_singleton();
 void GDN_EXPORT godot_gearvr_nativescript_init(void *p_handle);
 
