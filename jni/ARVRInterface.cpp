@@ -236,7 +236,8 @@ void godot_arvr_set_anchor_detection_is_enabled(void *p_data,
 		godot_vector2 size;
 
 		for (int eye = 0; eye < EYE_NUM; eye++){
-			api->godot_vector2_new(&size, arvr_data->frameBuffer[eye].width, arvr_data->frameBuffer[eye].height);
+			ovrFramebuffer * frameBuffer = &arvr_data->frameBuffer[eye];
+			api->godot_vector2_new(&size, frameBuffer->width, frameBuffer->height);
 		}
 		return size;
 	}
