@@ -1,0 +1,15 @@
+[general]
+
+singleton=true
+load_once=true
+symbol_prefix="godot_gearvr_"
+
+[entry]
+
+Android.32="res://addons/godot_gearvr/bin/arm32/godot_gearvr.dll"
+Android.64="res://addons/godot_gearvr/bin/arm64/godot_gearvr.dll"
+
+[dependencies]
+
+Android.32=[""]
+Android.64=[""]

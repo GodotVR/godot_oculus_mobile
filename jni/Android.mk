@@ -10,10 +10,13 @@ LOCAL_LDLIBS := -llog
 LOCAL_SRC_FILES := \
 ARVRInterface.cpp godot_gearvr.cpp GodotCalls.cpp OS.cpp
 
+# VrApi libraries
 LOCAL_SRC_FILES := /home/paritosh97/Desktop/GearVR/oculus_mobile_vr/VrApi/Libs/Android/armeabi-v7a/Debug/
 
+# VrApi Headers
 LOCAL_EXPORT_C_INCLUDES := /home/paritosh97/Desktop/GearVR/oculus_mobile_vr/VrApi/Include/
 
+# gdnative and java headers
 LOCAL_C_INCLUDES := \
 /home/paritosh97/Desktop/Godot/godot/modules/gdnative/include /usr/local/java/jdk1.8.0_171/include /usr/local/java/jdk1.8.0_171/include/linux 
 
