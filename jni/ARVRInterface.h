@@ -13,23 +13,37 @@
 // Include the GearVR SDK Helper
 #include "VrApi_Helpers.h"
 
-#include <EGL/egl.h>
+#include <GLES2/gl.h>
 
 extern const godot_arvr_interface_gdnative interface_struct;
 
-typedef struct arvr_data_struct {
-	bool gearvr_is_initialized;
-	ovrJava java;
-	ovrMobile * ovr;
-	ovrTextureSwapChain * colorTextureSwapChain[VRAPI_FRAME_LAYER_EYE_MAX];
-	long long frameIndex;
-	double predictedDisplayTime;
-	ovrTracking2 tracking;
-	ovrLayerProjection2 layer;
-
+typedef struct
+{
 	uint32_t width;
 	uint32_t height;
+	uint32_t multisamples;
+	uint32_t textureSwapChainLength;
+	uint32_t textureSwapChainIndex;
+	ovrTextureSwapChain * colorTextureSwapChain;
+	GLuint * depthBuffers;
+	GLuint * frameBuffers;
+} ovrFramebuffer;
 
+typedef struct
+{
+	ovrMobile * ovr;
+	ovrTracking tracking;
+} ovrHeadTracker;
+
+typedef struct arvr_data_struct {
+	bool gearvr_is_initialized;
+	ovrFramebuffer frameBuffer[EYE_NUM];
+	ovrMatrix4f projection;
+	Mat4 eyeProjection;
+	ovrJava java;
+	ovrMobile * ovr;
+	long long frameIndex;
+	ovrHeadTracker * headTracker;
 } arvr_data_struct;
 
 #endif /* !GEARVR_ARVR_INTERFACE_H */
