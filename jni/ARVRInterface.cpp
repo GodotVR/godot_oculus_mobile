@@ -167,6 +167,17 @@ godot_bool godot_arvr_initialize(void *p_data) {
   arvr_data_struct *arvr_data = (arvr_data_struct *)p_data;
 
   if (!arvr_data->gearvr_is_initialized) {
+
+    printf("Gear VR - initializing...\n");
+
+    // Initializes VrApi and GearVR
+    const ovrInitParms initParms = vrapi_DefaultInitParms(&arvr_data->java);
+    int32_t initResult = vrapi_Initialize(&initParms);
+    if (vrapi_Initialize(&initParms) != VRAPI_INITIALIZE_SUCCESS) {
+      FAIL("Failed to initialize VrApi!");
+      abort();
+    }
+
     arvr_data->java.ActivityObject = api->godot_android_get_env()->NewGlobalRef(
         api->godot_android_get_activity());
     arvr_data->java.Env = api->godot_android_get_env();
@@ -184,18 +195,12 @@ godot_bool godot_arvr_initialize(void *p_data) {
     }
 
     // Get the suggested resolution to create eye texture swap chains.
-    const float suggestedEyeFovDegreesX = vrapi_GetSystemPropertyInt(
+    arvr_data->width = vrapi_GetSystemPropertyInt(
         &arvr_data->java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH);
-    const float suggestedEyeFovDegreesY = vrapi_GetSystemPropertyInt(
+    arvr_data->height = vrapi_GetSystemPropertyInt(
         &arvr_data->java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_HEIGHT);
 
-    arvr_data->projection = ovrMatrix4f_CreateProjectionFov(
-        suggestedEyeFovDegreesX, suggestedEyeFovDegreesY, 0.0f, 0.0f,
-        VRAPI_ZNEAR, 5000.0f);
-    arvr_data->eyeProjection.set(
-        (const GLfloat *)(ovrMatrix4f_Transpose(&projection).M[0]));
-
-    // Event Listeners yet to be implemented for entering and leaving VR mode. Help!!!
+    arvr_data->gearvr_is_initialized = true;
   }
 
   // and return our result
@@ -217,11 +222,9 @@ void godot_arvr_uninitialize(void *p_data) {
 godot_vector2 godot_arvr_get_render_targetsize(const void *p_data) {
   arvr_data_struct *arvr_data = (arvr_data_struct *)p_data;
   godot_vector2 size;
-	// Suggested resolution remains same for both eyes
-	ovrFramebuffer *frameBuffer = &arvr_data->frameBuffer[0];
 
 	if (arvr_data->gearvr_is_initialized) {
-  	api->godot_vector2_new(&size, frameBuffer->width, frameBuffer->height);
+  	api->godot_vector2_new(&size, arvr_data->width, arvr_data->height);
 	} else {
 		api->godot_vector2_new(&size, 500, 500);
 	}
@@ -275,7 +278,16 @@ void godot_arvr_fill_projection_for_eye(void *p_data, godot_real *p_projection,
   arvr_data_struct *arvr_data = (arvr_data_struct *)p_data;
 
   if (arvr_data->gearvr_is_initialized) {
-    // need to implement, use arvr_data->tracking.Eye[eye].ProjectionMatrix
+
+    // Not sure
+    ovrMatrix4f matrix = arvr_data->headTracker.tracking.Eye[p_eye == 2 ? 1 : 0].ProjectionMatrix;
+
+		int k = 0;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				p_projection[k++] = matrix.M[j][i];
+			};
+
   } else {
     // uhm, should do something here really..
   };
@@ -416,6 +428,7 @@ void *godot_arvr_constructor(godot_object *p_instance) {
   arvr_data->frameIndex = 0;
   arvr_data->headTracker->ovr = NULL;
 
+  /*
   // Initializes VrApi and GearVR
   const ovrInitParms initParms = vrapi_DefaultInitParms(&arvr_data->java);
   int32_t initResult = vrapi_Initialize(&initParms);
@@ -423,6 +436,7 @@ void *godot_arvr_constructor(godot_object *p_instance) {
     FAIL("Failed to initialize VrApi!");
     abort();
   }
+  */
 
   return arvr_data;
 };
