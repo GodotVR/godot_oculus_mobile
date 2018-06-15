@@ -32,17 +32,18 @@ typedef struct
 typedef struct
 {
 	ovrMobile * ovr;
-	ovrTracking tracking;
+	ovrTracking2 tracking;
 } ovrHeadTracker;
 
 typedef struct arvr_data_struct {
+	uint32_t width;
+	uint32_t height;
+
 	bool gearvr_is_initialized;
 	ovrFramebuffer frameBuffer[EYE_NUM];
-	ovrMatrix4f projection;
-	Mat4 eyeProjection;
 	ovrJava java;
 	ovrMobile * ovr;
-	long long frameIndex;
+	uint64_t frameIndex;
 	ovrHeadTracker * headTracker;
 } arvr_data_struct;
 
