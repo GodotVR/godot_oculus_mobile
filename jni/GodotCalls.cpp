@@ -10,6 +10,7 @@
 
 const godot_gdnative_core_api_struct *api = NULL;
 const godot_gdnative_ext_arvr_api_struct *arvr_api = NULL;
+const godot_gdnative_ext_android_api_struct *android_api = NULL;
 const godot_gdnative_ext_nativescript_api_struct *nativescript_api = NULL;
 
 void GDN_EXPORT godot_gearvr_gdnative_init(godot_gdnative_init_options *p_options) {
@@ -23,6 +24,13 @@ void GDN_EXPORT godot_gearvr_gdnative_init(godot_gdnative_init_options *p_option
 			case GDNATIVE_EXT_ARVR: {
 				if (api->extensions[i]->version.major > 1 || (api->extensions[i]->version.major == 1 && api->extensions[i]->version.minor >= 1)) {
 					arvr_api = (godot_gdnative_ext_arvr_api_struct *)api->extensions[i];
+				} else {
+					printf("ARVR API version %i.%i isn't supported, need version 1.1 or higher\n", api->extensions[i]->version.major, api->extensions[i]->version.minor);
+				}
+			}; break;
+			case GDNATIVE_EXT_ANDROID: {
+				if (api->extensions[i]->version.major > 1 || (api->extensions[i]->version.major == 1 && api->extensions[i]->version.minor >= 0)) {
+					android_api = (godot_gdnative_ext_android_api_struct *)api->extensions[i];
 				} else {
 					printf("ARVR API version %i.%i isn't supported, need version 1.1 or higher\n", api->extensions[i]->version.major, api->extensions[i]->version.minor);
 				}
