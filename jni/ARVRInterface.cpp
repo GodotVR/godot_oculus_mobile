@@ -178,10 +178,10 @@ godot_bool godot_arvr_initialize(void *p_data) {
       abort();
     }
 
-    arvr_data->java.ActivityObject = api->godot_android_get_env()->NewGlobalRef(
-        api->godot_android_get_activity());
-    arvr_data->java.Env = api->godot_android_get_env();
-    api->godot_android_get_env()->GetJavaVM(&arvr_data->java.Vm);
+    arvr_data->java.ActivityObject = android_api->godot_android_get_env()->NewGlobalRef(
+        android_api->godot_android_get_activity());
+    arvr_data->java.Env = android_api->godot_android_get_env();
+    android_api->godot_android_get_env()->GetJavaVM(&arvr_data->java.Vm);
 
     for (int eye = 0; eye < EYE_NUM; eye++) {
       ovrFramebuffer_Clear(&arvr_data->frameBuffer[eye]);

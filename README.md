@@ -16,11 +16,15 @@ The rest of this project is released under a MIT license.
 Compiling
 ---------
 In order to compile this plugin you first need to download the GearVR SDK from the Oculus developer website.
-You will also need the Android NDK(Make sure it's in your PATH variable) and JDK.
+You will also need the Android NDK (Make sure it's in your PATH variable) and JDK.
 
 After cloning this repository make sure to initialise the submodules with `git submodule init`
 When you've pulled a newer version make sure to run `git submodule update`
 
-Next, modify the jni/Android.mk by adding the respective paths. Alternatively, you can add them to path and call using $(Var_Name).
+For now you will need to edit the `jni/android.mk` file to correct some paths. Still working on making that switchable
 
-Then run `ndk-build NDK_LIBS_OUT=./demo/addons/godot_gearvr/bin`
+Now run:
+```
+cd jni
+ndk-build
+```
