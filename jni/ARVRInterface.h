@@ -13,7 +13,7 @@
 // Include the GearVR SDK Helper
 #include "VrApi_Helpers.h"
 
-#include <GLES2/gl.h>
+#include <GLES2/gl2.h>
 
 extern const godot_arvr_interface_gdnative interface_struct;
 
@@ -40,11 +40,14 @@ typedef struct arvr_data_struct {
 	uint32_t height;
 
 	bool gearvr_is_initialized;
-	ovrFramebuffer frameBuffer[EYE_NUM];
+	ovrFramebuffer frameBuffer[VRAPI_EYE_COUNT];
 	ovrJava java;
 	ovrMobile * ovr;
 	uint64_t frameIndex;
 	ovrHeadTracker * headTracker;
+	ovrLayerProjection2 layer;
+	ovrTextureSwapChain * colorTextureSwapChain[VRAPI_EYE_COUNT];
+	double predictedDisplayTime;
 } arvr_data_struct;
 
 #endif /* !GEARVR_ARVR_INTERFACE_H */

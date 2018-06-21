@@ -8,6 +8,8 @@
 #include "ARVRInterface.h"
 
 #define GL(func) func;
+#define NUM_MULTI_SAMPLES	4
+
 
 void ovrFramebuffer_Clear(ovrFramebuffer *frameBuffer) {
   frameBuffer->width = 0;
@@ -51,7 +53,7 @@ bool ovrFramebuffer_Create(ovrFramebuffer *frameBuffer,
     // Create depth buffer.
     GL(glGenRenderbuffers(1, &frameBuffer->depthBuffers[i]));
     GL(glBindRenderbuffer(GL_RENDERBUFFER, frameBuffer->depthBuffers[i]));
-    GL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24_OES, width,
+    GL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width,
                              height));
     GL(glBindRenderbuffer(GL_RENDERBUFFER, 0));
 
@@ -163,6 +165,61 @@ godot_bool godot_arvr_is_initialized(const void *p_data) {
   return ret;
 }
 
+void setOVR(void *p_data) {
+  arvr_data_struct *arvr_data = (arvr_data_struct *)p_data;
+  // Set OVR for head Tracker
+  arvr_data->headTracker->ovr = arvr_data->ovr;
+}
+
+godot_vector3 getLocalPosition(void *p_data) {
+  arvr_data_struct *arvr_data = (arvr_data_struct *)p_data;
+
+  godot_vector3 pos;
+  if (!arvr_data->gearvr_is_initialized) {
+    api->godot_vector3_new(&pos, 0.0, 0.0, 0.0);
+  } else {
+    api->godot_vector3_new(&pos, arvr_data->headTracker->tracking.HeadPose.Pose.Position.x,
+                arvr_data->headTracker->tracking.HeadPose.Pose.Position.y,
+                arvr_data->headTracker->tracking.HeadPose.Pose.Position.z);
+  }
+  return pos;
+}
+
+/*
+godot_transform getLocalRotation(void *p_data, float p_world_scale) {
+  arvr_data_struct *arvr_data = (arvr_data_struct *)p_data;
+
+  godot_transform rotMat;
+  if (!arvr_data->gearvr_is_initialized) {
+    api->godot_transform_new_identity(&rotMat);
+  } else {
+    auto rot = arvr_data->headTracker->tracking.HeadPose.Pose.Orientation;
+    godot_quat q;
+    godot_basis basis;
+    godot_vector3 origin;
+    api->godot_quat_new(&q, rot.x, rot.y, rot.z, rot.w);
+    api->godot_basis_new_with_euler_quat(&basis, &q);
+    api->godot_vector3_operator_multiply_scalar(getLocalPosition(arvr_data), p_world_scale);
+    api->godot_transform_new(&rotMat, &basis, &origin);
+  }
+  return rotMat;
+}
+*/
+
+void applyTracking(void *p_data) {
+  arvr_data_struct *arvr_data = (arvr_data_struct *)p_data;
+
+  if (!arvr_data->gearvr_is_initialized) {
+    return;
+  }
+
+  const double predictedDisplayTime =
+      vrapi_GetPredictedDisplayTime(arvr_data->ovr, arvr_data->frameIndex);
+
+  arvr_data->headTracker->tracking =
+      vrapi_GetPredictedTracking2(arvr_data->ovr, predictedDisplayTime);
+}
+
 godot_bool godot_arvr_initialize(void *p_data) {
   arvr_data_struct *arvr_data = (arvr_data_struct *)p_data;
 
@@ -174,7 +231,7 @@ godot_bool godot_arvr_initialize(void *p_data) {
     const ovrInitParms initParms = vrapi_DefaultInitParms(&arvr_data->java);
     int32_t initResult = vrapi_Initialize(&initParms);
     if (vrapi_Initialize(&initParms) != VRAPI_INITIALIZE_SUCCESS) {
-      FAIL("Failed to initialize VrApi!");
+      printf("Failed to initialize VrApi!");
       abort();
     }
 
@@ -183,14 +240,14 @@ godot_bool godot_arvr_initialize(void *p_data) {
     arvr_data->java.Env = android_api->godot_android_get_env();
     android_api->godot_android_get_env()->GetJavaVM(&arvr_data->java.Vm);
 
-    for (int eye = 0; eye < EYE_NUM; eye++) {
+    for (int eye = 0; eye < VRAPI_EYE_COUNT; eye++) {
       ovrFramebuffer_Clear(&arvr_data->frameBuffer[eye]);
       ovrFramebuffer_Create(
           &arvr_data->frameBuffer[eye], VRAPI_TEXTURE_FORMAT_8888,
           vrapi_GetSystemPropertyInt(
-              &_java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH),
+              &arvr_data->java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH),
           vrapi_GetSystemPropertyInt(
-              &_java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_HEIGHT),
+              &arvr_data->java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_HEIGHT),
           NUM_MULTI_SAMPLES);
     }
 
@@ -211,7 +268,7 @@ void godot_arvr_uninitialize(void *p_data) {
   arvr_data_struct *arvr_data = (arvr_data_struct *)p_data;
 
   if (arvr_data->gearvr_is_initialized) {
-    for (int eye = 0; eye < EYE_NUM; eye++) {
+    for (int eye = 0; eye < VRAPI_EYE_COUNT; eye++) {
       ovrFramebuffer_Destroy(&arvr_data->frameBuffer[eye]);
     }
     vrapi_Shutdown();
@@ -230,6 +287,18 @@ godot_vector2 godot_arvr_get_render_targetsize(const void *p_data) {
 	}
 
   return size;
+}
+
+void gearvr_transform_from_pose(godot_transform *p_dest, ovrPosef *p_pose , float p_world_scale) {
+	godot_quat q;
+	godot_basis basis;
+	godot_vector3 origin;
+
+	api->godot_quat_new(&q, p_pose->Orientation.x, p_pose->Orientation.y, p_pose->Orientation.z, p_pose->Orientation.w);
+	api->godot_basis_new_with_euler_quat(&basis, &q);
+
+	api->godot_vector3_new(&origin, p_pose->Position.x * p_world_scale, p_pose->Position.y * p_world_scale, p_pose->Position.z * p_world_scale);
+	api->godot_transform_new(p_dest, &basis, &origin);
 }
 
 godot_transform godot_arvr_get_transform_for_eye(void *p_data, godot_int p_eye,
@@ -251,6 +320,14 @@ godot_transform godot_arvr_get_transform_for_eye(void *p_data, godot_int p_eye,
   //&arvr_data->EyeRenderPose[p_eye == 2 ? 1 : 0], world_scale); 	} else {
   // really not needed, just being paranoid..
   // godot_vector3 offset;
+  // api->godot_transform_new_identity(&transform_for_eye);
+  // if (p_eye == 1) {
+
+  // not sure
+  ovrPosef tracking_transform = vrapi_GetTrackingTransform(arvr_data->ovr, VRAPI_TRACKING_TRANSFORM_CURRENT);
+  gearvr_transform_from_pose(&transform_for_eye, &tracking_transform, world_scale);
+
+  /*
   api->godot_transform_new_identity(&transform_for_eye);
   if (p_eye == 1) {
     api->godot_vector3_new(&offset, -0.035 * world_scale, 0.0, 0.0);
@@ -259,6 +336,7 @@ godot_transform godot_arvr_get_transform_for_eye(void *p_data, godot_int p_eye,
   };
   api->godot_transform_translated(&transform_for_eye, &offset);
   //	};
+  */
 
   // Now construct our full transform, the order may be in reverse, have to test
   // :)
@@ -280,13 +358,14 @@ void godot_arvr_fill_projection_for_eye(void *p_data, godot_real *p_projection,
   if (arvr_data->gearvr_is_initialized) {
 
     // Not sure
-    ovrMatrix4f matrix = arvr_data->headTracker.tracking.Eye[p_eye == 2 ? 1 : 0].ProjectionMatrix;
+    ovrMatrix4f matrix = arvr_data->headTracker->tracking.Eye[p_eye == 2 ? 1 : 0].ProjectionMatrix;
 
 		int k = 0;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				p_projection[k++] = matrix.M[j][i];
-			};
+			}
+    };
 
   } else {
     // uhm, should do something here really..
@@ -351,7 +430,7 @@ void godot_arvr_commit_for_eye(void *p_data, godot_int p_eye,
     arvr_data->layer.Textures[eye].SwapChainIndex = colorTextureSwapChainIndex;
     arvr_data->layer.Textures[eye].TexCoordsFromTanAngles =
         ovrMatrix4f_TanAngleMatrixFromProjection(
-            &arvr_data->tracking.Eye[eye].ProjectionMatrix);
+            &arvr_data->headTracker->tracking.Eye[eye].ProjectionMatrix);
 
     if (eye == 1) {
       // Insert 'fence' using eglCreateSyncKHR.
@@ -388,9 +467,9 @@ void godot_arvr_process(void *p_data) {
   // valid ANativeWindow.
   ovrModeParms modeParms = vrapi_DefaultModeParms(&arvr_data->java);
   modeParms.Flags |= VRAPI_MODE_FLAG_NATIVE_WINDOW;
-  modeParms.Display = (size_t)eglDisplay;
-  modeParms.WindowSurface = (size_t)nativeWindow;
-  modeParms.ShareContext = (size_t)eglContext;
+  //modeParms.Display = (size_t)eglDisplay;
+  //modeParms.WindowSurface = (size_t)nativeWindow;
+  //modeParms.ShareContext = (size_t)eglContext;
   arvr_data->ovr = vrapi_EnterVrMode(&modeParms);
 
   // Set the tracking transform to use, by default this is eye level.
@@ -412,7 +491,7 @@ void godot_arvr_process(void *p_data) {
     // in at the edges.
     arvr_data->predictedDisplayTime =
         vrapi_GetPredictedDisplayTime(arvr_data->ovr, arvr_data->frameIndex);
-    arvr_data->tracking = vrapi_GetPredictedTracking2(
+    arvr_data->headTracker->tracking = vrapi_GetPredictedTracking2(
         arvr_data->ovr, arvr_data->predictedDisplayTime);
   }
 }
