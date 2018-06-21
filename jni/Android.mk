@@ -6,6 +6,7 @@ include $(CLEAR_VARS)
 # need to make some of these switchable
 # note also that godot_headers currently contains the headers for 3.0 so adjust this path to your 3.1 godot installation!
 # I am talking to Karroffel to get 3.1 headers in a branch so we can simply point our submodule to that branch
+
 SDK_PATH := ../../sdk/oculus_mobile_vr
 GODOT_HEADERS_PATH := ../../godot/modules/gdnative/include/
 JDK_PATH := $(JAVA_HOME)
@@ -20,7 +21,9 @@ include $(PREBUILT_SHARED_LIBRARY)
 LOCAL_MODULE := android_gdnative
 LOCAL_CPPFLAGS := -std=c++14
 LOCAL_CPP_FEATURES := rtti exceptions
+
 LOCAL_LDLIBS := -llog -lGLESv2
+
 
 LOCAL_SRC_FILES := \
 ARVRInterface.cpp godot_gearvr.cpp GodotCalls.cpp OS.cpp
@@ -30,5 +33,6 @@ LOCAL_C_INCLUDES := \
 $(GODOT_HEADERS_PATH) $(JDK_PATH)/include $(JDK_PATH)/include/linux
 
 LOCAL_SHARED_LIBRARIES = vrapi
+
 
 include $(BUILD_SHARED_LIBRARY)

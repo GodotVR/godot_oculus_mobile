@@ -10,6 +10,7 @@
 #define GL(func) func;
 #define NUM_MULTI_SAMPLES	4
 
+
 void ovrFramebuffer_Clear(ovrFramebuffer *frameBuffer) {
   frameBuffer->width = 0;
   frameBuffer->height = 0;
@@ -309,7 +310,7 @@ godot_transform godot_arvr_get_transform_for_eye(void *p_data, godot_int p_eye,
   godot_vector3 offset;
   godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
 
-  // if (p_eye == 0) {
+  //	if (p_eye == 0) {
   // ok, we actually get our left and right eye position from tracking data, not
   // our head center with eye offsets so lets find the center :)
   //		oculus_transform_from_poses(&transform_for_eye,
@@ -327,6 +328,9 @@ godot_transform godot_arvr_get_transform_for_eye(void *p_data, godot_int p_eye,
   gearvr_transform_from_pose(&transform_for_eye, &tracking_transform, world_scale);
 
   /*
+  api->godot_transform_new_identity(&transform_for_eye);
+  if (p_eye == 1) {
+    api->godot_vector3_new(&offset, -0.035 * world_scale, 0.0, 0.0);
   } else {
     api->godot_vector3_new(&offset, 0.035 * world_scale, 0.0, 0.0);
   };
