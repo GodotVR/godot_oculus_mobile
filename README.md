@@ -25,6 +25,5 @@ For now you will need to edit the `jni/android.mk` file to correct some paths. S
 
 Now run:
 ```
-cd jni
 ndk-build
 ```
