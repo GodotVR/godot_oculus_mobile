@@ -426,7 +426,7 @@ void godot_arvr_commit_for_eye(void *p_data, godot_int p_eye,
     */
 
     arvr_data->layer.Textures[eye].ColorSwapChain =
-        arvr_data->arvr_data->frameBuffer->colorTextureSwapChain[eye];
+        arvr_data->frameBuffer->colorTextureSwapChain[eye];
     arvr_data->layer.Textures[eye].SwapChainIndex = colorTextureSwapChainIndex;
     arvr_data->layer.Textures[eye].TexCoordsFromTanAngles =
         ovrMatrix4f_TanAngleMatrixFromProjection(
