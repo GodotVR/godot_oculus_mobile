@@ -393,9 +393,9 @@ void godot_arvr_commit_for_eye(void *p_data, godot_int p_eye,
 
     const int colorTextureSwapChainIndex =
         arvr_data->frameIndex %
-        vrapi_GetTextureSwapChainLength(arvr_data->frameBuffer->colorTextureSwapChain[eye]);
+        vrapi_GetTextureSwapChainLength(arvr_data->frameBuffer[eye].colorTextureSwapChain);
     const unsigned int textureId = vrapi_GetTextureSwapChainHandle(
-        arvr_data->frameBuffer->colorTextureSwapChain[eye], colorTextureSwapChainIndex);
+        arvr_data->frameBuffer[eye].colorTextureSwapChain, colorTextureSwapChainIndex);
 
     // Blit to 'textureId' using the 'ProjectionMatrix' from 'ovrTracking2'.
     /*
@@ -426,7 +426,7 @@ void godot_arvr_commit_for_eye(void *p_data, godot_int p_eye,
     */
 
     arvr_data->layer.Textures[eye].ColorSwapChain =
-        arvr_data->frameBuffer->colorTextureSwapChain[eye];
+        arvr_data->frameBuffer[eye].colorTextureSwapChain;
     arvr_data->layer.Textures[eye].SwapChainIndex = colorTextureSwapChainIndex;
     arvr_data->layer.Textures[eye].TexCoordsFromTanAngles =
         ovrMatrix4f_TanAngleMatrixFromProjection(
