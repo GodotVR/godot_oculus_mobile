@@ -7,8 +7,8 @@ include $(CLEAR_VARS)
 # note also that godot_headers currently contains the headers for 3.0 so adjust this path to your 3.1 godot installation!
 # I am talking to Karroffel to get 3.1 headers in a branch so we can simply point our submodule to that branch
 
-SDK_PATH := ../../sdk/oculus_mobile_vr
-GODOT_HEADERS_PATH := ../../godot/modules/gdnative/include/
+SDK_PATH := ../ovr_sdk_mobile_1.14.0
+GODOT_HEADERS_PATH := ../godot/modules/gdnative/include/
 JDK_PATH := $(JAVA_HOME)
 
 # Include VrApi
