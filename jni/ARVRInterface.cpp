@@ -227,6 +227,11 @@ godot_bool godot_arvr_initialize(void *p_data) {
 
     printf("Gear VR - initializing...\n");
 
+    arvr_data->java.ActivityObject = android_api->godot_android_get_env()->NewGlobalRef(
+        android_api->godot_android_get_activity());
+    arvr_data->java.Env = android_api->godot_android_get_env();
+    android_api->godot_android_get_env()->GetJavaVM(&arvr_data->java.Vm);
+
     // Initializes VrApi and GearVR
     const ovrInitParms initParms = vrapi_DefaultInitParms(&arvr_data->java);
     int32_t initResult = vrapi_Initialize(&initParms);
@@ -235,27 +240,22 @@ godot_bool godot_arvr_initialize(void *p_data) {
       abort();
     }
 
-    arvr_data->java.ActivityObject = android_api->godot_android_get_env()->NewGlobalRef(
-        android_api->godot_android_get_activity());
-    arvr_data->java.Env = android_api->godot_android_get_env();
-    android_api->godot_android_get_env()->GetJavaVM(&arvr_data->java.Vm);
-
-    for (int eye = 0; eye < VRAPI_EYE_COUNT; eye++) {
-      ovrFramebuffer_Clear(&arvr_data->frameBuffer[eye]);
-      ovrFramebuffer_Create(
-          &arvr_data->frameBuffer[eye], VRAPI_TEXTURE_FORMAT_8888,
-          vrapi_GetSystemPropertyInt(
-              &arvr_data->java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH),
-          vrapi_GetSystemPropertyInt(
-              &arvr_data->java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_HEIGHT),
-          NUM_MULTI_SAMPLES);
-    }
-
     // Get the suggested resolution to create eye texture swap chains.
     arvr_data->width = vrapi_GetSystemPropertyInt(
         &arvr_data->java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH);
     arvr_data->height = vrapi_GetSystemPropertyInt(
         &arvr_data->java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_HEIGHT);
+
+    // Create Frame buffers for each eye
+    bool success = true;
+    for (int eye = 0; eye < VRAPI_EYE_COUNT; eye++) {
+      ovrFramebuffer_Clear(&arvr_data->frameBuffer[eye]);
+      ovrFramebuffer_Create(
+          &arvr_data->frameBuffer[eye], VRAPI_TEXTURE_FORMAT_8888,
+          arvr_data->width,
+          arvr_data->height,
+          NUM_MULTI_SAMPLES);
+    }
 
     arvr_data->gearvr_is_initialized = true;
   }
@@ -393,9 +393,9 @@ void godot_arvr_commit_for_eye(void *p_data, godot_int p_eye,
 
     const int colorTextureSwapChainIndex =
         arvr_data->frameIndex %
-        vrapi_GetTextureSwapChainLength(arvr_data->colorTextureSwapChain[eye]);
+        vrapi_GetTextureSwapChainLength(arvr_data->frameBuffer->colorTextureSwapChain[eye]);
     const unsigned int textureId = vrapi_GetTextureSwapChainHandle(
-        arvr_data->colorTextureSwapChain[eye], colorTextureSwapChainIndex);
+        arvr_data->frameBuffer->colorTextureSwapChain[eye], colorTextureSwapChainIndex);
 
     // Blit to 'textureId' using the 'ProjectionMatrix' from 'ovrTracking2'.
     /*
@@ -426,7 +426,7 @@ void godot_arvr_commit_for_eye(void *p_data, godot_int p_eye,
     */
 
     arvr_data->layer.Textures[eye].ColorSwapChain =
-        arvr_data->colorTextureSwapChain[eye];
+        arvr_data->arvr_data->frameBuffer->colorTextureSwapChain[eye];
     arvr_data->layer.Textures[eye].SwapChainIndex = colorTextureSwapChainIndex;
     arvr_data->layer.Textures[eye].TexCoordsFromTanAngles =
         ovrMatrix4f_TanAngleMatrixFromProjection(
