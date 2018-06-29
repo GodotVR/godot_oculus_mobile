@@ -5,6 +5,8 @@ func _ready():
 	var arvr_interface = ARVRServer.find_interface("GearVR")
 	if arvr_interface and arvr_interface.initialize():
 		get_viewport().arvr = true
+	else:
+		print("Failed to enable GearVR")
 
 func _process(delta):
 	# Test for escape to close application, space to reset our reference frame
