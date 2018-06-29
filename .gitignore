@@ -1,6 +1,5 @@
 *.o
 *.os
-*.so
 *.dylib
 .import/
 *.dblite
@@ -10,3 +9,5 @@
 *.TMP
 logs
 Thumbs.db
+/obj
+/libs
