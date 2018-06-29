@@ -7,10 +7,7 @@ path="res://.import/Milkyway.png-c8038416f38c889c516f7e41b5681a1a.stex"
 [deps]
 
 source_file="res://Milkyway.png"
-source_md5="f7e3ea69fa66dd963c0bd15dd1793c05"
-
 dest_files=[ "res://.import/Milkyway.png-c8038416f38c889c516f7e41b5681a1a.stex" ]
-dest_md5="c8de710bb33403e9e1bc170b4eedf52f"
 
 [params]
 

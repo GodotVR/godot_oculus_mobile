@@ -3,13 +3,12 @@
 singleton=true
 load_once=true
 symbol_prefix="godot_gearvr_"
+reloadable=false
 
 [entry]
 
-Android.32="res://addons/godot_gearvr/bin/arm32/godot_gearvr.dll"
-Android.64="res://addons/godot_gearvr/bin/arm64/godot_gearvr.dll"
+Android.armeabi-v7a="res://addons/godot_gearvr/libs/armeabi-v7a/libvrapi.so"
 
 [dependencies]
 
-Android.32=[""]
-Android.64=[""]
+Android.armeabi-v7a=[ ]
