@@ -3,8 +3,10 @@ extends Spatial
 func _ready():
 	# Find the interface and initialise
 	var arvr_interface = ARVRServer.find_interface("GearVR")
+	print("==============================================================")
 	if arvr_interface and arvr_interface.initialize():
 		get_viewport().arvr = true
+		print("Loaded GearVR")
 	else:
 		print("Failed to enable GearVR")
 

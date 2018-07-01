@@ -27,3 +27,5 @@ Now run:
 ```
 ndk-build
 ```
+
+After it has successfully build, copy the contents on the newly created Libs\ folder into demo\addons\godot_gearvr

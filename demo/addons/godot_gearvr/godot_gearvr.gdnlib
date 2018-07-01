@@ -7,8 +7,8 @@ reloadable=false
 
 [entry]
 
-Android.armeabi-v7a="res://addons/godot_gearvr/libs/armeabi-v7a/libvrapi.so"
+Android.armeabi-v7a="res://addons/godot_gearvr/libs/armeabi-v7a/libgodot_gearvr.so"
 
 [dependencies]
 
-Android.armeabi-v7a=[ ]
+Android.armeabi-v7a=[ "res://addons/godot_gearvr/libs/armeabi-v7a/libvrapi.so" ]

@@ -18,12 +18,12 @@ LOCAL_EXPORT_C_INCLUDES := $(SDK_PATH)/VrApi/Include/
 include $(PREBUILT_SHARED_LIBRARY)
 
 # and configure our build
-LOCAL_MODULE := android_gdnative
+include $(CLEAR_VARS)
+LOCAL_MODULE := godot_gearvr
 LOCAL_CPPFLAGS := -std=c++14
 LOCAL_CPP_FEATURES := rtti exceptions
 
 LOCAL_LDLIBS := -llog -lGLESv2
-
 
 LOCAL_SRC_FILES := \
 ARVRInterface.cpp godot_gearvr.cpp GodotCalls.cpp OS.cpp
@@ -33,6 +33,5 @@ LOCAL_C_INCLUDES := \
 $(GODOT_HEADERS_PATH) $(JDK_PATH)/include $(JDK_PATH)/include/linux
 
 LOCAL_SHARED_LIBRARIES = vrapi
-
 
 include $(BUILD_SHARED_LIBRARY)
