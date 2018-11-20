@@ -1,14 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////
-// GearVR GDNative module for Godot
+// OVR GDNative module for Godot
 //
-// Written by Bastiaan "Mux213" Olij, 
+// Written by Bastiaan "Mux213" Olij and Paritosh Sharma,
 // with loads of help from Thomas "Karroffel" Herzog
 
-#ifndef GODOT_GEARVR_H
-#define GODOT_GEARVR_H
+#ifndef GODOT_OVR_H
+#define GODOT_OVR_H
 
 #include "GodotCalls.h"
-	
+
 #include "ARVRInterface.h"
 
 // declare our public functions for our ARVR Interface
@@ -16,12 +16,11 @@
 extern "C" {
 #endif
 
-void GDN_EXPORT godot_gearvr_gdnative_singleton();
-void GDN_EXPORT godot_gearvr_nativescript_init(void *p_handle);
+void GDN_EXPORT godot_ovr_gdnative_singleton();
+void GDN_EXPORT godot_ovr_nativescript_init(void *p_handle);
 
 #ifdef __cplusplus
 }
 #endif
 
-
-#endif /* !GODOT_GEARVR_H */
+#endif /* !GODOT_OVR_H */

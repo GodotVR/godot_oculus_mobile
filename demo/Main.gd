@@ -2,13 +2,15 @@ extends Spatial
 
 func _ready():
 	# Find the interface and initialise
-	var arvr_interface = ARVRServer.find_interface("GearVR")
+	var arvr_interface = ARVRServer.find_interface("OVR")
 	print("==============================================================")
-	if arvr_interface and arvr_interface.initialize():
+	if !arvr_interface:
+		print("Couldn't find OVR interface")
+	elif arvr_interface.initialize():
 		get_viewport().arvr = true
-		print("Loaded GearVR")
+		print("Loaded OVR")
 	else:
-		print("Failed to enable GearVR")
+		print("Failed to enable OVR")
 
 func _process(delta):
 	# Test for escape to close application, space to reset our reference frame
