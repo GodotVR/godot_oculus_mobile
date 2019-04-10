@@ -11,3 +11,6 @@ logs
 Thumbs.db
 /obj
 /libs
+log.txt
+log.zip
+oculussig_*

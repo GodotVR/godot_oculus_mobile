@@ -10,7 +10,7 @@ config_version=3
 
 [application]
 
-config/name="GearVR demo"
+config/name="OVR demo"
 run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
 
@@ -26,7 +26,7 @@ window/vsync/use_vsync=false
 
 [gdnative]
 
-singletons=[ "res://addons/godot_gearvr/godot_gearvr.gdnlib" ]
+singletons=[ "res://addons/godot_ovr/godot_ovr.gdnlib" ]
 
 [rendering]
 
