@@ -5,27 +5,31 @@
 // Written by Bastiaan "Mux213" Olij and Paritosh Sharma,
 // with loads of help from Thomas "Karroffel" Herzog
 
-#include "ovrFramebuffer.h"
+#include "framebuffer.h"
 
-namespace OVR {
+namespace ovrmobile {
 
-frameBuffer::frameBuffer(const bool useMultiview, const GLenum colorFormat, const int width, const int height, const int multisamples) {
-	PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC glRenderbufferStorageMultisampleEXT =
+namespace {
+const int kDefaultBufferCount = 3;
+} // namespace
+
+FrameBuffer::FrameBuffer(const bool useMultiview, const GLenum colorFormat, const int width, const int height, const int multisamples) {
+	auto glRenderbufferStorageMultisampleEXT =
 			(PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC)eglGetProcAddress("glRenderbufferStorageMultisampleEXT");
-	PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC glFramebufferTexture2DMultisampleEXT =
+	auto glFramebufferTexture2DMultisampleEXT =
 			(PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC)eglGetProcAddress("glFramebufferTexture2DMultisampleEXT");
 
-	PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC glFramebufferTextureMultiviewOVR =
+	auto glFramebufferTextureMultiviewOVR =
 			(PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC)eglGetProcAddress("glFramebufferTextureMultiviewOVR");
-	PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC glFramebufferTextureMultisampleMultiviewOVR =
+	auto glFramebufferTextureMultisampleMultiviewOVR =
 			(PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC)eglGetProcAddress("glFramebufferTextureMultisampleMultiviewOVR");
 
 	mWidth = width;
 	mHeight = height;
 	mMultisamples = multisamples;
-	mUseMultiview = (useMultiview && (glFramebufferTextureMultiviewOVR != NULL)) ? true : false;
+	mUseMultiview = useMultiview && (glFramebufferTextureMultiviewOVR != NULL);
 
-	mColorTextureSwapChain = vrapi_CreateTextureSwapChain3(mUseMultiview ? VRAPI_TEXTURE_TYPE_2D_ARRAY : VRAPI_TEXTURE_TYPE_2D, colorFormat, width, height, 1, 3);
+	mColorTextureSwapChain = vrapi_CreateTextureSwapChain3(mUseMultiview ? VRAPI_TEXTURE_TYPE_2D_ARRAY : VRAPI_TEXTURE_TYPE_2D, colorFormat, width, height, 1, kDefaultBufferCount);
 	mTextureSwapChainLength = vrapi_GetTextureSwapChainLength(mColorTextureSwapChain);
 	mTextureSwapChainIndex = 0;
 	mDepthBuffers = (GLuint *)malloc(mTextureSwapChainLength * sizeof(GLuint));
@@ -117,10 +121,16 @@ frameBuffer::frameBuffer(const bool useMultiview, const GLenum colorFormat, cons
 				}
 			}
 		}
+
+		GL(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFrameBuffers[i]));
+		GL(glScissor(0, 0, width, height));
+		GL(glViewport(0, 0, width, height));
+		GL(glClear(GL_COLOR_BUFFER_BIT));
+		GL(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
 	}
 }
 
-frameBuffer::~frameBuffer() {
+FrameBuffer::~FrameBuffer() {
 	GL(glDeleteFramebuffers(mTextureSwapChainLength, mFrameBuffers));
 	if (mUseMultiview) {
 		GL(glDeleteTextures(mTextureSwapChainLength, mDepthBuffers));
@@ -133,26 +143,24 @@ frameBuffer::~frameBuffer() {
 	free(mFrameBuffers);
 }
 
-void frameBuffer::setCurrent() {
-	GL(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFrameBuffers[mTextureSwapChainIndex]));
+GLuint FrameBuffer::getFrameBufferTexture() {
+	return vrapi_GetTextureSwapChainHandle(mColorTextureSwapChain, mTextureSwapChainIndex);
 }
 
-void frameBuffer::setNone() {
-	GL(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
-}
-
-void frameBuffer::resolve() {
+void FrameBuffer::resolve() {
 	// Discard the depth buffer, so the tiler won't need to write it back out to memory.
-	const GLenum depthAttachment[1] = { GL_DEPTH_ATTACHMENT };
-	glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, 1, depthAttachment);
+	const GLenum attachments[2] = { GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT };
+	glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, sizeof(attachments) / sizeof(attachments[0]), attachments);
 
 	// Flush this frame worth of commands.
 	glFlush();
+
+	GL(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
 }
 
-void frameBuffer::advance() {
+void FrameBuffer::advance() {
 	// Advance to the next texture from the set.
 	mTextureSwapChainIndex = (mTextureSwapChainIndex + 1) % mTextureSwapChainLength;
 }
 
-} // namespace OVR
+} // namespace ovrmobile

@@ -8,7 +8,7 @@
 #ifndef OS_H
 #define OS_H
 
-#include "GodotCalls.h"
+#include "godot_calls.h"
 
 #ifdef __cplusplus
 extern "C" {

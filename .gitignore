@@ -14,3 +14,7 @@ Thumbs.db
 log.txt
 log.zip
 oculussig_*
+.DS_Store
+.idea
+cmake-build-debug
+demo/addons/godot_ovrmobile/libs/

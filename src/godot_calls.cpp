@@ -5,14 +5,14 @@
 // Written by Bastiaan "Mux213" Olij and Paritosh Sharma,
 // with loads of help from Thomas "Karroffel" Herzog
 
-#include "GodotCalls.h"
+#include "godot_calls.h"
 
 const godot_gdnative_core_api_struct *api = NULL;
 const godot_gdnative_ext_arvr_api_struct *arvr_api = NULL;
 const godot_gdnative_ext_android_api_struct *android_api = NULL;
 const godot_gdnative_ext_nativescript_api_struct *nativescript_api = NULL;
 
-void GDN_EXPORT godot_ovr_gdnative_init(godot_gdnative_init_options *p_options) {
+void GDN_EXPORT godot_ovrmobile_gdnative_init(godot_gdnative_init_options *p_options) {
 	// get our main API struct
 	api = p_options->api_struct;
 
@@ -44,16 +44,13 @@ void GDN_EXPORT godot_ovr_gdnative_init(godot_gdnative_init_options *p_options) 
 			default: break;
 		};
 	};
-
-	//	if (!gladLoadGL()) {
-	//		printf("Error initializing GLAD\n");
-	//	}
 }
 
-void GDN_EXPORT godot_ovr_gdnative_terminate(godot_gdnative_terminate_options *p_options) {
+void GDN_EXPORT godot_ovrmobile_gdnative_terminate(godot_gdnative_terminate_options *p_options) {
 	api = NULL;
 	nativescript_api = NULL;
 	arvr_api = NULL;
+	nativescript_api = nullptr;
 }
 
 int64_t ___godot_icall_int(godot_method_bind *mb, godot_object *inst) {

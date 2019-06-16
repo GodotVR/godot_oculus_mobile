@@ -4,8 +4,8 @@
 // Written by Bastiaan "Mux213" Olij and Paritosh Sharma,
 // with loads of help from Thomas "Karroffel" Herzog
 
-#ifndef OVRCOMMONH
-#define OVRCOMMONH
+#ifndef OVRMOBILE_COMMON_H
+#define OVRMOBILE_COMMON_H
 
 // Some android includes
 #include <android/log.h>
@@ -45,6 +45,8 @@ typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC)(GLenum target
 typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei samples, GLint baseViewIndex, GLsizei numViews);
 #endif
 
+#include "godot_calls.h"
+
 // Include the OVR SDK
 #include "VrApi.h"
 
@@ -52,24 +54,31 @@ typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC)(GL
 #include "VrApi_Helpers.h"
 
 #define DEBUG 1
-#define LOG_TAG "GodotOVR"
+#define LOG_TAG "GodotOVRMobile"
 
+#define ALOG_ASSERT(_cond, ...) \
+	if (!(_cond)) __android_log_assert("conditional", LOG_TAG, __VA_ARGS__)
 #define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#define ALOGW(...) __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
 #if DEBUG
 #define ALOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 #else
 #define ALOGV(...)
 #endif
 
+#define MULTI_THREADED 0
+
+namespace ovrmobile {
+
 static const int CPU_LEVEL = 2;
 static const int GPU_LEVEL = 3;
 static const int NUM_MULTI_SAMPLES = 4;
 
-#define MULTI_THREADED 0
+inline bool check_bit(uint32_t in, uint32_t bits) {
+	return (in & bits) != 0;
+}
 
-namespace OVR {
-
-// there has to be a nicer way to do this....
+void godot_transform_from_ovr_pose(godot_transform *dest, const ovrPosef &pose, const float world_scale);
 
 class OpenGLExtensions {
 public:
@@ -91,10 +100,10 @@ public:
 	static void GLCheckErrors(int line);
 };
 
-} // namespace OVR
+} // namespace ovrmobile
 
 #define GL(func) \
 	func;        \
-	OVR::OpenGLExtensions::GLCheckErrors(__LINE__);
+	ovrmobile::OpenGLExtensions::GLCheckErrors(__LINE__);
 
-#endif /* !OVRCOMMONH */
+#endif // OVRMOBILE_COMMON_H
