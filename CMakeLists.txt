@@ -67,7 +67,7 @@ endif (NOT (EXISTS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}))
 set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/ovr_sdk_mobile/1.23.0/VrApi")
 
 # Location to the Godot headers directory. The default location is "${CMAKE_SOURCE_DIR}/godot_headers"
-set(GODOT_HEADERS_DIR "/Users/fhuya/Projects/godotengine/godot/modules/gdnative/include")
+set(GODOT_HEADERS_DIR "${CMAKE_SOURCE_DIR}/godot_headers")
 ###############################################################################
 
 set(OVR_HEADERS_DIR "${OVR_ROOT_DIR}/Include" CACHE STRING "")
