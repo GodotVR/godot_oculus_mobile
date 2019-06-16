@@ -5,7 +5,7 @@
 // Written by Bastiaan "Mux213" Olij and Paritosh Sharma,
 // with loads of help from Thomas "Karroffel" Herzog
 
-#include "OS.h"
+#include "os.h"
 
 static godot_object *___static_object_OS;
 

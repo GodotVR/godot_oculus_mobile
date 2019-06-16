@@ -4,9 +4,23 @@
 // Written by Bastiaan "Mux213" Olij and Paritosh Sharma,
 // with loads of help from Thomas "Karroffel" Herzog
 
-#include "ovrCommon.h"
+#include "common.h"
+#include <vector>
 
-namespace OVR {
+namespace ovrmobile {
+
+void godot_transform_from_ovr_pose(godot_transform *dest, const ovrPosef &pose, const float world_scale) {
+	godot_quat q;
+	godot_basis basis;
+	godot_vector3 origin;
+
+	api->godot_quat_new(&q, pose.Orientation.x, pose.Orientation.y, pose.Orientation.z, pose.Orientation.w);
+	api->godot_basis_new_with_euler_quat(&basis, &q);
+
+	api->godot_vector3_new(&origin, pose.Position.x * world_scale, pose.Position.y * world_scale,
+			pose.Position.z * world_scale);
+	api->godot_transform_new(dest, &basis, &origin);
+}
 
 // Must use EGLSyncKHR because the VrApi still supports OpenGL ES 2.0
 // EGL_KHR_reusable_sync
@@ -88,4 +102,4 @@ void OpenGLExtensions::GLCheckErrors(int line) {
 	}
 }
 
-} // namespace OVR
+} // namespace ovrmobile
