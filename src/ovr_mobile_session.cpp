@@ -89,7 +89,7 @@ godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye, god
 	godot_transform transform_for_eye;
 	if (in_vr_mode()) {
 		// Sample the Oculus tracking state.
-		const ovrTracking2 tracking_state = vrapi_GetPredictedTracking2(ovr, 0.0);
+		const ovrTracking2 tracking_state = head_tracker;
 		const ovrPosef eye_pose = tracking_state.HeadPose.Pose;
 		godot_transform_from_ovr_pose(&transform_for_eye, eye_pose, arvr_api->godot_arvr_get_worldscale());
 		switch (godot_eye) {
@@ -177,7 +177,7 @@ void OvrMobileSession::fill_projection_for_eye(godot_real *projection, godot_int
 	}
 
 	// Not sure
-	const ovrTracking2 tracking_state = vrapi_GetPredictedTracking2(ovr, 0.0);
+	const ovrTracking2 tracking_state = head_tracker;
 	ovrMatrix4f matrix;
 	switch (godot_eye) {
 		case 0: // EYE_MONO -- This corresponds to the hmd projection.
