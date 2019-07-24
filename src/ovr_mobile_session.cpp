@@ -252,6 +252,11 @@ bool OvrMobileSession::enter_vr_mode() {
 		vrapi_SetPerfThread(ovr, VRAPI_PERF_THREAD_TYPE_RENDERER, gettid());
 		ALOGV("		vrapi_SetPerfThread( RENDERER, %d )", gettid());
 
+		// From the doc: If VRAPI_EXTRA_LATENCY_MODE_ON specified, adds an extra frame of latency
+		// for full GPU utilization.
+		// It seems that nearly all apps on the Oculus Quest use this - except Youtube.
+		vrapi_SetExtraLatencyMode(ovr, ovrExtraLatencyMode::VRAPI_EXTRA_LATENCY_MODE_ON);
+
 		// Set the tracking transform to use, by default this is eye level.
 		vrapi_SetTrackingTransform(ovr, vrapi_GetTrackingTransform(ovr,
 												VRAPI_TRACKING_TRANSFORM_SYSTEM_CENTER_EYE_LEVEL));
