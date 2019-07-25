@@ -1,10 +1,10 @@
 # Oculus Mobile Godot plugin
 
-***`<WIP>`***<br> 
-This is a work in progress which requires a few unsubmitted changes ([PR #29824](https://github.com/godotengine/godot/pull/29824)) 
-in the core of Godot, and has a few remaining issues.<br>
-Check back here soon when we're a little further along!<br>
-***`</WIP>`***
+**Note:**<br> 
+This plugin is in **alpha** state.<br>
+Testing and resolution of remaining issues need to be complete before it's deemed stable and ready for use.<br>
+If you'd like to contribute to the testing process, follow the instructions below to setup and use the plugin, 
+and report any issues you encounter. Thanks!<br>
 
 This repository contains the source code for the Oculus Mobile Godot plugin.
 See demo project as an example for how to use the plugin.
@@ -30,33 +30,30 @@ The project uses `cmake` as its primary build system, which you can configure by
 for the **Android SDK & NDK**.
 
 #### Android SDK & NDK
-- Download and setup the [latest version](https://developer.android.com/studio/#command-tools) of the **Android SDK**.
+- Download and setup the [Android SDK](https://developer.android.com/studio/#command-tools).
+  - If using Android Studio, download version **3.4** or higher.
+  - If using the [command line tools](https://developer.android.com/studio/#command-tools), 
+  download revision **26.1.1** or higher. 
+  - To ensure you have the latest version, check [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.  
 - Add the Android SDK **cmake** binaries directory to the environment path. The directory can be found under 
-`<android_sdk_location>/cmake/<cmake_version>/bin`.  
-- Download and setup the [latest version](https://developer.android.com/ndk/downloads) of the **Android NDK**.
+`<android_sdk_location>/cmake/<cmake_version>/bin`.
+  - Ensure that `cmake_version` is greater or equal to version `3.6.0`.   
+- Download and setup the [latest version](https://developer.android.com/ndk/downloads) 
+(version **r20** or higher) of the **Android NDK**.
 - Set the environment variable `ANDROID_NDK_HOME` to the Android NDK location. 
 
 #### Godot headers
 By default the project is configured to checkout the [godot_headers](https://github.com/GodotNativeTools/godot_headers) 
-repo as a submodule under the `godot_headers` directory.
-You can edit the `GODOT_HEADERS_DIR` cmake variable in the `CMakeLists.txt` build file if you'd like to provide a 
-different source for the Godot headers.<br>
-**Note**: At the moment, the [godot_headers](https://github.com/GodotNativeTools/godot_headers) repo does not have the 
-necessary dependencies to build this plugin. As such you'll need to update your Godot fork to patch in the missing 
-dependencies:
-- Clone the [Godot](https://github.com/godotengine/godot) repo, and patch in [PR #29824](https://github.com/godotengine/godot/pull/29824)
-- Open the [`platform/android/java/AndroidManifest.xml`](https://github.com/godotengine/godot/blob/master/platform/android/java/AndroidManifest.xml)
-and add the following meta-data entry above the `org.godotengine.godot.Godot` activity entry:
-  - `<meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only"/>`
-- Rebuild the Godot Android shared libraries
-  - **Optional**: build the export templates for your Godot fork by following [these instructions](https://docs.godotengine.org/en/latest/development/compiling/compiling_for_android.html#building-the-export-templates)
-- Update the `GODOT_HEADERS_DIR` cmake variable in the `CMakeLists.txt` build file to point to the location of the 
-updated headers (e.g: `<godot_fork_root_dir>/modules/gdnative/include`)
+repo as a submodule under the `godot_headers` directory when you run 
+the `git submodule init` and `git submodule update` commands.<br>
+You can edit the `GODOT_HEADERS_DIR` cmake variable in the `CMakeLists.txt` 
+build file if you'd like to provide a different source for the Godot headers.<br>
 
 #### Oculus Mobile SDK
-- Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/) of the Oculus Mobile 
+- Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
+(version **1.23.0** or higher) of the Oculus Mobile 
 SDK into a sub-directory of the `ovr_sdk_mobile` directory. It's recommended to use the SDK version as the sub-directory 
-name (e.g: `ovr_sdk_mobile/1.23.0/` for version 1.23.0 of the Oculus Mobile SDK).
+name (e.g: `ovr_sdk_mobile/1.23.0/` for version **1.23.0** of the Oculus Mobile SDK).
 - Update the `OVR_ROOT_DIR` cmake variable in the the `CMakeLists.txt` build file to point to the Oculus Mobile SDK 
 root directory.
 
@@ -76,5 +73,5 @@ default output location: `demo/addons/godot_ovrmobile/libs/<arch>`
 
 Deployment
 ------------
-When exporting the project apk, make sure that `Xr Mode` under the Android export `Graphics` section is set to 
+When exporting the project apk in Godot, make sure that `Xr Mode` under the Android export `Graphics` section is set to 
 `Oculus Mobile VR`.
