@@ -253,8 +253,7 @@ bool OvrMobileSession::enter_vr_mode() {
 		ALOGV("		vrapi_SetPerfThread( RENDERER, %d )", gettid());
 
 		// Set the tracking transform to use, by default this is eye level.
-		vrapi_SetTrackingTransform(ovr, vrapi_GetTrackingTransform(ovr,
-												VRAPI_TRACKING_TRANSFORM_SYSTEM_CENTER_EYE_LEVEL));
+		vrapi_SetTrackingSpace(ovr, ovrTrackingSpace::VRAPI_TRACKING_SPACE_LOCAL_FLOOR);
 
 		vrapi_SetPropertyInt(&java, VRAPI_REORIENT_HMD_ON_CONTROLLER_RECENTER,
 				VRAPI_TRUE);
