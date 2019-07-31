@@ -89,7 +89,7 @@ godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye, god
 	godot_transform transform_for_eye;
 	if (in_vr_mode()) {
 		// Sample the Oculus tracking state.
-		const ovrTracking2 tracking_state = vrapi_GetPredictedTracking2(ovr, 0.0);
+		const ovrTracking2 tracking_state = head_tracker;
 		const ovrPosef eye_pose = tracking_state.HeadPose.Pose;
 		godot_transform_from_ovr_pose(&transform_for_eye, eye_pose, arvr_api->godot_arvr_get_worldscale());
 		switch (godot_eye) {
@@ -177,7 +177,7 @@ void OvrMobileSession::fill_projection_for_eye(godot_real *projection, godot_int
 	}
 
 	// Not sure
-	const ovrTracking2 tracking_state = vrapi_GetPredictedTracking2(ovr, 0.0);
+	const ovrTracking2 tracking_state = head_tracker;
 	ovrMatrix4f matrix;
 	switch (godot_eye) {
 		case 0: // EYE_MONO -- This corresponds to the hmd projection.
@@ -251,6 +251,11 @@ bool OvrMobileSession::enter_vr_mode() {
 
 		vrapi_SetPerfThread(ovr, VRAPI_PERF_THREAD_TYPE_RENDERER, gettid());
 		ALOGV("		vrapi_SetPerfThread( RENDERER, %d )", gettid());
+
+		// From the doc: If VRAPI_EXTRA_LATENCY_MODE_ON specified, adds an extra frame of latency
+		// for full GPU utilization.
+		// It seems that nearly all apps on the Oculus Quest use this - except Youtube.
+		vrapi_SetExtraLatencyMode(ovr, ovrExtraLatencyMode::VRAPI_EXTRA_LATENCY_MODE_ON);
 
 		// Set the tracking transform to use, by default this is eye level.
 		vrapi_SetTrackingSpace(ovr, ovrTrackingSpace::VRAPI_TRACKING_SPACE_LOCAL_FLOOR);
