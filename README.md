@@ -51,9 +51,9 @@ build file if you'd like to provide a different source for the Godot headers.<br
 
 #### Oculus Mobile SDK
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
-(version **1.23.0** or higher) of the Oculus Mobile 
+(version **1.24.0** or higher) of the Oculus Mobile 
 SDK into a sub-directory of the `ovr_sdk_mobile` directory. It's recommended to use the SDK version as the sub-directory 
-name (e.g: `ovr_sdk_mobile/1.23.0/` for version **1.23.0** of the Oculus Mobile SDK).
+name (e.g: `ovr_sdk_mobile/1.24.0/` for version **1.24.0** of the Oculus Mobile SDK).
 - Update the `OVR_ROOT_DIR` cmake variable in the the `CMakeLists.txt` build file to point to the Oculus Mobile SDK 
 root directory.
 

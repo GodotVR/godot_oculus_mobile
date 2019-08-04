@@ -151,7 +151,7 @@ void OvrMobileController::update_controller_tracking_state(ovrMobile *ovr,
 
 	// Update the controller transform.
 	godot_transform transform;
-	godot_transform_from_ovr_pose(&transform, tracking_state.HeadPose.Pose, 1.0);
+	godot_transform_from_ovr_pose(&transform, tracking_state.HeadPose.Pose, arvr_api->godot_arvr_get_worldscale());
 	arvr_api->godot_arvr_set_controller_transform(controller_state.godot_controller_id, &transform,
 			has_orientation_tracking(controller_state.remote_capabilities),
 			has_position_tracking(controller_state.remote_capabilities));

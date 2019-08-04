@@ -47,6 +47,8 @@ bool OvrMobileSession::initialize() {
 		return initialized;
 	}
 
+	ALOGV("OvrMobileSession::initialize()  Render target size: w %i / h %i", width, height);
+
 	const ovrInitParms init_parms = vrapi_DefaultInitParms(&java);
 	ovrInitializeStatus init_status = vrapi_Initialize(&init_parms);
 	if (init_status != VRAPI_INITIALIZE_SUCCESS) {
@@ -60,7 +62,7 @@ bool OvrMobileSession::initialize() {
 	// Get the suggested resolution to create eye texture swap chains.
 	width = vrapi_GetSystemPropertyInt(&java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH);
 	height = vrapi_GetSystemPropertyInt(&java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_HEIGHT);
-	ALOGV("Render target size: w %i / h %i", width, height);
+	ALOGV("  Render target size: w %i / h %i", width, height);
 
 	// Create Frame buffers for each eye
 	for (auto &eye_frame_buffer : frame_buffers) {
@@ -85,40 +87,42 @@ int OvrMobileSession::get_texture_for_eye(godot_int godot_eye) {
 	return frame_buffers[ovr_eye]->getFrameBufferTexture();
 }
 
-godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye, godot_transform *cam_transform) {
-	godot_transform transform_for_eye;
-	if (in_vr_mode()) {
-		// Sample the Oculus tracking state.
-		const ovrTracking2 tracking_state = head_tracker;
-		const ovrPosef eye_pose = tracking_state.HeadPose.Pose;
-		godot_transform_from_ovr_pose(&transform_for_eye, eye_pose, arvr_api->godot_arvr_get_worldscale());
-		switch (godot_eye) {
-			case 0: // EYE_MONO -- This corresponds to the hmd transform.
-			default:
-				// Nothing to do. The hmd transform is already calculated above
-				// since it's also needed for the following cases.
-				break;
+void godot_transform_from_ovrMatrix(godot_transform *p_dest, const ovrMatrix4f *p_matrix, godot_real p_world_scale) {
+	godot_basis basis;
+	godot_vector3 origin;
+	godot_real *basis_ptr = (godot_real *)&basis; 
 
-			case 1: { // EYE_LEFT
-				godot_vector3 left_eye_offset;
-				api->godot_vector3_new(&left_eye_offset, -0.5f * vrapi_GetInterpupillaryDistance(&tracking_state), 0.0f,
-						0.0f);
-				api->godot_transform_translated(&transform_for_eye, &left_eye_offset);
-				break;
-			}
-			case 2: { // EYE_RIGHT
-				godot_vector3 right_eye_offset;
-				api->godot_vector3_new(&right_eye_offset, 0.5f * vrapi_GetInterpupillaryDistance(&tracking_state), 0.0f,
-						0.0f);
-				api->godot_transform_translated(&transform_for_eye, &right_eye_offset);
-				break;
-			}
-		}
+	ovrMatrix4f _matrix = ovrMatrix4f_Inverse(p_matrix);
+
+	// extract the rotation 3x3 part from the full ovrMatrix4f
+	int k = 0;
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			basis_ptr[k++] = _matrix.M[i][j];
+		};
+	};
+
+	// get the translation part from the ovrMatrix4f
+	api->godot_vector3_new(&origin, _matrix.M[0][3] * p_world_scale, _matrix.M[1][3] * p_world_scale, _matrix.M[2][3] * p_world_scale);
+
+	api->godot_transform_new(p_dest, &basis, &origin);
+};
+
+godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye, godot_transform *cam_transform) {
+	godot_transform ret;
+
+	godot_transform transform_for_eye;
+	godot_transform reference_frame = arvr_api->godot_arvr_get_reference_frame();
+	godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
+
+	if (in_vr_mode() && (godot_eye == 1 || godot_eye == 2)) { // check if we are in vr mode and if we have the left(1) or right(2) eye
+		ovrMatrix4f* ovrEyeMatrix = &head_tracker.Eye[godot_eye - 1].ViewMatrix;
+		godot_transform_from_ovrMatrix(&transform_for_eye, ovrEyeMatrix, world_scale);
+	} else {
+		api->godot_transform_new_identity(&transform_for_eye);
 	}
 
-	// Now construct our full transform, the order may be in reverse, have to test
-	godot_transform ret = *cam_transform;
-	godot_transform reference_frame = arvr_api->godot_arvr_get_reference_frame();
+	ret = *cam_transform;
 	ret = api->godot_transform_operator_multiply(&ret, &reference_frame);
 	ret = api->godot_transform_operator_multiply(&ret, &transform_for_eye);
 
@@ -191,6 +195,9 @@ void OvrMobileSession::fill_projection_for_eye(godot_real *projection, godot_int
 			break;
 	}
 
+	matrix.M[2][2] = -(z_far + z_near) / (z_far - z_near);
+	matrix.M[2][3] = -(2.0f * z_far * z_near) / (z_far - z_near);
+	
 	int k = 0;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
