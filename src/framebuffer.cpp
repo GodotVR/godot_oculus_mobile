@@ -35,7 +35,9 @@ FrameBuffer::FrameBuffer(const bool useMultiview, const GLenum colorFormat, cons
 	mDepthBuffers = (GLuint *)malloc(mTextureSwapChainLength * sizeof(GLuint));
 	mFrameBuffers = (GLuint *)malloc(mTextureSwapChainLength * sizeof(GLuint));
 
-	ALOGV("        mUseMultiview = %d", mUseMultiview);
+	ALOGV("    Framebuffer(...): mUseMultiview = %d; mTextureSwapChainLength=%d; mMultisamples=%d", mUseMultiview, mTextureSwapChainLength, mMultisamples);
+	GL(); // empty GL macro call to catch previous GL errors and not report them on the next GL call in this function
+	
 
 	for (int i = 0; i < mTextureSwapChainLength; i++) {
 		// Create the color buffer texture.

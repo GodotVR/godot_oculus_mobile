@@ -97,13 +97,13 @@ public:
 	static const char *errorString(const EGLint error);
 	static const char *GlFrameBufferStatusString(GLenum status);
 	static const char *GlErrorString(GLenum error);
-	static void GLCheckErrors(int line);
+	static void GLCheckErrors(int line, const char* filename, const char* func);
 };
 
 } // namespace ovrmobile
 
 #define GL(func) \
 	func;        \
-	ovrmobile::OpenGLExtensions::GLCheckErrors(__LINE__);
+	ovrmobile::OpenGLExtensions::GLCheckErrors(__LINE__, __FILE__, #func);
 
 #endif // OVRMOBILE_COMMON_H

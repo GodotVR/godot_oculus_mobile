@@ -64,7 +64,7 @@ endif (NOT (EXISTS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}))
 ## in the project README.
 
 # Sets the path to the VrApi root directory. Update this variable if the api is in another location.
-set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/ovr_sdk_mobile/1.23.0/VrApi")
+set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/ovr_sdk_mobile/1.24.0/VrApi")
 
 # Location to the Godot headers directory. The default location is "${CMAKE_SOURCE_DIR}/godot_headers"
 set(GODOT_HEADERS_DIR "${CMAKE_SOURCE_DIR}/godot_headers")

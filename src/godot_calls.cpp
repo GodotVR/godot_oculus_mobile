@@ -31,14 +31,14 @@ void GDN_EXPORT godot_ovrmobile_gdnative_init(godot_gdnative_init_options *p_opt
 				if (api->extensions[i]->version.major > 1 || (api->extensions[i]->version.major == 1 && api->extensions[i]->version.minor >= 0)) {
 					android_api = (godot_gdnative_ext_android_api_struct *)api->extensions[i];
 				} else {
-					printf("ARVR API version %i.%i isn't supported, need version 1.1 or higher\n", api->extensions[i]->version.major, api->extensions[i]->version.minor);
+					printf("ARVR API version %i.%i isn't supported, need version 1.0 or higher\n", api->extensions[i]->version.major, api->extensions[i]->version.minor);
 				}
 			}; break;
 			case GDNATIVE_EXT_NATIVESCRIPT: {
 				if (api->extensions[i]->version.major > 1 || (api->extensions[i]->version.major == 1 && api->extensions[i]->version.minor >= 0)) {
 					nativescript_api = (godot_gdnative_ext_nativescript_api_struct *)api->extensions[i];
 				} else {
-					printf("Native script API version %i.%i isn't supported, need version 1.1 or higher\n", api->extensions[i]->version.major, api->extensions[i]->version.minor);
+					printf("Native script API version %i.%i isn't supported, need version 1.0 or higher\n", api->extensions[i]->version.major, api->extensions[i]->version.minor);
 				}
 			}; break;
 			default: break;
@@ -50,7 +50,7 @@ void GDN_EXPORT godot_ovrmobile_gdnative_terminate(godot_gdnative_terminate_opti
 	api = NULL;
 	nativescript_api = NULL;
 	arvr_api = NULL;
-	nativescript_api = nullptr;
+	nativescript_api = NULL;
 }
 
 int64_t ___godot_icall_int(godot_method_bind *mb, godot_object *inst) {

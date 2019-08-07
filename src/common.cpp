@@ -92,13 +92,13 @@ const char *OpenGLExtensions::GlErrorString(GLenum error) {
 	}
 }
 
-void OpenGLExtensions::GLCheckErrors(int line) {
+void OpenGLExtensions::GLCheckErrors(int line, const char* filename, const char* func) {
 	for (int i = 0; i < 10; i++) {
 		const GLenum error = glGetError();
 		if (error == GL_NO_ERROR) {
 			break;
 		}
-		ALOGE("GL error on line %d: %s", line, GlErrorString(error));
+		ALOGE("GL error on line %d: %s (%s: %s)", line, GlErrorString(error), filename, func);
 	}
 }
 
