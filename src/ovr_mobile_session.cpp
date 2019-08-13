@@ -115,10 +115,14 @@ godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye, god
 	godot_transform reference_frame = arvr_api->godot_arvr_get_reference_frame();
 	godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
 
-	if (in_vr_mode() && (godot_eye == 1 || godot_eye == 2)) { // check if we are in vr mode and if we have the left(1) or right(2) eye
-		ovrMatrix4f* ovrEyeMatrix = &head_tracker.Eye[godot_eye - 1].ViewMatrix;
-		godot_transform_from_ovrMatrix(&transform_for_eye, ovrEyeMatrix, world_scale);
-	} else {
+	if (in_vr_mode()) {
+		if (godot_eye == 1 || godot_eye == 2) { // check if we have the left(1) or right(2) eye
+			ovrMatrix4f* ovrEyeMatrix = &head_tracker.Eye[godot_eye - 1].ViewMatrix;
+			godot_transform_from_ovrMatrix(&transform_for_eye, ovrEyeMatrix, world_scale);
+		} else { // mono eye (godot_eye == 0); used by godot to set the ARVRCamera matrix
+			godot_transform_from_ovr_pose(&transform_for_eye, head_tracker.HeadPose.Pose, world_scale);
+		}
+	} else { 
 		api->godot_transform_new_identity(&transform_for_eye);
 	}
 
