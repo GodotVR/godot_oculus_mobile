@@ -17,6 +17,22 @@ const int kDefaultRenderTargetHeight = 1024;
 const int kDefaultRenderTargetWidth = 1024;
 } // namespace
 
+
+OvrMobileSession* OvrMobileSession::singleton_instance = NULL;
+
+OvrMobileSession* OvrMobileSession::get_singleton_instance() {
+	if (singleton_instance == NULL) {
+		singleton_instance = new OvrMobileSession();
+	}
+	return singleton_instance;
+}
+
+void OvrMobileSession::delete_singleton_instance() {
+	delete singleton_instance;
+	singleton_instance = NULL;
+}
+
+
 OvrMobileSession::OvrMobileSession() :
 		width(
 				kDefaultRenderTargetWidth),
@@ -47,7 +63,7 @@ bool OvrMobileSession::initialize() {
 		return initialized;
 	}
 
-	ALOGV("OvrMobileSession::initialize()  Render target size: w %i / h %i", width, height);
+	ALOGV("OvrMobileSession::initialize() called");
 
 	const ovrInitParms init_parms = vrapi_DefaultInitParms(&java);
 	ovrInitializeStatus init_status = vrapi_Initialize(&init_parms);
@@ -62,7 +78,7 @@ bool OvrMobileSession::initialize() {
 	// Get the suggested resolution to create eye texture swap chains.
 	width = vrapi_GetSystemPropertyInt(&java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH);
 	height = vrapi_GetSystemPropertyInt(&java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_HEIGHT);
-	ALOGV("  Render target size: w %i / h %i", width, height);
+	ALOGV("  vrapi Render target size: w %i / h %i", width, height);
 
 	// Create Frame buffers for each eye
 	for (auto &eye_frame_buffer : frame_buffers) {

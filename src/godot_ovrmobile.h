@@ -7,7 +7,6 @@
 #ifndef GODOT_OVRMOBILE_H
 #define GODOT_OVRMOBILE_H
 
-#include "arvr_interface.h"
 #include "godot_calls.h"
 
 // declare our public functions for our ARVR Interface
