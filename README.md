@@ -12,7 +12,6 @@ See demo project as an example for how to use the plugin.
 This is an Android only plugin that is only supported on the following Oculus Mobile devices:
 - Oculus Quest
 - Oculus Go
-- GearVR
 
 The use of this plugin require Godot 3.2 or later.
 
@@ -73,5 +72,10 @@ default output location: `demo/addons/godot_ovrmobile/libs/<arch>`
 
 Deployment
 ------------
-When exporting the project apk in Godot, make sure that `Xr Mode` under the Android export `Graphics` section is set to 
-`Oculus Mobile VR`.
+When exporting the project apk in Godot, the following Android export 
+`Graphics` options should be set:
+- `Xr Mode` must be set to `Oculus Mobile VR`.
+- `Degrees of Freedom`:
+  - If deploying only on Oculus Quest, this must be set to `6DOF`
+  - If deploying on Oculus Go, or on Oculus Go and Oculus Quest, 
+  this must be set to `3DOF and 6DOF`
