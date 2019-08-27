@@ -48,8 +48,8 @@ void GDN_EXPORT godot_ovrmobile_gdnative_init(godot_gdnative_init_options *p_opt
 
 void GDN_EXPORT godot_ovrmobile_gdnative_terminate(godot_gdnative_terminate_options *p_options) {
 	api = NULL;
-	nativescript_api = NULL;
 	arvr_api = NULL;
+	android_api = NULL;
 	nativescript_api = NULL;
 }
 

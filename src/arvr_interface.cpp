@@ -120,7 +120,7 @@ void *godot_arvr_constructor(godot_object *p_instance) {
 
 	ALOGV("Creating OVR Mobile session.");
 
-	arvr_data->ovr_mobile_session = new ovrmobile::OvrMobileSession();
+	arvr_data->ovr_mobile_session = ovrmobile::OvrMobileSession::get_singleton_instance();
 
 	return arvr_data;
 };
@@ -128,7 +128,7 @@ void *godot_arvr_constructor(godot_object *p_instance) {
 void godot_arvr_destructor(void *p_data) {
 	if (p_data != nullptr) {
 		auto *arvr_data = (arvr_data_struct *)p_data;
-		delete arvr_data->ovr_mobile_session;
+		ovrmobile::OvrMobileSession::delete_singleton_instance();
 		api->godot_free(p_data);
 	}
 }

@@ -14,9 +14,8 @@ namespace ovrmobile {
 
 class OvrMobileSession {
 public:
-	OvrMobileSession();
-
-	~OvrMobileSession();
+	static OvrMobileSession* get_singleton_instance();
+	static void delete_singleton_instance();
 
 	void commit_for_eye(godot_int godot_eye);
 
@@ -57,7 +56,13 @@ public:
 	// Shuts down the Oculus VrApi.
 	void uninitialize();
 
+	ovrMobile* get_ovr_mobile_context() {return ovr;};
+
 private:
+
+	OvrMobileSession();
+	~OvrMobileSession();
+
 	bool should_enter_vr_mode() {
 		return initialized && ovr == nullptr && android_api->godot_android_is_activity_resumed();
 	}
@@ -73,6 +78,8 @@ private:
 	inline int get_ovr_eye_from_godot_eye(godot_int godot_eye) {
 		return godot_eye == /* EYE_RIGHT */ 2 ? static_cast<int>(ovrEye::VRAPI_EYE_RIGHT) : static_cast<int>(ovrEye::VRAPI_EYE_LEFT);
 	}
+
+	static OvrMobileSession* singleton_instance;
 
 	bool initialized = false;
 	int width;

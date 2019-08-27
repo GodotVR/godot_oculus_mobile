@@ -79,3 +79,21 @@ When exporting the project apk in Godot, the following Android export
   - If deploying only on Oculus Quest, this must be set to `6DOF`
   - If deploying on Oculus Go, or on Oculus Go and Oculus Quest, 
   this must be set to `3DOF and 6DOF`
+
+GDScript Oculus VrApi access
+------------
+This plugin exposes parts of the Oculus VrApi via GDNative script classes. The actual exported functions
+can be found in [src/config/](src/config/).
+
+Here is an example of how to use these classes inside GDScript:
+```
+onready var ovrTrackingTransform = preload("res://addons/godot_ovrmobile/OvrTrackingTransform.gdns").new()
+onready var ovrGuardianSystem = preload("res://addons/godot_ovrmobile/OvrGuardianSystem.gdns").new()
+
+func _process(delta):
+	print("GetTrackingSpace: " , ovrTrackingTransform.get_tracking_space())
+
+	print("GetBoundaryVisible: ", ovrGuardianSystem.get_boundary_visible())
+	print("GetBoundaryOrientedBoundingBox: ", ovrGuardianSystem.get_boundary_oriented_bounding_box())
+```
+
