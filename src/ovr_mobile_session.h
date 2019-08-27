@@ -58,6 +58,10 @@ public:
 
 	ovrMobile* get_ovr_mobile_context() {return ovr;};
 
+	const ovrJava *get_ovr_java() {
+		return &java;
+	}
+
 private:
 
 	OvrMobileSession();
