@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://Milkyway.png" type="Texture" id=2]
-[ext_resource path="res://Table.tscn" type="PackedScene" id=3]
+[ext_resource path="res://right-controller.dae" type="PackedScene" id=3]
+[ext_resource path="res://Table.tscn" type="PackedScene" id=4]
+[ext_resource path="res://left-controller.dae" type="PackedScene" id=5]
 
 [sub_resource type="PanoramaSky" id=1]
 radiance_size = 4
@@ -41,7 +43,7 @@ transform = Transform( 100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0 )
 mesh = SubResource( 4 )
 material/0 = null
 
-[node name="Table" parent="." instance=ExtResource( 3 )]
+[node name="Table" parent="." instance=ExtResource( 4 )]
 
 [node name="Test" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.63647, -1.15364 )
@@ -49,3 +51,16 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.63647, -1.15364 )
 [node name="ARVROrigin" type="ARVROrigin" parent="."]
 
 [node name="ARVRCamera" type="ARVRCamera" parent="ARVROrigin"]
+
+[node name="LeftTouchController" type="ARVRController" parent="ARVROrigin"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.324, 0.805, -1.679 )
+
+[node name="left-controller" parent="ARVROrigin/LeftTouchController" instance=ExtResource( 5 )]
+transform = Transform( -1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0 )
+
+[node name="RightTouchController" type="ARVRController" parent="ARVROrigin"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.452, 0.746, -1.104 )
+controller_id = 2
+
+[node name="right-controller" parent="ARVROrigin/RightTouchController" instance=ExtResource( 3 )]
+transform = Transform( -1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0 )

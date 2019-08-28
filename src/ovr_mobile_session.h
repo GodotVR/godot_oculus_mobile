@@ -30,6 +30,14 @@ public:
 		return width;
 	}
 
+	void set_render_target_size_multiplier(double multiplier) {
+		this->render_target_size_multiplier = multiplier;
+	}
+
+	void set_swap_interval(unsigned int swap_interval) {
+	    this->swap_interval = swap_interval;
+	}
+
 	int get_texture_for_eye(godot_int godot_eye);
 
 	godot_transform get_transform_for_eye(godot_int godot_eye, godot_transform *cam_transform);
@@ -88,8 +96,8 @@ private:
 	bool initialized = false;
 	int width;
 	int height;
-	int cpu_level;
-	int gpu_level;
+	double render_target_size_multiplier;
+	unsigned int swap_interval;
 	uint64_t frame_index = 1;
 	double predicted_display_time = 0;
 

@@ -22,6 +22,20 @@ void godot_transform_from_ovr_pose(godot_transform *dest, const ovrPosef &pose, 
 	api->godot_transform_new(dest, &basis, &origin);
 }
 
+bool is_oculus_go_device(const ovrJava *java) {
+	auto device_type = static_cast<ovrDeviceType>(
+			vrapi_GetSystemPropertyInt(java, VRAPI_SYS_PROP_DEVICE_TYPE));
+	return device_type >= VRAPI_DEVICE_TYPE_OCULUSGO_START &&
+		   device_type <= VRAPI_DEVICE_TYPE_OCULUSGO_END;
+}
+
+bool is_oculus_quest_device(const ovrJava * java) {
+	auto device_type = static_cast<ovrDeviceType>(
+			vrapi_GetSystemPropertyInt(java, VRAPI_SYS_PROP_DEVICE_TYPE));
+	return device_type >= VRAPI_DEVICE_TYPE_OCULUSQUEST_START &&
+		   device_type <= VRAPI_DEVICE_TYPE_OCULUSQUEST_END;
+}
+
 // Must use EGLSyncKHR because the VrApi still supports OpenGL ES 2.0
 // EGL_KHR_reusable_sync
 PFNEGLCREATESYNCKHRPROC OpenGLExtensions::eglCreateSyncKHR;
