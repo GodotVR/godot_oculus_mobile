@@ -18,7 +18,7 @@ public:
 
 	~OvrMobileController();
 
-	void process(ovrMobile *ovr, ovrJava *java);
+	void process(ovrMobile *ovr, ovrJava *java, double predicted_display_time);
 
 private:
 	enum ControllerHand {
@@ -97,7 +97,7 @@ private:
 
 	void update_controllers_connection_state(ovrMobile *ovr, ovrJava *java);
 
-	void update_controller_tracking_state(ovrMobile *ovr, ControllerState controller_state);
+	void update_controller_tracking_state(ovrMobile *ovr, ControllerState controller_state, double predicted_display_time);
 
 	void update_controller_input_state(ovrMobile *ovr, ControllerState controller_state);
 
