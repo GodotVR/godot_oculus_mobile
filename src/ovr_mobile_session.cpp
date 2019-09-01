@@ -248,7 +248,7 @@ void OvrMobileSession::process() {
 	head_tracker = vrapi_GetPredictedTracking2(ovr, predicted_display_time);
 
 	// Update the oculus controllers state.
-	ovr_mobile_controller->process(ovr, &java);
+	ovr_mobile_controller->process(ovr, &java, predicted_display_time);
 }
 
 bool OvrMobileSession::enter_vr_mode() {
