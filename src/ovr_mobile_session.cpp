@@ -12,7 +12,6 @@ namespace {
 const int kDefaultCpuLevel = 1;
 const int kDefaultGpuLevel = 1;
 const int kSwapInterval = 1;
-const bool kDefaultEnableMultiview = false;
 const int kDefaultRenderTargetHeight = 1024;
 const int kDefaultRenderTargetWidth = 1024;
 } // namespace
@@ -34,12 +33,11 @@ void OvrMobileSession::delete_singleton_instance() {
 
 
 OvrMobileSession::OvrMobileSession() :
-		width(
-				kDefaultRenderTargetWidth),
+		width(kDefaultRenderTargetWidth),
 		height(kDefaultRenderTargetHeight),
-		cpu_level(
-				kDefaultCpuLevel),
+		cpu_level(kDefaultCpuLevel),
 		gpu_level(kDefaultGpuLevel) {
+			
 	JNIEnv *env = android_api->godot_android_get_env();
 	java.ActivityObject = env->NewGlobalRef(android_api->godot_android_get_activity());
 	java.Env = env;
@@ -82,12 +80,7 @@ bool OvrMobileSession::initialize() {
 
 	// Create Frame buffers for each eye
 	for (auto &eye_frame_buffer : frame_buffers) {
-		eye_frame_buffer = new ovrmobile::FrameBuffer(
-				kDefaultEnableMultiview,
-				GL_RGBA8,
-				width,
-				height,
-				NUM_MULTI_SAMPLES);
+		eye_frame_buffer = new ovrmobile::FrameBuffer(GL_RGBA8, width, height);
 	}
 
 	initialized = true;
@@ -100,7 +93,7 @@ int OvrMobileSession::get_texture_for_eye(godot_int godot_eye) {
 	}
 
 	int ovr_eye = get_ovr_eye_from_godot_eye(godot_eye);
-	return frame_buffers[ovr_eye]->getFrameBufferTexture();
+	return frame_buffers[ovr_eye]->get_active_target_texture();
 }
 
 void godot_transform_from_ovrMatrix(godot_transform *p_dest, const ovrMatrix4f *p_matrix, godot_real p_world_scale) {
@@ -166,12 +159,12 @@ void OvrMobileSession::commit_for_eye(godot_int godot_eye) {
 	}
 
 	// Set the layer's texture properties.
-	layer.Textures[ovr_eye].ColorSwapChain = frame_buffers[ovr_eye]->mColorTextureSwapChain;
-	layer.Textures[ovr_eye].SwapChainIndex = frame_buffers[ovr_eye]->mTextureSwapChainIndex;
+	layer.Textures[ovr_eye].ColorSwapChain = frame_buffers[ovr_eye]->get_texture_swap_chain();
+	layer.Textures[ovr_eye].SwapChainIndex = frame_buffers[ovr_eye]->get_texture_swap_chain_index();
 	layer.Textures[ovr_eye].TexCoordsFromTanAngles = ovrMatrix4f_TanAngleMatrixFromProjection(
 			&head_tracker.Eye[ovr_eye].ProjectionMatrix);
 
-	frame_buffers[ovr_eye]->advance();
+	frame_buffers[ovr_eye]->advance_texture_swap_chain();
 
 	if (ovr_eye == static_cast<int>(ovrEye::VRAPI_EYE_RIGHT)) {
 

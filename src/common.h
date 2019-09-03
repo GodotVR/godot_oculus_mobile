@@ -70,9 +70,6 @@ typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC)(GL
 
 namespace ovrmobile {
 
-static const int CPU_LEVEL = 2;
-static const int GPU_LEVEL = 3;
-static const int NUM_MULTI_SAMPLES = 4;
 
 inline bool check_bit(uint32_t in, uint32_t bits) {
 	return (in & bits) != 0;

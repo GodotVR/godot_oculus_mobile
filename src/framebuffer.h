@@ -9,7 +9,6 @@
 #ifndef OVRMOBILE_FRAMEBUFFER_H
 #define OVRMOBILE_FRAMEBUFFER_H
 
-// Include some standard C stuff
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -18,25 +17,32 @@
 namespace ovrmobile {
 
 class FrameBuffer {
-private:
-	int mWidth;
-	int mHeight;
-	int mMultisamples;
-	int mTextureSwapChainLength;
-	bool mUseMultiview;
-	GLuint *mDepthBuffers;
-	GLuint *mFrameBuffers;
-
 public:
-	int mTextureSwapChainIndex;
-	ovrTextureSwapChain *mColorTextureSwapChain;
 
-	FrameBuffer(const bool useMultiview, const GLenum colorFormat, const int width, const int height, const int multisamples);
+	FrameBuffer(const GLenum colorFormat, const int width, const int height);
 	~FrameBuffer();
 
-	GLuint getFrameBufferTexture();
-	void resolve();
-	void advance();
+	// returns the currently active rendertarget texture from the texture swap chain
+	GLuint get_active_target_texture();
+
+	// Advance to the next rendertarget texture from the texture swap chain
+	void advance_texture_swap_chain();
+
+	int get_texture_swap_chain_index() {
+		return mTextureSwapChainIndex;
+	}
+
+	ovrTextureSwapChain* get_texture_swap_chain() {
+		return mColorTextureSwapChain;
+	}
+
+private:
+
+	int mWidth;
+	int mHeight;
+	int mTextureSwapChainLength;
+	int mTextureSwapChainIndex;
+	ovrTextureSwapChain *mColorTextureSwapChain;
 };
 
 } // namespace ovrmobile
