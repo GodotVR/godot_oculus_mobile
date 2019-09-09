@@ -84,7 +84,7 @@ bool OvrMobileSession::initialize() {
 		eye_frame_buffer = new ovrmobile::FrameBuffer(GL_RGBA8, width, height);
 	}
 
-	initialized = true;
+	initialized = enter_vr_mode();
 	return initialized;
 }
 
@@ -96,27 +96,6 @@ int OvrMobileSession::get_texture_for_eye(godot_int godot_eye) {
 	int ovr_eye = get_ovr_eye_from_godot_eye(godot_eye);
 	return frame_buffers[ovr_eye]->get_active_target_texture();
 }
-
-void godot_transform_from_ovrMatrix(godot_transform *p_dest, const ovrMatrix4f *p_matrix, godot_real p_world_scale) {
-	godot_basis basis;
-	godot_vector3 origin;
-	godot_real *basis_ptr = (godot_real *)&basis; 
-
-	ovrMatrix4f _matrix = ovrMatrix4f_Inverse(p_matrix);
-
-	// extract the rotation 3x3 part from the full ovrMatrix4f
-	int k = 0;
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			basis_ptr[k++] = _matrix.M[i][j];
-		};
-	};
-
-	// get the translation part from the ovrMatrix4f
-	api->godot_vector3_new(&origin, _matrix.M[0][3] * p_world_scale, _matrix.M[1][3] * p_world_scale, _matrix.M[2][3] * p_world_scale);
-
-	api->godot_transform_new(p_dest, &basis, &origin);
-};
 
 godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye, godot_transform *cam_transform) {
 	godot_transform ret;
@@ -221,14 +200,8 @@ void OvrMobileSession::fill_projection_for_eye(godot_real *projection, godot_int
 }
 
 void OvrMobileSession::process() {
-	if (should_exit_vr_mode()) {
-		exit_vr_mode();
-		return;
-	}
-
-	if (should_enter_vr_mode() && !enter_vr_mode()) {
-		// We're not able to enter vr mode, so let's return early.
-		return;
+	if (!in_vr_mode()) {
+	    return;
 	}
 
 	// If we get here, then we're successfully in vr mode.
@@ -286,10 +259,8 @@ void OvrMobileSession::on_pause() {
 }
 
 void OvrMobileSession::on_resume() {
-	// Attempt to enter vr mode if we can.
-	if (should_enter_vr_mode()) {
-		enter_vr_mode();
-	}
+	// Attempt to enter vr mode.
+    ALOG_ASSERT(initialized && enter_vr_mode(), "Unable to resume VR mode! Aborting..");
 }
 
 void OvrMobileSession::exit_vr_mode() {

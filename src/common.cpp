@@ -9,6 +9,27 @@
 
 namespace ovrmobile {
 
+void godot_transform_from_ovrMatrix(godot_transform *p_dest, const ovrMatrix4f *p_matrix, godot_real p_world_scale) {
+	godot_basis basis;
+	godot_vector3 origin;
+	godot_real *basis_ptr = (godot_real *)&basis;
+
+	ovrMatrix4f _matrix = ovrMatrix4f_Inverse(p_matrix);
+
+	// extract the rotation 3x3 part from the full ovrMatrix4f
+	int k = 0;
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			basis_ptr[k++] = _matrix.M[i][j];
+		};
+	};
+
+	// get the translation part from the ovrMatrix4f
+	api->godot_vector3_new(&origin, _matrix.M[0][3] * p_world_scale, _matrix.M[1][3] * p_world_scale, _matrix.M[2][3] * p_world_scale);
+
+	api->godot_transform_new(p_dest, &basis, &origin);
+}
+
 void godot_transform_from_ovr_pose(godot_transform *dest, const ovrPosef &pose, const float world_scale) {
 	godot_quat q;
 	godot_basis basis;

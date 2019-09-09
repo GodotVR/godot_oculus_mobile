@@ -35,10 +35,10 @@ void godot_arvr_set_anchor_detection_is_enabled(void *p_data, bool p_enable) {
 void godot_arvr_notification(void *p_data, godot_int p_what) {
 	auto *arvr_data = (arvr_data_struct *)p_data;
 	switch (p_what) {
-		case 1004: // NOTIFICATION_WM_FOCUS_IN - The Android activity is resumed.
+		case 1014: // NOTIFICATION_APP_RESUMED - The Android activity is resumed.
 			arvr_data->ovr_mobile_session->on_resume();
 			break;
-		case 1005: // NOTIFICATION_WM_FOCUS_OUT - The Android activity is paused.
+		case 1015: // NOTIFICATION_APP_PAUSED - The Android activity is paused.
 			arvr_data->ovr_mobile_session->on_pause();
 			break;
 

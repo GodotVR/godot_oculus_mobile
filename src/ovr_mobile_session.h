@@ -42,7 +42,7 @@ public:
 
 	godot_transform get_transform_for_eye(godot_int godot_eye, godot_transform *cam_transform);
 
-	// Initializes the Oculus VrApi. This is required to be able to enter VR mode and access
+	// Initializes the Oculus VrApi and enters VR mode. This is required to be able to access
 	// the api functionality.
 	bool initialize();
 
@@ -75,15 +75,7 @@ private:
 	OvrMobileSession();
 	~OvrMobileSession();
 
-	bool should_enter_vr_mode() {
-		return initialized && ovr == nullptr && android_api->godot_android_is_activity_resumed();
-	}
-
 	bool enter_vr_mode();
-
-	bool should_exit_vr_mode() {
-		return ovr != nullptr && (!initialized || !android_api->godot_android_is_activity_resumed());
-	}
 
 	void exit_vr_mode();
 
