@@ -1,6 +1,7 @@
 #include "config_common.h"
 #include "ovr_guardian_system.h"
 
+static const char *kClassName = "OvrGuardianSystem";
 
 void register_gdnative_guardian_system(void *p_handle) {
     { // register the constructor and destructor of the OvrGuardianSystem class for use in GDScript
@@ -10,7 +11,7 @@ void register_gdnative_guardian_system(void *p_handle) {
 		godot_instance_destroy_func destroy = { NULL, NULL, NULL };
 		destroy.destroy_func = &ovr_guardian_system_destructor;
 
-		nativescript_api->godot_nativescript_register_class(p_handle, "OvrGuardianSystem", "Reference", create, destroy);
+		nativescript_api->godot_nativescript_register_class(p_handle, kClassName, "Reference", create, destroy);
 	}
 
 	{ // now we register all the functions that we want to expose via OvrGuardianSystem class in GDScript; we use as method names the same names as in VrApi.h but without prefix
@@ -18,13 +19,13 @@ void register_gdnative_guardian_system(void *p_handle) {
 		godot_method_attributes attributes = { GODOT_METHOD_RPC_MODE_DISABLED };
 
 		method.method = &request_boundary_visible;
-		nativescript_api->godot_nativescript_register_method(p_handle, "OvrGuardianSystem", "request_boundary_visible", attributes, method);
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "request_boundary_visible", attributes, method);
 
 		method.method = &get_boundary_visible;
-		nativescript_api->godot_nativescript_register_method(p_handle, "OvrGuardianSystem", "get_boundary_visible", attributes, method);
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_boundary_visible", attributes, method);
 
 		method.method = &get_boundary_oriented_bounding_box;
-		nativescript_api->godot_nativescript_register_method(p_handle, "OvrGuardianSystem", "get_boundary_oriented_bounding_box", attributes, method);
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_boundary_oriented_bounding_box", attributes, method);
 	}
 }
 

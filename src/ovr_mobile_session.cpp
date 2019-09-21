@@ -9,11 +9,9 @@
 namespace ovrmobile {
 
 namespace {
-const int kDefaultCpuLevel = 1;
-const int kDefaultGpuLevel = 1;
-const int kSwapInterval = 1;
-const int kDefaultRenderTargetHeight = 1024;
-const int kDefaultRenderTargetWidth = 1024;
+const unsigned int kDefaultSwapInterval = 1;
+const int kDefaultRenderTargetDimension = 1024;
+const double kDefaultRenderTargetSizeMultiplier = 1.0;
 } // namespace
 
 
@@ -31,13 +29,11 @@ void OvrMobileSession::delete_singleton_instance() {
 	singleton_instance = NULL;
 }
 
-
 OvrMobileSession::OvrMobileSession() :
-		width(kDefaultRenderTargetWidth),
-		height(kDefaultRenderTargetHeight),
-		cpu_level(kDefaultCpuLevel),
-		gpu_level(kDefaultGpuLevel) {
-			
+		width(kDefaultRenderTargetDimension),
+		height(kDefaultRenderTargetDimension),
+		render_target_size_multiplier(kDefaultRenderTargetSizeMultiplier),
+		swap_interval(kDefaultSwapInterval) {
 	JNIEnv *env = android_api->godot_android_get_env();
 	java.ActivityObject = env->NewGlobalRef(android_api->godot_android_get_activity());
 	java.Env = env;
@@ -74,16 +70,21 @@ bool OvrMobileSession::initialize() {
 	ovrmobile::OpenGLExtensions::initExtensions();
 
 	// Get the suggested resolution to create eye texture swap chains.
-	width = vrapi_GetSystemPropertyInt(&java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH);
-	height = vrapi_GetSystemPropertyInt(&java, VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_HEIGHT);
-	ALOGV("  vrapi Render target size: w %i / h %i", width, height);
+	width = static_cast<int>(render_target_size_multiplier *
+							 vrapi_GetSystemPropertyInt(&java,
+														VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH));
+	height = static_cast<int>(render_target_size_multiplier *
+							  vrapi_GetSystemPropertyInt(&java,
+														 VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_HEIGHT));
+	ALOGV(" render target size multiplier: %f", render_target_size_multiplier);
+	ALOGV(" vrapi render target size: w %i / h %i", width, height);
 
 	// Create Frame buffers for each eye
 	for (auto &eye_frame_buffer : frame_buffers) {
 		eye_frame_buffer = new ovrmobile::FrameBuffer(GL_RGBA8, width, height);
 	}
 
-	initialized = true;
+	initialized = enter_vr_mode();
 	return initialized;
 }
 
@@ -95,27 +96,6 @@ int OvrMobileSession::get_texture_for_eye(godot_int godot_eye) {
 	int ovr_eye = get_ovr_eye_from_godot_eye(godot_eye);
 	return frame_buffers[ovr_eye]->get_active_target_texture();
 }
-
-void godot_transform_from_ovrMatrix(godot_transform *p_dest, const ovrMatrix4f *p_matrix, godot_real p_world_scale) {
-	godot_basis basis;
-	godot_vector3 origin;
-	godot_real *basis_ptr = (godot_real *)&basis; 
-
-	ovrMatrix4f _matrix = ovrMatrix4f_Inverse(p_matrix);
-
-	// extract the rotation 3x3 part from the full ovrMatrix4f
-	int k = 0;
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			basis_ptr[k++] = _matrix.M[i][j];
-		};
-	};
-
-	// get the translation part from the ovrMatrix4f
-	api->godot_vector3_new(&origin, _matrix.M[0][3] * p_world_scale, _matrix.M[1][3] * p_world_scale, _matrix.M[2][3] * p_world_scale);
-
-	api->godot_transform_new(p_dest, &basis, &origin);
-};
 
 godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye, godot_transform *cam_transform) {
 	godot_transform ret;
@@ -173,7 +153,7 @@ void OvrMobileSession::commit_for_eye(godot_int godot_eye) {
 
 		ovrSubmitFrameDescription2 frameDesc = {};
 		frameDesc.Flags = 0;
-		frameDesc.SwapInterval = kSwapInterval;
+		frameDesc.SwapInterval = swap_interval;
 		frameDesc.FrameIndex = frame_index;
 		frameDesc.DisplayTime = predicted_display_time;
 		frameDesc.LayerCount = 1;
@@ -220,14 +200,8 @@ void OvrMobileSession::fill_projection_for_eye(godot_real *projection, godot_int
 }
 
 void OvrMobileSession::process() {
-	if (should_exit_vr_mode()) {
-		exit_vr_mode();
-		return;
-	}
-
-	if (should_enter_vr_mode() && !enter_vr_mode()) {
-		// We're not able to enter vr mode, so let's return early.
-		return;
+	if (!in_vr_mode()) {
+	    return;
 	}
 
 	// If we get here, then we're successfully in vr mode.
@@ -266,16 +240,8 @@ bool OvrMobileSession::enter_vr_mode() {
 
 		ALOGV("Entered Oculus Mobile VR mode.");
 
-		vrapi_SetClockLevels(ovr, cpu_level, gpu_level);
-		ALOGV("		vrapi_SetClockLevels( %d, %d )", cpu_level, gpu_level);
-
 		vrapi_SetPerfThread(ovr, VRAPI_PERF_THREAD_TYPE_RENDERER, gettid());
 		ALOGV("		vrapi_SetPerfThread( RENDERER, %d )", gettid());
-
-		// From the doc: If VRAPI_EXTRA_LATENCY_MODE_ON specified, adds an extra frame of latency
-		// for full GPU utilization.
-		// It seems that nearly all apps on the Oculus Quest use this - except Youtube.
-		vrapi_SetExtraLatencyMode(ovr, ovrExtraLatencyMode::VRAPI_EXTRA_LATENCY_MODE_ON);
 
 		// Set the tracking transform to use, by default this is eye level.
 		vrapi_SetTrackingSpace(ovr, ovrTrackingSpace::VRAPI_TRACKING_SPACE_LOCAL_FLOOR);
@@ -293,10 +259,8 @@ void OvrMobileSession::on_pause() {
 }
 
 void OvrMobileSession::on_resume() {
-	// Attempt to enter vr mode if we can.
-	if (should_enter_vr_mode()) {
-		enter_vr_mode();
-	}
+	// Attempt to enter vr mode.
+    ALOG_ASSERT(initialized && enter_vr_mode(), "Unable to resume VR mode! Aborting..");
 }
 
 void OvrMobileSession::exit_vr_mode() {
@@ -328,52 +292,5 @@ void OvrMobileSession::uninitialize() {
 	vrapi_Shutdown();
 	initialized = false;
 }
-
-/*
-void OvrMobileSession::apply_tracking() {
-    if (!is_initialized()) {
-        return;
-    }
-
-    const double predictedDisplayTime = vrapi_GetPredictedDisplayTime(ovr, frame_index);
-
-    head_tracker = vrapi_GetPredictedTracking2(ovr, predictedDisplayTime);
-}
-
-
-godot_vector3 getLocalPosition(void *p_data) {
-    auto *arvr_data = (arvr_data_struct *) p_data;
-
-    godot_vector3 pos;
-    if (!arvr_data->ovr_is_initialized) {
-        api->godot_vector3_new(&pos, 0.0, 0.0, 0.0);
-    } else {
-        api->godot_vector3_new(&pos, arvr_data->headTracker.HeadPose.Pose.Position.x,
-                               arvr_data->headTracker.HeadPose.Pose.Position.y,
-                               arvr_data->headTracker.HeadPose.Pose.Position.z);
-    }
-    return pos;
-}
-
-
-godot_transform getLocalRotation(void *p_data, float p_world_scale) {
-  arvr_data_struct *arvr_data = (arvr_data_struct *)p_data;
-
-  godot_transform rotMat;
-  if (!arvr_data->ovr_is_initialized) {
-    api->godot_transform_new_identity(&rotMat);
-  } else {
-    auto rot = arvr_data->headTracker.HeadPose.Pose.Orientation;
-    godot_quat q;
-    godot_basis basis;
-    godot_vector3 origin;
-    api->godot_quat_new(&q, rot.x, rot.y, rot.z, rot.w);
-    api->godot_basis_new_with_euler_quat(&basis, &q);
-    api->godot_vector3_operator_multiply_scalar(getLocalPosition(arvr_data), p_world_scale);
-    api->godot_transform_new(&rotMat, &basis, &origin);
-  }
-  return rotMat;
-}
-*/
 
 } // namespace ovrmobile

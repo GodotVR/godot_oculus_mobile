@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
-// GDNative module that exposes part of the oculus api.
+// GDNative module that exposes part of the oculus runtime api.
 // Each exported class implements one section of the VrApi.h.
 // This implements the <Display refresh rate> section.
 

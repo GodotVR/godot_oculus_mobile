@@ -10,6 +10,8 @@
 
 #include "config/ovr_display_refresh_rate.h"
 #include "config/ovr_guardian_system.h"
+#include "config/ovr_init_config.h"
+#include "config/ovr_performance.h"
 #include "config/ovr_tracking_transform.h"
 
 void GDN_EXPORT godot_ovrmobile_gdnative_singleton() {
@@ -25,5 +27,7 @@ void GDN_EXPORT godot_ovrmobile_nativescript_init(void *p_handle) {
 
 	register_gdnative_display_refresh_rate(p_handle);
 	register_gdnative_guardian_system(p_handle);
+	register_gdnative_init_config(p_handle);
+	register_gdnative_performance(p_handle);
 	register_gdnative_tracking_transform(p_handle);
 }

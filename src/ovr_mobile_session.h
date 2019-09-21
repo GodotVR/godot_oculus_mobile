@@ -30,11 +30,19 @@ public:
 		return width;
 	}
 
+	void set_render_target_size_multiplier(double multiplier) {
+		this->render_target_size_multiplier = multiplier;
+	}
+
+	void set_swap_interval(unsigned int swap_interval) {
+	    this->swap_interval = swap_interval;
+	}
+
 	int get_texture_for_eye(godot_int godot_eye);
 
 	godot_transform get_transform_for_eye(godot_int godot_eye, godot_transform *cam_transform);
 
-	// Initializes the Oculus VrApi. This is required to be able to enter VR mode and access
+	// Initializes the Oculus VrApi and enters VR mode. This is required to be able to access
 	// the api functionality.
 	bool initialize();
 
@@ -67,15 +75,7 @@ private:
 	OvrMobileSession();
 	~OvrMobileSession();
 
-	bool should_enter_vr_mode() {
-		return initialized && ovr == nullptr && android_api->godot_android_is_activity_resumed();
-	}
-
 	bool enter_vr_mode();
-
-	bool should_exit_vr_mode() {
-		return ovr != nullptr && (!initialized || !android_api->godot_android_is_activity_resumed());
-	}
 
 	void exit_vr_mode();
 
@@ -88,8 +88,8 @@ private:
 	bool initialized = false;
 	int width;
 	int height;
-	int cpu_level;
-	int gpu_level;
+	double render_target_size_multiplier;
+	unsigned int swap_interval;
 	uint64_t frame_index = 1;
 	double predicted_display_time = 0;
 

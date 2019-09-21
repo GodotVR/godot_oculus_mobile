@@ -1,6 +1,8 @@
 #include "config_common.h"
 #include "ovr_tracking_transform.h"
 
+static const char *kClassName = "OvrTrackingTransform";
+
 void register_gdnative_tracking_transform(void *p_handle) {
     { // register the constructor and destructor of the OvrTrackingTransform class for use in GDScript
 		godot_instance_create_func create = { NULL, NULL, NULL };
@@ -9,7 +11,7 @@ void register_gdnative_tracking_transform(void *p_handle) {
 		godot_instance_destroy_func destroy = { NULL, NULL, NULL };
 		destroy.destroy_func = &ovr_tracking_transform_destructor;
 
-		nativescript_api->godot_nativescript_register_class(p_handle, "OvrTrackingTransform", "Reference", create, destroy);
+		nativescript_api->godot_nativescript_register_class(p_handle, kClassName, "Reference", create, destroy);
 	}
 
 	{ // register all the functions that we want to expose via the OvrTrackingTransform class in GDScript
@@ -17,10 +19,10 @@ void register_gdnative_tracking_transform(void *p_handle) {
 		godot_method_attributes attributes = { GODOT_METHOD_RPC_MODE_DISABLED };
 
 		method.method = &get_tracking_space;
-		nativescript_api->godot_nativescript_register_method(p_handle, "OvrTrackingTransform", "get_tracking_space", attributes, method);
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_tracking_space", attributes, method);
 
 		method.method = &set_tracking_space;
-		nativescript_api->godot_nativescript_register_method(p_handle, "OvrTrackingTransform", "set_tracking_space", attributes, method);
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "set_tracking_space", attributes, method);
 	}
 }
 
