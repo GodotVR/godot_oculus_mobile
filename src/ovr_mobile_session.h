@@ -66,6 +66,8 @@ public:
 
 	ovrMobile* get_ovr_mobile_context() {return ovr;};
 
+	ovrTracking2 get_head_tracker() {return head_tracker;};
+
 	const ovrJava *get_ovr_java() {
 		return &java;
 	}
