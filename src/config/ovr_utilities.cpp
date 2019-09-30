@@ -20,6 +20,9 @@ void register_gdnative_utilities(void *p_handle) {
 
 		method.method = &get_ipd;
 		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_ipd", attributes, method);
+
+		method.method = &set_default_layer_color_scale;
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "set_default_layer_color_scale", attributes, method);
 	}
 }
 
@@ -58,4 +61,13 @@ GDCALLINGCONV godot_variant get_ipd(godot_object *p_instance, void *p_method_dat
         float ipd = sqrtf(dx*dx + dy*dy + dz*dz);
 		api->godot_variant_new_real(&ret, ipd);
 	)	
+}
+
+GDCALLINGCONV godot_variant set_default_layer_color_scale(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+		godot_color color = api->godot_variant_as_color(p_args[0]);
+		godot_real* pcolor = (godot_real*)&color;
+		ovr_mobile_session->set_default_layer_color_scale(pcolor[0], pcolor[1], pcolor[2], pcolor[3]);
+		api->godot_variant_new_bool(&ret, true);
+	)
 }

@@ -38,6 +38,8 @@ public:
 	    this->swap_interval = swap_interval;
 	}
 
+	void set_default_layer_color_scale(float r, float g, float b, float a);
+
 	int get_texture_for_eye(godot_int godot_eye);
 
 	godot_transform get_transform_for_eye(godot_int godot_eye, godot_transform *cam_transform);
@@ -72,6 +74,7 @@ public:
 		return &java;
 	}
 
+
 private:
 
 	OvrMobileSession();
@@ -94,6 +97,8 @@ private:
 	unsigned int swap_interval;
 	uint64_t frame_index = 1;
 	double predicted_display_time = 0;
+
+	ovrVector4f default_layer_color_scale;
 
 	ovrJava java;
 	ovrLayerProjection2 layer;
