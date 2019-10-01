@@ -97,3 +97,16 @@ func _process(delta):
 	print("GetBoundaryOrientedBoundingBox: ", ovrGuardianSystem.get_boundary_oriented_bounding_box())
 ```
 
+There is also a OvrUtility GDNative script class that exposes some utility functions to configure the 
+compositor and query information:
+```
+onready var ovrUtilities = preload("res://addons/godot_ovrmobile/OvrUtilities.gdns").new()
+
+func do_something():
+  # Query the current IPD; return value is in m
+  print("Current IPD is: %.1fmm" % (ovrUtilities.get_ipd() * 1000.0))
+
+  # set a color multiply (also useful for fade to black)
+  ovrUtilities.set_default_layer_color_scale(Color(1.0, 0.3, 0.4, 1.0));
+```
+

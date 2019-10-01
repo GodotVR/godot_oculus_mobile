@@ -39,6 +39,11 @@ OvrMobileSession::OvrMobileSession() :
 	java.Env = env;
 	env->GetJavaVM(&java.Vm);
 
+	default_layer_color_scale.x = 1.0f;
+	default_layer_color_scale.y = 1.0f;
+	default_layer_color_scale.z = 1.0f;
+	default_layer_color_scale.w = 1.0f;
+
 	ovr_mobile_controller = new OvrMobileController();
 }
 
@@ -122,6 +127,13 @@ godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye, god
 	return ret;
 }
 
+void OvrMobileSession::set_default_layer_color_scale(float r, float g, float b, float a) {
+	default_layer_color_scale.x = r;
+	default_layer_color_scale.y = g;
+	default_layer_color_scale.z = b;
+	default_layer_color_scale.w = a;
+}
+
 void OvrMobileSession::commit_for_eye(godot_int godot_eye) {
 	if (!in_vr_mode()) {
 		return;
@@ -136,6 +148,8 @@ void OvrMobileSession::commit_for_eye(godot_int godot_eye) {
 		layer = vrapi_DefaultLayerProjection2();
 		layer.HeadPose = head_tracker.HeadPose;
 		layer.Header.Flags |= VRAPI_FRAME_LAYER_FLAG_CHROMATIC_ABERRATION_CORRECTION;
+
+		layer.Header.ColorScale = default_layer_color_scale;
 	}
 
 	// Set the layer's texture properties.
