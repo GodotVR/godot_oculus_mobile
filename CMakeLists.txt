@@ -63,14 +63,14 @@ endif (NOT (EXISTS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}))
 ## The variables below should be updated based on the setup instructions
 ## in the project README.
 
-# Sets the path to the VrApi root directory. Update this variable if the api is in another location.
-set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/ovr_sdk_mobile/1.24.0/VrApi")
+# Sets the path to the VrApi containing directory. Update this variable if the api is in another location.
+set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/ovr_sdk_mobile")
 
 # Location to the Godot headers directory. The default location is "${CMAKE_SOURCE_DIR}/godot_headers"
 set(GODOT_HEADERS_DIR "${CMAKE_SOURCE_DIR}/godot_headers")
 ###############################################################################
 
-set(OVR_HEADERS_DIR "${OVR_ROOT_DIR}/Include" CACHE STRING "")
+set(OVR_HEADERS_DIR "${OVR_ROOT_DIR}/VrApi/Include" CACHE STRING "")
 
 set(GODOT_COMPILE_FLAGS)
 set(GODOT_LINKER_FLAGS)
@@ -100,7 +100,7 @@ else ()
 endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
 # OVR library
-set(VRAPI_LIB_PATH "${OVR_ROOT_DIR}/Libs/Android/${ANDROID_ABI}/${VRAPI_LIB_BUILD_TYPE}/libvrapi.so")
+set(VRAPI_LIB_PATH "${OVR_ROOT_DIR}/VrApi/Libs/Android/${ANDROID_ABI}/${VRAPI_LIB_BUILD_TYPE}/libvrapi.so")
 add_library(vrapi SHARED IMPORTED GLOBAL)
 set_target_properties(vrapi PROPERTIES IMPORTED_LOCATION ${VRAPI_LIB_PATH})
 
