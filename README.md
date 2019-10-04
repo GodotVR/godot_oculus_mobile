@@ -1,8 +1,8 @@
 # Oculus Mobile Godot plugin
 
 **Note:**<br> 
-This plugin is in **alpha** state.<br>
-Testing and resolution of remaining issues need to be complete before it's deemed stable and ready for use.<br>
+This plugin is in **beta**.<br>
+Testing needs to be complete before it's deemed stable and ready for use.<br>
 If you'd like to contribute to the testing process, follow the instructions below to setup and use the plugin, 
 and report any issues you encounter. Thanks!<br>
 
@@ -30,7 +30,7 @@ for the **Android SDK & NDK**.
 
 #### Android SDK & NDK
 - Download and setup the [Android SDK](https://developer.android.com/studio/#command-tools).
-  - If using Android Studio, download version **3.4** or higher.
+  - If using Android Studio, download version **3.5** or higher.
   - If using the [command line tools](https://developer.android.com/studio/#command-tools), 
   download revision **26.1.1** or higher. 
   - To ensure you have the latest version, check [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.  
@@ -50,11 +50,10 @@ build file if you'd like to provide a different source for the Godot headers.<br
 
 #### Oculus Mobile SDK
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
-(version **1.24.0** or higher) of the Oculus Mobile 
-SDK into a sub-directory of the `ovr_sdk_mobile` directory. It's recommended to use the SDK version as the sub-directory 
-name (e.g: `ovr_sdk_mobile/1.24.0/` for version **1.24.0** of the Oculus Mobile SDK).
-- Update the `OVR_ROOT_DIR` cmake variable in the the `CMakeLists.txt` build file to point to the Oculus Mobile SDK 
-root directory.
+(version **1.25.0** or higher) of the Oculus Mobile SDK into the 
+`ovr_sdk_mobile` directory (create the directory if it doesn't exist).
+- If needed, update the `OVR_ROOT_DIR` cmake variable in the the `CMakeLists.txt` build file to point to the Oculus Mobile SDK 
+containing folder.
 
 Build
 ---------
