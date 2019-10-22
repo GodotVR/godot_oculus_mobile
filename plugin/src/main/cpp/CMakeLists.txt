@@ -100,7 +100,7 @@ file(GLOB_RECURSE HEADERS ./*.h**)
 
 add_library(${PROJECT_NAME}
         SHARED
-        ${SOURCES} ${HEADERS})
+        ${SOURCES} ${HEADERS} VRAPI_SO_LIB)
 
 target_include_directories(${PROJECT_NAME}
         PRIVATE
@@ -126,7 +126,9 @@ set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY COMPILE_FLAGS ${GODOT
 set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS ${GODOT_LINKER_FLAGS})
 
 # Copy the VrApi shared library to the output directory.
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${VRAPI_LIB_PATH} $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_custom_command(OUTPUT VRAPI_SO_LIB
+        COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${VRAPI_LIB_PATH} $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 
 set(BITS 32)
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
