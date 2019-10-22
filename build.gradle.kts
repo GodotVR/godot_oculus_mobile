@@ -22,6 +22,43 @@ allprojects {
     }
 }
 
-tasks.register("clean", Delete::class) {
+val outputDir = "build/outputs"
+
+tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
+
+    // Delete the contents of the outputs directory.
+    delete(outputDir)
+}
+
+/**
+ * Generate the native shared libraries the plugin depends on.
+ */
+tasks.register<Copy>("generateSharedLibs") {
+    dependsOn(":plugin:externalNativeBuildDebug")
+    dependsOn(":plugin:externalNativeBuildRelease")
+
+    // Specify the base directory. All following 'into' targets will be relative
+    // to this directory.
+    into("$outputDir/sharedLibs")
+
+    // Copy the generated debug shared libs into the outputs directory
+    from("plugin/build/intermediates/cmake/debug/obj") {
+        into("debug")
+    }
+
+    // Copy the generated release shared libs into the outputs directory
+    from("plugin/build/intermediates/cmake/release/obj") {
+        into("release")
+    }
+}
+
+/**
+ * Generate the plugin binaries.
+ */
+tasks.register<Copy>("generatePluginBinary") {
+    dependsOn(":plugin:assembleDebug")
+    dependsOn(":plugin:assembleRelease")
+    from("plugin/build/outputs/aar")
+    into("$outputDir/pluginBin")
 }
