@@ -5,9 +5,9 @@ if (NOT ANDROID_ABI)
     set(ANDROID_ABI "arm64-v8a")
 endif (NOT ANDROID_ABI)
 
-# Default android platform is android-23
+# Default android platform is android-24
 if (NOT ANDROID_PLATFORM)
-    set(ANDROID_PLATFORM "android-23")
+    set(ANDROID_PLATFORM "android-24")
 endif (NOT ANDROID_PLATFORM)
 
 # Default build type is Debug
@@ -48,26 +48,16 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(godot_ovrmobile)
 
-# Set the default output directory.
-if (NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/demo/addons/${CMAKE_PROJECT_NAME}/libs/${ANDROID_ABI}")
-endif (NOT CMAKE_LIBRARY_OUTPUT_DIRECTORY)
-
-# Create the default output directory if necessary.
-if (NOT (EXISTS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}))
-    file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-endif (NOT (EXISTS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}))
-
 ###############################################################################
 ## PROJECT SETUP
 ## The variables below should be updated based on the setup instructions
 ## in the project README.
 
 # Sets the path to the VrApi containing directory. Update this variable if the api is in another location.
-set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/ovr_sdk_mobile")
+set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/deps/ovr_sdk_mobile")
 
-# Location to the Godot headers directory. The default location is "${CMAKE_SOURCE_DIR}/godot_headers"
-set(GODOT_HEADERS_DIR "${CMAKE_SOURCE_DIR}/godot_headers")
+# Location to the Godot headers directory. The default location is "${CMAKE_SOURCE_DIR}/deps/godot_headers"
+set(GODOT_HEADERS_DIR "${CMAKE_SOURCE_DIR}/deps/godot_headers")
 ###############################################################################
 
 set(OVR_HEADERS_DIR "${OVR_ROOT_DIR}/VrApi/Include" CACHE STRING "")
@@ -105,8 +95,8 @@ add_library(vrapi SHARED IMPORTED GLOBAL)
 set_target_properties(vrapi PROPERTIES IMPORTED_LOCATION ${VRAPI_LIB_PATH})
 
 # Get Sources
-file(GLOB_RECURSE SOURCES src/*.c**)
-file(GLOB_RECURSE HEADERS src/*.h**)
+file(GLOB_RECURSE SOURCES ./*.c**)
+file(GLOB_RECURSE HEADERS ./*.h**)
 
 add_library(${PROJECT_NAME}
         SHARED
@@ -114,7 +104,7 @@ add_library(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
         PRIVATE
-        src
+        .
         )
 
 # Put godot headers as SYSTEM PUBLIC to exclude warnings from irrelevant headers
