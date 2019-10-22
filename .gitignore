@@ -19,3 +19,16 @@ oculussig_*
 cmake-build-debug
 demo/addons/godot_ovrmobile/libs/
 demo/export_presets.cfg
+
+# Gradle files
+.cxx
+.externalNativeBuild
+*.iml
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Godot mono configuration
+.mono

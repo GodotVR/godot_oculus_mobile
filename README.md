@@ -23,68 +23,71 @@ Setup
 -----
 After cloning this repository make sure to initialise the submodules with `git submodule init`.
 When you've pulled a newer version make sure to run `git submodule update`.<br>
-The project uses `cmake` as its primary build system, which you can configure by following the setup instructions
+The project uses `gradle` as its primary build system, which you can configure by following the setup instructions
 for the **Android SDK & NDK**.
 
 #### Android SDK & NDK
 - Download and setup the [Android SDK](https://developer.android.com/studio/#command-tools).
-  - If using Android Studio, download version **3.5** or higher.
+  - If using Android Studio, download version **3.6.1** or higher.
   - If using the [command line tools](https://developer.android.com/studio/#command-tools), 
   download revision **26.1.1** or higher. 
-  - To ensure you have the latest version, check [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.  
-- Add the Android SDK **cmake** binaries directory to the environment path. The directory can be found under 
-`<android_sdk_location>/cmake/<cmake_version>/bin`.
-  - Ensure that `cmake_version` is greater or equal to version `3.6.0`.   
-- Download and setup the [latest version](https://developer.android.com/ndk/downloads) 
-(version **r20** or higher) of the **Android NDK**.
-- Set the environment variable `ANDROID_NDK_HOME` to the Android NDK location. 
+  - To ensure you have the latest version, check [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.
+  - Set the environment variable `ANDROID_HOME` to the Android SDK location.
+- Follow the instructions [here](https://developer.android.com/studio/projects/install-ndk#specific-version) and install version **21.0.6113669** of the NDK.
 
 #### Godot headers
 By default the project is configured to checkout the [godot_headers](https://github.com/GodotNativeTools/godot_headers) 
-repo as a submodule under the `godot_headers` directory when you run 
+repo as a submodule under the `plugin/libs/godot_headers` directory when you run 
 the `git submodule init` and `git submodule update` commands.<br>
 You can edit the `GODOT_HEADERS_DIR` cmake variable in the `CMakeLists.txt` 
 build file if you'd like to provide a different source for the Godot headers.<br>
 
 #### Oculus Mobile SDK
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
-(**Oculus Mobile SDK 12.0** (1.29.0) or higher) of the Oculus Mobile SDK into the 
-`ovr_sdk_mobile` directory (create the directory if it doesn't exist).
-- If needed, update the `OVR_ROOT_DIR` cmake variable in the the `CMakeLists.txt` build file to point to the Oculus Mobile SDK 
+(**Oculus Mobile SDK 14.0** (1.31.0) or higher) of the Oculus Mobile SDK and extract it into the
+`plugin/libs/ovr_sdk_mobile` directory (create the directory if it doesn't exist).
+- If needed, update the `OVR_ROOT_DIR` cmake variable in the the `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK 
 containing folder.
 
 Build
----------
-**Note**: Ensure you're using the **Android SDK**'s version of `cmake`.<br><br>
+-----
+#### Generate plugin AAR files
 In the project root directory:
- - Navigate to the `build` directory: `cd build`
- - Run:
-```
-cmake -GNinja ..
-cmake --build .
-```
+ - Run `./gradlew :generatePluginBinary` to generate the plugin AAR files.
+ - Once the build successfully completes, the AAR files can be found in the `build/outputs/pluginBin` directory.
 
-Once the build successfully completes, the plugin and its dependencies shared libraries can be found in the 
-default output location: `demo/addons/godot_ovrmobile/libs/<arch>`
+**Note:** A release version of the plugin AAR file will be made available for each version update in the [release section](https://github.com/GodotVR/godot_oculus_mobile/releases).
+
+##### Generate shared libraries ( Advanced - For maintainers only )
+In the project root directory:
+ - Run `./gradlew :generateSharedLibs` to generate the plugin shared libraries.
+ - Once the build successfully completes, the shared libraries can be found in the `build/outputs/sharedLibs` directory.
 
 Deployment
-------------
-When exporting the project apk in Godot, the following Android export 
-`Xr Features` options should be set:
-- `Xr Mode` must be set to `Oculus Mobile VR`.
-- `Degrees of Freedom`:
-  - If deploying only on Oculus Quest, this must be set to `6DOF`
-  - If deploying on Oculus Go, or on Oculus Go and Oculus Quest, 
-  this must be set to `3DOF and 6DOF`
-- `Hand Tracking`: This is only supported on the **Oculus Quest**
-  - Select `None` if your app doesn't need hand tracking
-  - Select `Optional` if your app can use hand tracking, but doesn't require it (i.e: also works with controllers).
-  - Select `Required` if your app only uses hand tracking.
+----------
+**Note:**  
+Version `2.0.0` (and higher) of the plugin requires the use of [Android custom build templates](https://docs.godotengine.org/en/3.2/getting_started/workflow/export/android_custom_build.html) ([setup instructions](https://docs.godotengine.org/en/3.2/getting_started/workflow/export/android_custom_build.html#set-up-the-custom-build-environment)).  
+Deployment instructions for version `1.0.0` of the plugin can be found [here](https://github.com/GodotVR/godot_oculus_mobile/tree/1.0.0#deployment).
+
+In the editor `FileSystem` pane, make sure the plugin AAR file is added to the `res://android/plugins` directory.  
+When exporting the project apk in Godot, the following Android export options should be set:
+- `Xr Features`
+  - `Xr Mode` must be set to `Oculus Mobile VR`.
+  - `Degrees of Freedom`:
+    - If deploying only on Oculus Quest, this must be set to `6DOF`
+    - If deploying on Oculus Go, or on Oculus Go and Oculus Quest, 
+    this must be set to `3DOF and 6DOF`
+  - `Hand Tracking`: This is only supported on the **Oculus Quest**
+    - Select `None` if your app doesn't need hand tracking
+    - Select `Optional` if your app can use hand tracking, but doesn't require it (i.e: also works with controllers).
+    - Select `Required` if your app only uses hand tracking.
+- `Custom Template`
+  - `Use Custom Build` must be enabled.
+  - `Plugins` list must contain `OVRMobile`. This enables the `OVRMobile` plugin for the project.
 
 GDScript Oculus VrApi access
 ------------
-This plugin exposes parts of the Oculus VrApi via GDNative script classes. The actual exported functions
-can be found in [src/config/](src/config/).
+This plugin exposes parts of the Oculus VrApi via GDNative script classes.
 
 Here is an example of how to use these classes inside GDScript:
 ```
