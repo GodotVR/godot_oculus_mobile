@@ -97,7 +97,7 @@ func _process(delta):
 ```
 
 There is also a OvrUtility GDNative script class that exposes some utility functions to configure the 
-compositor and query information:
+compositor or query information:
 ```
 onready var ovrUtilities = preload("res://addons/godot_ovrmobile/OvrUtilities.gdns").new()
 
@@ -109,3 +109,32 @@ func do_something():
   ovrUtilities.set_default_layer_color_scale(Color(1.0, 0.3, 0.4, 1.0));
 ```
 
+In addition to the official API above there is the experimental `OvrVrApiProxy.gdns`
+class that exposes partially the low level property setters/getters from the VrApi.h.
+This API is to be considered temporary and might be removed in future releases of the plugin. If possible it is recommended to use the offical API described above.
+The functions inside the API rely on enum values so there is an convenience class `OvrVrApiTypes.gd` that contains the enum values.
+In the example below you can see a sample usage of the API. For details of the different enum values and query options
+please check the VrApi.h file from the oculus mobile sdk.
+```
+onready var ovr_vr_api_proxy = preload("res://addons/godot_ovrmobile/OvrVrApiProxy.gdns").new();
+onready var ovr_types = preload("res://addons/godot_ovrmobile/OvrVrApiTypes.gd").new();
+
+func test_property_access():
+	print("Testing vrapi access:")
+	print("System property:")
+	print("  vrapi_get_system_property_int(VRAPI_SYS_PROP_DEVICE_TYPE) = ", ovr_vr_api_proxy.vrapi_get_system_property_int(ovr_types.OvrSystemProperty.VRAPI_SYS_PROP_DEVICE_TYPE));
+	print("  vrapi_get_system_property_int(VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH) = ", ovr_vr_api_proxy.vrapi_get_system_property_int(ovr_types.OvrSystemProperty.VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH));
+	
+	print("Property:")
+	print("  vrapi_get_property_int(VRAPI_DEVICE_EMULATION_MODE) = ", ovr_vr_api_proxy.vrapi_get_property_int(ovr_types.OvrProperty.VRAPI_DEVICE_EMULATION_MODE));
+	print("  vrapi_get_property_int(VRAPI_ACTIVE_INPUT_DEVICE_ID) = ", ovr_vr_api_proxy.vrapi_get_property_int(ovr_types.OvrProperty.VRAPI_ACTIVE_INPUT_DEVICE_ID));
+	print("  vrapi_get_property_int(VRAPI_FOVEATION_LEVEL) = ", ovr_vr_api_proxy.vrapi_get_property_int(ovr_types.OvrProperty.VRAPI_FOVEATION_LEVEL));
+	ovr_vr_api_proxy.vrapi_set_property_int(ovr_types.OvrProperty.VRAPI_FOVEATION_LEVEL, 3);
+	print("  vrapi_get_property_int(VRAPI_FOVEATION_LEVEL) = ", ovr_vr_api_proxy.vrapi_get_property_int(ovr_types.OvrProperty.VRAPI_FOVEATION_LEVEL));
+	
+	print("System Status:")
+	print("  vrapi_get_system_status_int(VRAPI_SYS_STATUS_MOUNTED) = ", ovr_vr_api_proxy.vrapi_get_system_status_int(ovr_types.OvrSystemStatus.VRAPI_SYS_STATUS_MOUNTED));
+	print("  vrapi_get_system_status_int(VRAPI_SYS_STATUS_RENDER_LATENCY_MILLISECONDS) = ", ovr_vr_api_proxy.vrapi_get_system_status_int(ovr_types.OvrSystemStatus.VRAPI_SYS_STATUS_RENDER_LATENCY_MILLISECONDS));
+	print("  vrapi_get_system_status_int(VRAPI_SYS_STATUS_FRONT_BUFFER_SRGB) = ", ovr_vr_api_proxy.vrapi_get_system_status_int(ovr_types.OvrSystemStatus.VRAPI_SYS_STATUS_FRONT_BUFFER_SRGB));
+	
+```
