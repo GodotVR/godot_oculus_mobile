@@ -54,10 +54,10 @@ project(godot_ovrmobile)
 ## in the project README.
 
 # Sets the path to the VrApi containing directory. Update this variable if the api is in another location.
-set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/deps/ovr_sdk_mobile")
+set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/libs/ovr_sdk_mobile")
 
 # Location to the Godot headers directory. The default location is "${CMAKE_SOURCE_DIR}/deps/godot_headers"
-set(GODOT_HEADERS_DIR "${CMAKE_SOURCE_DIR}/deps/godot_headers")
+set(GODOT_HEADERS_DIR "${CMAKE_SOURCE_DIR}/libs/godot_headers")
 ###############################################################################
 
 set(OVR_HEADERS_DIR "${OVR_ROOT_DIR}/VrApi/Include" CACHE STRING "")
@@ -95,8 +95,8 @@ add_library(vrapi SHARED IMPORTED GLOBAL)
 set_target_properties(vrapi PROPERTIES IMPORTED_LOCATION ${VRAPI_LIB_PATH})
 
 # Get Sources
-file(GLOB_RECURSE SOURCES ./*.c**)
-file(GLOB_RECURSE HEADERS ./*.h**)
+file(GLOB_RECURSE SOURCES src/main/cpp/*.c**)
+file(GLOB_RECURSE HEADERS src/main/cpp/*.h**)
 
 add_library(${PROJECT_NAME}
         SHARED
@@ -104,7 +104,7 @@ add_library(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
         PRIVATE
-        .
+        src/main/cpp
         )
 
 # Put godot headers as SYSTEM PUBLIC to exclude warnings from irrelevant headers
