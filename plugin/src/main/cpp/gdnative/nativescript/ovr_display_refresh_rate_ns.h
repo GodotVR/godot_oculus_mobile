@@ -3,10 +3,10 @@
 // Each exported class implements one section of the VrApi.h.
 // This implements the <Display refresh rate> section.
 
-#ifndef OVR_DISPLAY_REFRESH_RATE_H
-#define OVR_DISPLAY_REFRESH_RATE_H
+#ifndef OVR_DISPLAY_REFRESH_RATE_NS_H
+#define OVR_DISPLAY_REFRESH_RATE_NS_H
 
-#include "../godot_calls.h"
+#include "gdnative/godot_calls.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,4 +29,4 @@ GDCALLINGCONV godot_variant get_supported_display_refresh_rates(godot_object *in
 }
 #endif
 
-#endif // OVR_DISPLAY_REFRESH_RATE_H
+#endif // OVR_DISPLAY_REFRESH_RATE_NS_H

@@ -3,10 +3,10 @@
 // Each exported class implements one section of the VrApi.h.
 // This implements the <Guardian System> section.
 
-#ifndef OVR_GUARDIAN_SYSTEM_H
-#define OVR_GUARDIAN_SYSTEM_H
+#ifndef OVR_GUARDIAN_SYSTEM_NS_H
+#define OVR_GUARDIAN_SYSTEM_NS_H
 
-#include "../godot_calls.h"
+#include "gdnative/godot_calls.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,4 +42,4 @@ GDCALLINGCONV godot_variant get_boundary_visible(godot_object *p_instance, void 
 }
 #endif
 
-#endif /* !GDNATIVE_OVR_GUARDIAN_SYSTEM_H */
+#endif /* !OVR_GUARDIAN_SYSTEM_NS_H */

@@ -1,6 +1,5 @@
-#include "config_common.h"
-#include "ovr_utilities.h"
-#include "ovr_mobile_controller.h"
+#include "nativescript_common.h"
+#include "ovr_utilities_ns.h"
 
 static const char *kClassName = "OvrUtilities";
 

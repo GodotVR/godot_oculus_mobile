@@ -1,5 +1,5 @@
-#include "config_common.h"
-#include "ovr_tracking_transform.h"
+#include "nativescript_common.h"
+#include "ovr_tracking_transform_ns.h"
 
 static const char *kClassName = "OvrTrackingTransform";
 

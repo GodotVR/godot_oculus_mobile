@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // GDNative module that wraps some utility functions that need the VrApi
 
-#ifndef OVR_UTILITIES_H
-#define OVR_UTILITIES_H
+#ifndef OVR_UTILITIES_NS_H
+#define OVR_UTILITIES_NS_H
 
-#include "../godot_calls.h"
+#include "gdnative/godot_calls.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,4 +37,4 @@ GDCALLINGCONV godot_variant get_head_linear_acceleration(godot_object *p_instanc
 }
 #endif
 
-#endif /* !OVR_UTILITIES */
+#endif /* !OVR_UTILITIES_NS_H */

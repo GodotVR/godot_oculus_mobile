@@ -4,10 +4,10 @@
 // This implements the <Tracking Transform> section.
 
 
-#ifndef OVR_TRACKING_TRANSFORM_H
-#define OVR_TRACKING_TRANSFORM_H
+#ifndef OVR_TRACKING_TRANSFORM_NS_H
+#define OVR_TRACKING_TRANSFORM_NS_H
 
-#include "../godot_calls.h"
+#include "gdnative/godot_calls.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,4 +33,4 @@ GDCALLINGCONV godot_variant set_tracking_space(godot_object *p_instance, void *p
 }
 #endif
 
-#endif /* !OVR_TRACKING_TRANSFORM */
+#endif /* !OVR_TRACKING_TRANSFORM_NS_H */
