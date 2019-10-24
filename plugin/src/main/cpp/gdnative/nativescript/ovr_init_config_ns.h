@@ -2,10 +2,10 @@
 // GDNative module to access and setup the init parameters for the plugin.
 // The methods defined in this class must be invoked prior to initializing the Oculus mobile plugin.
 
-#ifndef OVR_INIT_CONFIG_H
-#define OVR_INIT_CONFIG_H
+#ifndef OVR_INIT_CONFIG_NS_H
+#define OVR_INIT_CONFIG_NS_H
 
-#include "../godot_calls.h"
+#include "gdnative/godot_calls.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,4 +25,4 @@ GDCALLINGCONV godot_variant set_render_target_size_multiplier(godot_object *inst
 }
 #endif
 
-#endif // OVR_INIT_CONFIG_H
+#endif // OVR_INIT_CONFIG_NS_H

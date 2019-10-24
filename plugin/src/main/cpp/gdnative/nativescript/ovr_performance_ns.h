@@ -4,10 +4,10 @@
 // This implements the <Performance> section.
 
 
-#ifndef OVR_PERFORMANCE_H
-#define OVR_PERFORMANCE_H
+#ifndef OVR_PERFORMANCE_NS_H
+#define OVR_PERFORMANCE_NS_H
 
-#include "../godot_calls.h"
+#include "gdnative/godot_calls.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,4 +44,4 @@ GDCALLINGCONV godot_variant set_swap_interval(godot_object *p_instance, void *p_
 }
 #endif
 
-#endif // OVR_PERFORMANCE_H
+#endif // OVR_PERFORMANCE_NS_H

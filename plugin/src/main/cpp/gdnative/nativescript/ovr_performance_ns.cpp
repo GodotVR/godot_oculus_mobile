@@ -1,5 +1,5 @@
-#include "ovr_performance.h"
-#include "config_common.h"
+#include "ovr_performance_ns.h"
+#include "nativescript_common.h"
 #include <vector>
 
 static const char *kClassName = "OvrPerformance";

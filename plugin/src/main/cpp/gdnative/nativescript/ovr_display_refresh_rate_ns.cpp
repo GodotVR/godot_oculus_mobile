@@ -1,5 +1,5 @@
-#include "ovr_display_refresh_rate.h"
-#include "config_common.h"
+#include "ovr_display_refresh_rate_ns.h"
+#include "nativescript_common.h"
 #include <vector>
 
 static const char *kClassName = "OvrDisplayRefreshRate";

@@ -1,5 +1,5 @@
-#include "config_common.h"
-#include "ovr_guardian_system.h"
+#include "nativescript_common.h"
+#include "ovr_guardian_system_ns.h"
 
 static const char *kClassName = "OvrGuardianSystem";
 

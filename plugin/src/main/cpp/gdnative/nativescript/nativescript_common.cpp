@@ -1,4 +1,4 @@
-#include "config_common.h"
+#include "nativescript_common.h"
 
 void *init_ovr_config_data_struct() {
     ovr_config_data_struct *ovr_config_data;

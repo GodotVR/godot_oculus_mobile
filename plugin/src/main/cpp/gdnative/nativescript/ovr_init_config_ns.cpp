@@ -1,5 +1,5 @@
-#include "ovr_init_config.h"
-#include "config_common.h"
+#include "ovr_init_config_ns.h"
+#include "nativescript_common.h"
 
 static const char *kClassName = "OvrInitConfig";
 
