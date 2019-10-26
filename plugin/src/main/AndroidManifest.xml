@@ -5,8 +5,8 @@
   <application>
 
     <meta-data
-            android:name="org.godotengine.plugin.v1.OculusMobile"
-            android:value="org.godotengine.plugin.vr.oculus.mobile.OculusMobileGodotPlugin" />
+            android:name="org.godotengine.plugin.v1.OVRMobile"
+            android:value="org.godotengine.plugin.vr.oculus.mobile.OvrMobileGodotPlugin" />
   </application>
 
 </manifest>
