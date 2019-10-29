@@ -15,6 +15,9 @@
 #include "config/ovr_tracking_transform.h"
 #include "config/ovr_utilities.h"
 
+// experimental low-level VrApi access
+#include "config/ovr_vr_api_proxy.h"
+
 void GDN_EXPORT godot_ovrmobile_gdnative_singleton() {
 	if (arvr_api != NULL) {
 		arvr_api->godot_arvr_register_interface(&interface_struct);
@@ -32,4 +35,5 @@ void GDN_EXPORT godot_ovrmobile_nativescript_init(void *p_handle) {
 	register_gdnative_performance(p_handle);
 	register_gdnative_tracking_transform(p_handle);
 	register_gdnative_utilities(p_handle);
+	register_gdnative_vr_api_proxy(p_handle);
 }

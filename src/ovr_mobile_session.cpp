@@ -81,8 +81,9 @@ bool OvrMobileSession::initialize() {
 	height = static_cast<int>(render_target_size_multiplier *
 							  vrapi_GetSystemPropertyInt(&java,
 														 VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_HEIGHT));
-	ALOGV(" render target size multiplier: %f", render_target_size_multiplier);
-	ALOGV(" vrapi render target size: w %i / h %i", width, height);
+	ALOGV(" vrapi version string: '%s'", vrapi_GetVersionString());
+	ALOGV("   render target size multiplier: %f", render_target_size_multiplier);
+	ALOGV("   vrapi render target size: w %i / h %i", width, height);
 
 	// Create Frame buffers for each eye
 	for (auto &eye_frame_buffer : frame_buffers) {
