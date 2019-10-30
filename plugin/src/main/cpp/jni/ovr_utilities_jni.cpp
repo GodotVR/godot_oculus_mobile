@@ -13,6 +13,22 @@
 #undef JNI_CLASS_NAME
 #define JNI_CLASS_NAME OvrUtilities
 
+namespace {
+    inline jfloatArray from_ovrVector3f(JNIEnv *env, ovrVector3f vector) {
+        jfloatArray result = env->NewFloatArray(3);
+        if (result) {
+            float vector_data[3];
+            vector_data[0] = vector.x;
+            vector_data[1] = vector.y;
+            vector_data[2] = vector.z;
+
+            env->SetFloatArrayRegion(result, 0, 3, vector_data);
+        }
+
+        return result;
+    }
+}  // namespace
+
 extern "C" {
 
 JNIEXPORT jfloat JNICALL JNI_METHOD(getIpd)(JNIEnv *env, jclass clazz) {
@@ -24,5 +40,57 @@ JNI_METHOD(setDefaultLayerColorScale)(JNIEnv *env, jclass clazz, jfloat red, jfl
                                       jfloat blue, jfloat alpha) {
     return static_cast<jboolean>(ovrmobile::set_default_layer_color_scale(get_session(), red,
                                                                           green, blue, alpha));
+}
+
+JNIEXPORT jfloatArray JNICALL
+JNI_METHOD(getControllerAngularVelocity)(JNIEnv *env, jclass clazz, jint controller_id) {
+    ovrVector3f angular_velocity = ovrmobile::get_controller_angular_velocity(get_session(),
+                                                                              controller_id);
+    return from_ovrVector3f(env, angular_velocity);
+}
+
+JNIEXPORT jfloatArray JNICALL
+JNI_METHOD(getControllerLinearVelocity)(JNIEnv *env, jclass clazz, jint controller_id) {
+    ovrVector3f linear_velocity = ovrmobile::get_controller_linear_velocity(get_session(),
+                                                                            controller_id);
+    return from_ovrVector3f(env, linear_velocity);
+}
+
+JNIEXPORT jfloatArray JNICALL
+JNI_METHOD(getControllerAngularAcceleration)(JNIEnv *env, jclass clazz, jint controller_id) {
+    ovrVector3f angular_acceleration = ovrmobile::get_controller_angular_acceleration(get_session(),
+                                                                                      controller_id);
+    return from_ovrVector3f(env, angular_acceleration);
+}
+
+JNIEXPORT jfloatArray JNICALL
+JNI_METHOD(getControllerLinearAcceleration)(JNIEnv *env, jclass clazz, jint controller_id) {
+    ovrVector3f linear_acceleration = ovrmobile::get_controller_linear_acceleration(get_session(),
+                                                                                    controller_id);
+    return from_ovrVector3f(env, linear_acceleration);
+}
+
+JNIEXPORT jfloatArray JNICALL
+JNI_METHOD(getHeadAngularVelocity)(JNIEnv *env, jclass clazz) {
+    ovrVector3f angular_velocity = ovrmobile::get_head_angular_velocity(get_session());
+    return from_ovrVector3f(env, angular_velocity);
+}
+
+JNIEXPORT jfloatArray JNICALL
+JNI_METHOD(getHeadLinearVelocity)(JNIEnv *env, jclass clazz) {
+    ovrVector3f linear_velocity = ovrmobile::get_head_linear_velocity(get_session());
+    return from_ovrVector3f(env, linear_velocity);
+}
+
+JNIEXPORT jfloatArray JNICALL
+JNI_METHOD(getHeadAngularAcceleration)(JNIEnv *env, jclass clazz) {
+    ovrVector3f angular_acceleration = ovrmobile::get_head_angular_acceleration(get_session());
+    return from_ovrVector3f(env, angular_acceleration);
+}
+
+JNIEXPORT jfloatArray JNICALL
+JNI_METHOD(getHeadLinearAcceleration)(JNIEnv *env, jclass clazz) {
+    ovrVector3f linear_acceleration = ovrmobile::get_head_linear_acceleration(get_session());
+    return from_ovrVector3f(env, linear_acceleration);
 }
 };

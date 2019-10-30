@@ -1,3 +1,4 @@
+#include "api/ovr_guardian_system.h"
 #include "nativescript_common.h"
 #include "ovr_guardian_system_ns.h"
 
@@ -53,18 +54,15 @@ GDCALLINGCONV void ovr_guardian_system_destructor(godot_object *p_instance, void
 
 
 GDCALLINGCONV godot_variant request_boundary_visible(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
-	CHECK_OVR(
+	CHECK_USER_DATA(
 	    bool visible = api->godot_variant_as_bool(p_args[0]);
-		ovrResult result = vrapi_RequestBoundaryVisible(ovr, visible);
-		if (result == ovrSuccess) api->godot_variant_new_bool(&ret, true); // set the return value to true if vrapi was called successfully
+	    api->godot_variant_new_bool(&ret, ovrmobile::request_boundary_visible(ovr_mobile_session, visible)); // set the return value to true if vrapi was called successfully
 	)
 }
 
 GDCALLINGCONV godot_variant get_boundary_visible(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
-	CHECK_OVR(
-        bool visible = false;
-		vrapi_GetBoundaryVisible(ovr, &visible);
-		api->godot_variant_new_bool(&ret, visible);
+	CHECK_USER_DATA(
+		api->godot_variant_new_bool(&ret, ovrmobile::get_boundary_visible(ovr_mobile_session));
 	)	
 }
 

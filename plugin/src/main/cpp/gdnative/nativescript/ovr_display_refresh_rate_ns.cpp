@@ -1,6 +1,7 @@
 #include "ovr_display_refresh_rate_ns.h"
-#include "nativescript_common.h"
 #include <vector>
+#include "nativescript_common.h"
+#include "api/ovr_display_refresh_rate.h"
 
 static const char *kClassName = "OvrDisplayRefreshRate";
 
@@ -36,15 +37,13 @@ GDCALLINGCONV void ovr_display_refresh_rate_destructor(godot_object *instance, v
 }
 
 GDCALLINGCONV godot_variant get_supported_display_refresh_rates(godot_object *instance, void *method_data, void *p_user_data, int num_args, godot_variant **args) {
-	CHECK_OVR(
-			const int refresh_rates_count = vrapi_GetSystemPropertyInt(ovr_java, VRAPI_SYS_PROP_NUM_SUPPORTED_DISPLAY_REFRESH_RATES);
-			std::vector<float> supported_refresh_rates(refresh_rates_count, 0.0F);
-			vrapi_GetSystemPropertyFloatArray(ovr_java, VRAPI_SYS_PROP_SUPPORTED_DISPLAY_REFRESH_RATES, supported_refresh_rates.data(), refresh_rates_count);
+	CHECK_USER_DATA(
+			std::vector<float> supported_refresh_rates = ovrmobile::get_supported_display_refresh_rates(ovr_mobile_session);
 
 			godot_array gd_return_array;
 			api->godot_array_new(&gd_return_array);
 
-			for (int i = 0; i < refresh_rates_count; i++) {
+			for (int i = 0; i < supported_refresh_rates.size(); i++) {
 				godot_variant refresh_rate;
 				api->godot_variant_new_real(&refresh_rate, supported_refresh_rates[i]);
 				api->godot_array_push_back(&gd_return_array, &refresh_rate);
@@ -58,12 +57,8 @@ GDCALLINGCONV godot_variant get_supported_display_refresh_rates(godot_object *in
 }
 
 GDCALLINGCONV godot_variant set_display_refresh_rate(godot_object *instance, void *method_data, void *p_user_data, int num_args, godot_variant **args) {
-	CHECK_OVR(
+	CHECK_USER_DATA(
 			const double refresh_rate = api->godot_variant_as_real(args[0]);
-			ovrResult result = vrapi_SetDisplayRefreshRate(ovr, refresh_rate);
-			if (result == ovrSuccess) {
-				api->godot_variant_new_bool(&ret, true);
-			}
-
+			api->godot_variant_new_bool(&ret, ovrmobile::set_display_refresh_rate(ovr_mobile_session, refresh_rate));
 	)
 }

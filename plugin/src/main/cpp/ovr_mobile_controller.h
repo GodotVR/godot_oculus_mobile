@@ -27,9 +27,14 @@ public:
 
 	void process(ovrMobile *ovr, ovrJava *java, double predicted_display_time);
 
-	const ControllerState* get_controller_state(int hand_index) const {
-		if (hand_index < 0 || hand_index >= MAX_HANDS) return nullptr;
-		return &controllers[hand_index];
+	const ControllerState* get_controller_state_by_id(int controller_id) const {
+	    for (int hand = 0; hand < MAX_HANDS; hand++) {
+	        auto* controller = &controllers[hand];
+	        if (controller->connected && controller->godot_controller_id == controller_id) {
+	            return controller;
+	        }
+	    }
+	    return nullptr;
 	}
 
 private:
