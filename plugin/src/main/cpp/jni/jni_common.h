@@ -46,8 +46,6 @@
 #define JNI_CLASS_NAME "Error: JNI_CLASS_NAME not redefined"
 #define JNI_PACKAGE_NAME "Error: JNI_PACKAGE_NAME not redefined"
 
-ovrmobile::OvrMobileSession* get_session() {
-    return ovrmobile::OvrMobileSession::get_singleton_instance();
-}
+ovrmobile::OvrMobileSession* get_session();
 
 #endif // JNI_COMMON_H

@@ -1,3 +1,4 @@
+#include "api/ovr_init_config.h"
 #include "ovr_init_config_ns.h"
 #include "nativescript_common.h"
 
@@ -31,32 +32,12 @@ GDCALLINGCONV void ovr_init_config_destructor(godot_object *instance, void *meth
     }
 }
 
-typedef bool (*init_config_logic)(ovrmobile::OvrMobileSession&, int, godot_variant**);
-
-// Utility method to avoid code duplication
-godot_variant run_init_config(void *user_data, int num_args, godot_variant **args, init_config_logic logic) {
-    bool result = false;
-    ovrmobile::OvrMobileSession *session = nullptr;
-    if (user_data) {
-        auto *ovr_config_data = static_cast<ovr_config_data_struct *>(user_data);
-        session = ovr_config_data->ovr_mobile_session;
-        // Validate session is not null, and is not initialized.
-        if (session && !session->is_initialized()) {
-            result = logic(*session, num_args, args);
-        }
-    }
-
-    godot_variant ret;
-    api->godot_variant_new_bool(&ret, result);
-    return ret;
-}
-
-GDCALLINGCONV godot_variant set_render_target_size_multiplier(godot_object*, void*, void *user_data, int num_args, godot_variant **args) {
-    return run_init_config(user_data, num_args, args, [](ovrmobile::OvrMobileSession &session, int num_args, godot_variant **args){
-        double multiplier = api->godot_variant_as_real(args[0]);
-
-        // Update the render target size.
-        session.set_render_target_size_multiplier(multiplier);
-        return true;
-    });
+GDCALLINGCONV godot_variant
+set_render_target_size_multiplier(godot_object *, void *, void *p_user_data, int num_args,
+                                  godot_variant **args) {
+    CHECK_USER_DATA(
+            double multiplier = api->godot_variant_as_real(args[0]);
+            api->godot_variant_new_bool(&ret, ovrmobile::set_render_target_size_multiplier(
+                    ovr_mobile_session, multiplier));
+    )
 }

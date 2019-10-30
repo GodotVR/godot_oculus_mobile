@@ -17,7 +17,7 @@
 #include "gdnative/nativescript/ovr_hand_tracking.h"
 
 // experimental low-level VrApi access
-#include "config/ovr_vr_api_proxy.h"
+#include "gdnative/nativescript/ovr_vr_api_proxy_ns.h"
 
 void GDN_EXPORT godot_ovrmobile_gdnative_singleton() {
 	if (arvr_api != NULL) {

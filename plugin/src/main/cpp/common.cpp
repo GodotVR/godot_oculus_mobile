@@ -43,6 +43,10 @@ void godot_transform_from_ovr_pose(godot_transform *dest, const ovrPosef &pose, 
 	api->godot_transform_new(dest, &basis, &origin);
 }
 
+void godot_vector3_from_ovrVector3f(godot_vector3 *dest, const ovrVector3f& vector) {
+    api->godot_vector3_new(dest, vector.x, vector.y, vector.z);
+}
+
 bool is_oculus_go_device(const ovrJava *java) {
 	auto device_type = static_cast<ovrDeviceType>(
 			vrapi_GetSystemPropertyInt(java, VRAPI_SYS_PROP_DEVICE_TYPE));

@@ -78,6 +78,8 @@ void godot_transform_from_ovrMatrix(godot_transform *p_dest, const ovrMatrix4f *
 
 void godot_transform_from_ovr_pose(godot_transform *dest, const ovrPosef &pose, const float world_scale);
 
+void godot_vector3_from_ovrVector3f(godot_vector3 *dest, const ovrVector3f& vector);
+
 bool is_oculus_go_device(const ovrJava * java);
 
 bool is_oculus_quest_device(const ovrJava * java);

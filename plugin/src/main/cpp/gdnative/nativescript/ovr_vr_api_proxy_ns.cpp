@@ -1,5 +1,5 @@
-#include "config_common.h"
-#include "ovr_vr_api_proxy.h"
+#include "nativescript_common.h"
+#include "ovr_vr_api_proxy_ns.h"
 
 static const char *kClassName = "OvrVrApiProxy";
 

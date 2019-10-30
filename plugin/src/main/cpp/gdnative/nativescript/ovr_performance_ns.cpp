@@ -1,6 +1,7 @@
 #include "ovr_performance_ns.h"
 #include "nativescript_common.h"
 #include <vector>
+#include "api/ovr_performance.h"
 
 static const char *kClassName = "OvrPerformance";
 
@@ -47,55 +48,24 @@ GDCALLINGCONV void ovr_performance_destructor(godot_object *instance, void *meth
 }
 
 GDCALLINGCONV godot_variant set_clock_levels(godot_object*, void*, void *p_user_data, int, godot_variant **p_args) {
-	CHECK_OVR(
+	CHECK_USER_DATA(
 	        int cpu_level = api->godot_variant_as_int(p_args[0]);
 	        int gpu_level = api->godot_variant_as_int(p_args[1]);
-	        ovrResult result = vrapi_SetClockLevels(ovr, cpu_level, gpu_level);
-	        if (result == ovrSuccess) {
-	            api->godot_variant_new_bool(&ret, true);
-	        }
-
+	        api->godot_variant_new_bool(&ret, ovrmobile::set_clock_levels(ovr_mobile_session, cpu_level, gpu_level));
 	)
 }
 
 GDCALLINGCONV godot_variant set_extra_latency_mode(godot_object*, void*, void *p_user_data, int, godot_variant **p_args) {
-	CHECK_OVR(
+	CHECK_USER_DATA(
 	       int latency_mode = api->godot_variant_as_int(p_args[0]);
-	       ovrResult result = vrapi_SetExtraLatencyMode(ovr,
-	               static_cast<ovrExtraLatencyMode>(latency_mode));
-	       if (result == ovrSuccess) {
-	           api->godot_variant_new_bool(&ret, true);
-	       }
-
+	       api->godot_variant_new_bool(&ret, ovrmobile::set_extra_latency_mode(ovr_mobile_session, latency_mode));
 	)
 }
 
 GDCALLINGCONV godot_variant set_foveation_level(godot_object *, void *, void *p_user_data, int, godot_variant **p_args) {
-	CHECK_OVR(
-			// Check if foveation is available.
-			int foveation_available = vrapi_GetSystemPropertyInt(ovr_java, VRAPI_SYS_PROP_FOVEATION_AVAILABLE);
-			if (foveation_available == VRAPI_TRUE) {
-				// Retrieve the foveation level
-				int foveation_level = api->godot_variant_as_int(p_args[0]);
-
-				// Validate the foveation level.
-				bool foveation_valid = false;
-				if (ovrmobile::is_oculus_go_device(ovr_java)) {
-				    // Foveation level for the Oculus Go ranges from 0 to 3
-				    // See https://developer.oculus.com/documentation/mobilesdk/latest/concepts/mobile-ffr/
-				    foveation_valid = foveation_level >= 0 && foveation_level <= 3;
-				} else if (ovrmobile::is_oculus_quest_device(ovr_java)) {
-				    // Foveation level for the Oculus Quest ranges from 0 to 4
-				    // See // - Oculus Quest: https://developer.oculus.com/documentation/quest/latest/concepts/mobile-ffr/
-				    foveation_valid = foveation_level >= 0 && foveation_level <= 4;
-				}
-
-				if (foveation_valid) {
-				    vrapi_SetPropertyInt(ovr_java, VRAPI_FOVEATION_LEVEL, foveation_level);
-				}
-                api->godot_variant_new_bool(&ret, foveation_valid);
-			}
-
+	CHECK_USER_DATA(
+			int foveation_level = api->godot_variant_as_int(p_args[0]);
+			api->godot_variant_new_bool(&ret, ovrmobile::set_foveation_level(ovr_mobile_session, foveation_level));
 	)
 }
 
@@ -126,12 +96,8 @@ GDCALLINGCONV godot_variant set_enable_dynamic_foveation(godot_object *p_instanc
 }
 
 GDCALLINGCONV godot_variant set_swap_interval(godot_object *, void *, void *p_user_data, int, godot_variant **p_args) {
-	CHECK_OVR(
+	CHECK_USER_DATA(
 	        unsigned int swap_interval = api->godot_variant_as_uint(p_args[0]);
-	        if (swap_interval == 1 || swap_interval == 2) {
-                ovr_mobile_session->set_swap_interval(swap_interval);
-                api->godot_variant_new_bool(&ret, true);
-            }
-
+	        api->godot_variant_new_bool(&ret, ovrmobile::set_swap_interval(ovr_mobile_session, swap_interval));
 	)
 }

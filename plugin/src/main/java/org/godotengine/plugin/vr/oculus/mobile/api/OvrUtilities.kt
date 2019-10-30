@@ -19,5 +19,21 @@ object OvrUtilities {
         green: Float,
         blue: Float,
         alpha: Float
-    ): Boolean;
+    ): Boolean
+
+    @JvmStatic external fun getControllerAngularVelocity(controllerId: Int): FloatArray
+
+    @JvmStatic external fun getControllerLinearVelocity(controllerId: Int): FloatArray
+
+    @JvmStatic external fun getControllerAngularAcceleration(controllerId: Int): FloatArray
+
+    @JvmStatic external fun getControllerLinearAcceleration(controllerId: Int): FloatArray
+
+    @JvmStatic external fun getHeadAngularVelocity(): FloatArray
+
+    @JvmStatic external fun getHeadLinearVelocity(): FloatArray
+
+    @JvmStatic external fun getHeadAngularAcceleration(): FloatArray
+
+    @JvmStatic external fun getHeadLinearAcceleration(): FloatArray
 }

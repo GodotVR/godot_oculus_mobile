@@ -18,6 +18,16 @@ namespace ovrmobile {
                                        float blue,
                                        float alpha);
 
+    ovrVector3f get_controller_angular_velocity(OvrMobileSession *session, int controller_id);
+    ovrVector3f get_controller_linear_velocity(OvrMobileSession* session, int controller_id);
+    ovrVector3f get_controller_angular_acceleration(OvrMobileSession* session, int controller_id);
+    ovrVector3f get_controller_linear_acceleration(OvrMobileSession* session, int controller_id);
+
+    ovrVector3f get_head_angular_velocity(OvrMobileSession *session);
+    ovrVector3f get_head_linear_velocity(OvrMobileSession *session);
+    ovrVector3f get_head_angular_acceleration(OvrMobileSession *session);
+    ovrVector3f get_head_linear_acceleration(OvrMobileSession *session);
+
 } // namespace ovrmobile
 
 #endif // OVR_UTILITIES_H

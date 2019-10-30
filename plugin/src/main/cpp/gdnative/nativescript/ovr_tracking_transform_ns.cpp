@@ -1,5 +1,6 @@
 #include "nativescript_common.h"
 #include "ovr_tracking_transform_ns.h"
+#include "api/ovr_tracking_transform.h"
 
 static const char *kClassName = "OvrTrackingTransform";
 
@@ -49,16 +50,14 @@ GDCALLINGCONV void ovr_tracking_transform_destructor(godot_object *p_instance, v
 
 
 GDCALLINGCONV godot_variant get_tracking_space(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
-	CHECK_OVR(
-		ovrTrackingSpace space = vrapi_GetTrackingSpace(ovr);
-		api->godot_variant_new_int(&ret, space);
+	CHECK_USER_DATA(
+		api->godot_variant_new_int(&ret, ovrmobile::get_tracking_space(ovr_mobile_session));
 	)	
 }
 
 GDCALLINGCONV godot_variant set_tracking_space(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
-	CHECK_OVR(
-		ovrTrackingSpace space = (ovrTrackingSpace)api->godot_variant_as_int(p_args[0]); // note that ovrTrackingSpace is an enum in VrApi.h
-		ovrResult result = vrapi_SetTrackingSpace(ovr, space);
-		if (result == ovrSuccess) api->godot_variant_new_bool(&ret, true); // set the return value to true if vrapi was called successfully
+	CHECK_USER_DATA(
+		int space = api->godot_variant_as_int(p_args[0]); // note that ovrTrackingSpace is an enum in VrApi.h
+		api->godot_variant_new_bool(&ret, ovrmobile::set_tracking_space(ovr_mobile_session, space));
 	)	
 }
