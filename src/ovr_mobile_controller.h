@@ -14,23 +14,29 @@ namespace ovrmobile {
 
 class OvrMobileController {
 public:
+	struct ControllerState {
+		bool connected = false;
+		int godot_controller_id = 0;
+		ovrInputTrackedRemoteCapabilities remote_capabilities;
+		ovrTracking tracking_state;
+	};
+
 	OvrMobileController();
 
 	~OvrMobileController();
 
 	void process(ovrMobile *ovr, ovrJava *java, double predicted_display_time);
 
+	const ControllerState* get_controller_state(int hand_index) const {
+		if (hand_index < 0 || hand_index >= MAX_HANDS) return nullptr;
+		return &controllers[hand_index];
+	}
+
 private:
 	enum ControllerHand {
 		LEFT_HAND,
 		RIGHT_HAND,
 		MAX_HANDS
-	};
-
-	struct ControllerState {
-		bool connected = false;
-		int godot_controller_id = 0;
-		ovrInputTrackedRemoteCapabilities remote_capabilities;
 	};
 
 	inline bool has_analog_grip_trigger(const ovrInputTrackedRemoteCapabilities &capabilities) const {
@@ -97,11 +103,11 @@ private:
 
 	void update_controllers_connection_state(ovrMobile *ovr, ovrJava *java);
 
-	void update_controller_tracking_state(ovrMobile *ovr, ControllerState controller_state, double predicted_display_time);
+	void update_controller_tracking_state(ovrMobile *ovr, ControllerState& controller_state, double predicted_display_time);
 
-	void update_controller_input_state(ovrMobile *ovr, ControllerState controller_state);
+	void update_controller_input_state(ovrMobile *ovr, ControllerState& controller_state);
 
-	void update_controller_vibration(ovrMobile *ovr, ControllerState controller_state);
+	void update_controller_vibration(ovrMobile *ovr, ControllerState& controller_state);
 
 	ControllerState controllers[MAX_HANDS];
 };

@@ -22,6 +22,16 @@ GDCALLINGCONV godot_variant get_ipd(godot_object *p_instance, void *p_method_dat
 // Expects a Color parameter in GDScript and sets the color multiplier for the default layer used by the VrAPI compositor
 GDCALLINGCONV godot_variant set_default_layer_color_scale(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
 
+GDCALLINGCONV godot_variant get_controller_angular_velocity(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+GDCALLINGCONV godot_variant get_controller_linear_velocity(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+GDCALLINGCONV godot_variant get_controller_angular_acceleration(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+GDCALLINGCONV godot_variant get_controller_linear_acceleration(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+
+GDCALLINGCONV godot_variant get_head_angular_velocity(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+GDCALLINGCONV godot_variant get_head_linear_velocity(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+GDCALLINGCONV godot_variant get_head_angular_acceleration(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+GDCALLINGCONV godot_variant get_head_linear_acceleration(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+
 
 #ifdef __cplusplus
 }

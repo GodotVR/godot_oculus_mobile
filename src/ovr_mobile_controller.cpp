@@ -38,7 +38,7 @@ void OvrMobileController::process(ovrMobile *ovr, ovrJava *java, double predicte
 }
 
 void OvrMobileController::update_controller_vibration(ovrMobile *ovr,
-		ControllerState controller_state) {
+		ControllerState& controller_state) {
 	if (!controller_state.connected || controller_state.godot_controller_id == kInvalidGodotControllerId) {
 		return;
 	}
@@ -53,7 +53,7 @@ void OvrMobileController::update_controller_vibration(ovrMobile *ovr,
 }
 
 void OvrMobileController::update_controller_input_state(ovrMobile *ovr,
-		ControllerState controller_state) {
+		ControllerState& controller_state) {
 	if (!controller_state.connected || controller_state.godot_controller_id == kInvalidGodotControllerId) {
 		return;
 	}
@@ -137,20 +137,19 @@ void OvrMobileController::update_controller_input_state(ovrMobile *ovr,
 }
 
 void OvrMobileController::update_controller_tracking_state(ovrMobile *ovr,
-		ControllerState controller_state, double predicted_display_time) {
+		ControllerState& controller_state, double predicted_display_time) {
 	if (!controller_state.connected || controller_state.godot_controller_id == kInvalidGodotControllerId) {
 		return;
 	}
 
 	// Tracked remote is connected. Get the device tracking state.
-	ovrTracking tracking_state;
-	if (vrapi_GetInputTrackingState(ovr, controller_state.remote_capabilities.Header.DeviceID, predicted_display_time, &tracking_state) < 0) {
+	if (vrapi_GetInputTrackingState(ovr, controller_state.remote_capabilities.Header.DeviceID, predicted_display_time, &controller_state.tracking_state) < 0) {
 		return;
 	}
 
 	// Update the controller transform.
 	godot_transform transform;
-	godot_transform_from_ovr_pose(&transform, tracking_state.HeadPose.Pose, arvr_api->godot_arvr_get_worldscale());
+	godot_transform_from_ovr_pose(&transform, controller_state.tracking_state.HeadPose.Pose, arvr_api->godot_arvr_get_worldscale());
 	arvr_api->godot_arvr_set_controller_transform(controller_state.godot_controller_id, &transform,
 			has_orientation_tracking(controller_state.remote_capabilities),
 			has_position_tracking(controller_state.remote_capabilities));
