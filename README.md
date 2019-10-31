@@ -107,8 +107,22 @@ func do_something():
 
   # set a color multiply (also useful for fade to black)
   ovrUtilities.set_default_layer_color_scale(Color(1.0, 0.3, 0.4, 1.0));
+
+  # query controller acceleration/velocities; return value is Vector3
+  print(ovrUtilities.get_controller_angular_velocity(1)); # parameter is the controller_id (either 1 or 2)
+  print(ovrUtilities.get_controller_linear_velocity(1));
+  print(ovrUtilities.get_controller_angular_acceleration(1));
+  print(ovrUtilities.get_controller_linear_acceleration(1));
+
+  # the same is available for the head:
+  print(ovrUtilities.get_head_angular_velocity());
+  print(ovrUtilities.get_head_linear_velocity());
+  print(ovrUtilities.get_head_angular_acceleration());
+  print(ovrUtilities.get_head_linear_acceleration());
 ```
 
+Advanced GDScript Oculus VrApi access
+------------
 In addition to the official API above there is the experimental `OvrVrApiProxy.gdns`
 class that exposes partially the low level property setters/getters from the VrApi.h.
 This API is to be considered temporary and might be removed in future releases of the plugin. If possible it is recommended to use the offical API described above.

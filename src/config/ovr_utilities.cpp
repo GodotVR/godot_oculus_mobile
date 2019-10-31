@@ -1,5 +1,6 @@
 #include "config_common.h"
 #include "ovr_utilities.h"
+#include "ovr_mobile_controller.h"
 
 static const char *kClassName = "OvrUtilities";
 
@@ -23,6 +24,25 @@ void register_gdnative_utilities(void *p_handle) {
 
 		method.method = &set_default_layer_color_scale;
 		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "set_default_layer_color_scale", attributes, method);
+
+		method.method = &get_controller_angular_velocity;
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_controller_angular_velocity", attributes, method);
+		method.method = &get_controller_linear_velocity;
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_controller_linear_velocity", attributes, method);
+		method.method = &get_controller_angular_acceleration;
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_controller_angular_acceleration", attributes, method);
+		method.method = &get_controller_linear_acceleration;
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_controller_linear_acceleration", attributes, method);
+
+		method.method = &get_head_angular_velocity;
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_head_angular_velocity", attributes, method);
+		method.method = &get_head_linear_velocity;
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_head_linear_velocity", attributes, method);
+		method.method = &get_head_angular_acceleration;
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_head_angular_acceleration", attributes, method);
+		method.method = &get_head_linear_acceleration;
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_head_linear_acceleration", attributes, method);
+
 	}
 }
 
@@ -69,5 +89,119 @@ GDCALLINGCONV godot_variant set_default_layer_color_scale(godot_object *p_instan
 		godot_real* pcolor = (godot_real*)&color;
 		ovr_mobile_session->set_default_layer_color_scale(pcolor[0], pcolor[1], pcolor[2], pcolor[3]);
 		api->godot_variant_new_bool(&ret, true);
+	)
+}
+
+
+GDCALLINGCONV godot_variant get_controller_angular_velocity(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+		int controller_id = api->godot_variant_as_int(p_args[0]) - 1;
+		const ovrmobile::OvrMobileController* pController = ovr_mobile_session->get_ovr_mobile_controller();
+		if (pController != nullptr) {
+			const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state(controller_id);
+			if (pState != nullptr && pState->connected) {
+				ovrVector3f v = pState->tracking_state.HeadPose.AngularVelocity;
+				godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
+				godot_vector3 gd_vector;
+				api->godot_vector3_new(&gd_vector, v.x * world_scale, v.y * world_scale, v.z * world_scale);
+				api->godot_variant_new_vector3(&ret, &gd_vector);
+			}
+		}
+	)
+}
+
+GDCALLINGCONV godot_variant get_controller_linear_velocity(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+		int controller_id = api->godot_variant_as_int(p_args[0]) - 1;
+		const ovrmobile::OvrMobileController* pController = ovr_mobile_session->get_ovr_mobile_controller();
+		if (pController != nullptr) {
+			const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state(controller_id);
+			if (pState != nullptr && pState->connected) {
+				ovrVector3f v = pState->tracking_state.HeadPose.LinearVelocity;
+				godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
+				godot_vector3 gd_vector;
+				api->godot_vector3_new(&gd_vector, v.x * world_scale, v.y * world_scale, v.z * world_scale);
+				api->godot_variant_new_vector3(&ret, &gd_vector);
+			}
+		}
+	)
+}
+
+GDCALLINGCONV godot_variant get_controller_angular_acceleration(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+		int controller_id = api->godot_variant_as_int(p_args[0]) - 1;
+		const ovrmobile::OvrMobileController* pController = ovr_mobile_session->get_ovr_mobile_controller();
+		if (pController != nullptr) {
+			const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state(controller_id);
+			if (pState != nullptr && pState->connected) {
+				ovrVector3f v = pState->tracking_state.HeadPose.AngularAcceleration;
+				godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
+				godot_vector3 gd_vector;
+				api->godot_vector3_new(&gd_vector, v.x * world_scale, v.y * world_scale, v.z * world_scale);
+				api->godot_variant_new_vector3(&ret, &gd_vector);
+			}
+		}
+	)
+}
+
+GDCALLINGCONV godot_variant get_controller_linear_acceleration(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+		int controller_id = api->godot_variant_as_int(p_args[0]) - 1;
+		const ovrmobile::OvrMobileController* pController = ovr_mobile_session->get_ovr_mobile_controller();
+		if (pController != nullptr) {
+			const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state(controller_id);
+			if (pState != nullptr && pState->connected) {
+				ovrVector3f v = pState->tracking_state.HeadPose.LinearAcceleration;
+				godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
+				godot_vector3 gd_vector;
+				api->godot_vector3_new(&gd_vector, v.x * world_scale, v.y * world_scale, v.z * world_scale);
+				api->godot_variant_new_vector3(&ret, &gd_vector);
+			}
+		}
+	)
+}
+
+
+GDCALLINGCONV godot_variant get_head_angular_velocity(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+        ovrTracking2 head_tracker = ovr_mobile_session->get_head_tracker();
+		ovrVector3f v = head_tracker.HeadPose.AngularVelocity;
+		godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
+		godot_vector3 gd_vector;
+		api->godot_vector3_new(&gd_vector, v.x * world_scale, v.y * world_scale, v.z * world_scale);
+		api->godot_variant_new_vector3(&ret, &gd_vector);
+	)
+}
+
+GDCALLINGCONV godot_variant get_head_angular_acceleration(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+        ovrTracking2 head_tracker = ovr_mobile_session->get_head_tracker();
+		ovrVector3f v = head_tracker.HeadPose.AngularAcceleration;
+		godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
+		godot_vector3 gd_vector;
+		api->godot_vector3_new(&gd_vector, v.x * world_scale, v.y * world_scale, v.z * world_scale);
+		api->godot_variant_new_vector3(&ret, &gd_vector);
+	)
+}
+
+GDCALLINGCONV godot_variant get_head_linear_velocity(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+        ovrTracking2 head_tracker = ovr_mobile_session->get_head_tracker();
+		ovrVector3f v = head_tracker.HeadPose.LinearVelocity;
+		godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
+		godot_vector3 gd_vector;
+		api->godot_vector3_new(&gd_vector, v.x * world_scale, v.y * world_scale, v.z * world_scale);
+		api->godot_variant_new_vector3(&ret, &gd_vector);
+	)
+}
+
+GDCALLINGCONV godot_variant get_head_linear_acceleration(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+        ovrTracking2 head_tracker = ovr_mobile_session->get_head_tracker();
+		ovrVector3f v = head_tracker.HeadPose.LinearAcceleration;
+		godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
+		godot_vector3 gd_vector;
+		api->godot_vector3_new(&gd_vector, v.x * world_scale, v.y * world_scale, v.z * world_scale);
+		api->godot_variant_new_vector3(&ret, &gd_vector);
 	)
 }

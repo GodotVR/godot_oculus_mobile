@@ -70,6 +70,8 @@ public:
 
 	ovrTracking2 get_head_tracker() {return head_tracker;};
 
+	const OvrMobileController* get_ovr_mobile_controller() const {return ovr_mobile_controller;};
+
 	const ovrJava *get_ovr_java() {
 		return &java;
 	}
