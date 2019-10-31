@@ -24,7 +24,8 @@ void reset_ovr_config_data_struct(ovr_config_data_struct *ovr_config_data);
 #undef CHECK_OVR
 #define CHECK_OVR(_codeblock_) \
 	godot_variant ret; \
-	 if (p_user_data != NULL) { \
+	api->godot_variant_new_nil(&ret); \
+	if (p_user_data != NULL) { \
 		ovr_config_data_struct *ovr_config_data = (ovr_config_data_struct *) p_user_data; \
 		ovrmobile::OvrMobileSession *ovr_mobile_session = ovr_config_data->ovr_mobile_session; \
 		if (ovr_mobile_session && ovr_mobile_session->is_initialized()) { \
@@ -32,11 +33,9 @@ void reset_ovr_config_data_struct(ovr_config_data_struct *ovr_config_data);
 			const ovrJava* ovr_java = ovr_mobile_session->get_ovr_java(); \
 			if (ovr && ovr_java) { \
 			  _codeblock_ \
-			} else { \
-				api->godot_variant_new_nil(&ret); \
 			} \
 		} \
-	 } \
-	 return ret;
+	} \
+	return ret;
 
 #endif
