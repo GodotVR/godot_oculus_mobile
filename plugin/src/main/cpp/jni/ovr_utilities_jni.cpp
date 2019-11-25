@@ -31,65 +31,65 @@ namespace {
 
 extern "C" {
 
-JNIEXPORT jfloat JNICALL JNI_METHOD(getIpd)(JNIEnv *env, jclass clazz) {
+JNIEXPORT jfloat JNICALL JNI_METHOD(nativeGetIpd)(JNIEnv *env, jclass clazz) {
     return ovrmobile::get_ipd(get_session());
 }
 
 JNIEXPORT jboolean JNICALL
-JNI_METHOD(setDefaultLayerColorScale)(JNIEnv *env, jclass clazz, jfloat red, jfloat green,
+JNI_METHOD(nativeSetDefaultLayerColorScale)(JNIEnv *env, jclass clazz, jfloat red, jfloat green,
                                       jfloat blue, jfloat alpha) {
     return static_cast<jboolean>(ovrmobile::set_default_layer_color_scale(get_session(), red,
                                                                           green, blue, alpha));
 }
 
 JNIEXPORT jfloatArray JNICALL
-JNI_METHOD(getControllerAngularVelocity)(JNIEnv *env, jclass clazz, jint controller_id) {
+JNI_METHOD(nativeGetControllerAngularVelocity)(JNIEnv *env, jclass clazz, jint controller_id) {
     ovrVector3f angular_velocity = ovrmobile::get_controller_angular_velocity(get_session(),
                                                                               controller_id);
     return from_ovrVector3f(env, angular_velocity);
 }
 
 JNIEXPORT jfloatArray JNICALL
-JNI_METHOD(getControllerLinearVelocity)(JNIEnv *env, jclass clazz, jint controller_id) {
+JNI_METHOD(nativeGetControllerLinearVelocity)(JNIEnv *env, jclass clazz, jint controller_id) {
     ovrVector3f linear_velocity = ovrmobile::get_controller_linear_velocity(get_session(),
                                                                             controller_id);
     return from_ovrVector3f(env, linear_velocity);
 }
 
 JNIEXPORT jfloatArray JNICALL
-JNI_METHOD(getControllerAngularAcceleration)(JNIEnv *env, jclass clazz, jint controller_id) {
+JNI_METHOD(nativeGetControllerAngularAcceleration)(JNIEnv *env, jclass clazz, jint controller_id) {
     ovrVector3f angular_acceleration = ovrmobile::get_controller_angular_acceleration(get_session(),
                                                                                       controller_id);
     return from_ovrVector3f(env, angular_acceleration);
 }
 
 JNIEXPORT jfloatArray JNICALL
-JNI_METHOD(getControllerLinearAcceleration)(JNIEnv *env, jclass clazz, jint controller_id) {
+JNI_METHOD(nativeGetControllerLinearAcceleration)(JNIEnv *env, jclass clazz, jint controller_id) {
     ovrVector3f linear_acceleration = ovrmobile::get_controller_linear_acceleration(get_session(),
                                                                                     controller_id);
     return from_ovrVector3f(env, linear_acceleration);
 }
 
 JNIEXPORT jfloatArray JNICALL
-JNI_METHOD(getHeadAngularVelocity)(JNIEnv *env, jclass clazz) {
+JNI_METHOD(nativeGetHeadAngularVelocity)(JNIEnv *env, jclass clazz) {
     ovrVector3f angular_velocity = ovrmobile::get_head_angular_velocity(get_session());
     return from_ovrVector3f(env, angular_velocity);
 }
 
 JNIEXPORT jfloatArray JNICALL
-JNI_METHOD(getHeadLinearVelocity)(JNIEnv *env, jclass clazz) {
+JNI_METHOD(nativeGetHeadLinearVelocity)(JNIEnv *env, jclass clazz) {
     ovrVector3f linear_velocity = ovrmobile::get_head_linear_velocity(get_session());
     return from_ovrVector3f(env, linear_velocity);
 }
 
 JNIEXPORT jfloatArray JNICALL
-JNI_METHOD(getHeadAngularAcceleration)(JNIEnv *env, jclass clazz) {
+JNI_METHOD(nativeGetHeadAngularAcceleration)(JNIEnv *env, jclass clazz) {
     ovrVector3f angular_acceleration = ovrmobile::get_head_angular_acceleration(get_session());
     return from_ovrVector3f(env, angular_acceleration);
 }
 
 JNIEXPORT jfloatArray JNICALL
-JNI_METHOD(getHeadLinearAcceleration)(JNIEnv *env, jclass clazz) {
+JNI_METHOD(nativeGetHeadLinearAcceleration)(JNIEnv *env, jclass clazz) {
     ovrVector3f linear_acceleration = ovrmobile::get_head_linear_acceleration(get_session());
     return from_ovrVector3f(env, linear_acceleration);
 }

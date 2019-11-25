@@ -14,11 +14,11 @@
 #define JNI_CLASS_NAME OvrGuardianSystem
 
 extern "C" {
-    JNIEXPORT jboolean JNICALL JNI_METHOD(isBoundaryVisible)(JNIEnv *env, jclass clazz) {
+    JNIEXPORT jboolean JNICALL JNI_METHOD(nativeIsBoundaryVisible)(JNIEnv *env, jclass clazz) {
         return static_cast<jboolean>(ovrmobile::get_boundary_visible(get_session()));
     }
 
-    JNIEXPORT jboolean JNICALL JNI_METHOD(requestBoundaryVisible)(JNIEnv *env, jclass clazz, jboolean visible) {
+    JNIEXPORT jboolean JNICALL JNI_METHOD(nativeRequestBoundaryVisible)(JNIEnv *env, jclass clazz, jboolean visible) {
         return static_cast<jboolean>(ovrmobile::request_boundary_visible(get_session(), visible));
     }
 };
