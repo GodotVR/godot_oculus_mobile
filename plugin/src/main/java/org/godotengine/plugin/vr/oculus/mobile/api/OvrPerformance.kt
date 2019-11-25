@@ -1,19 +1,37 @@
-package org.godotengine.plugin.vr.oculus.mobile.api
-
 /**
  * Wrapper for the VrApi performance apis.
  */
-object OvrPerformance {
+@file:JvmName("OvrPerformance")
 
-    @JvmStatic
-    external fun setClockLevels(cpuLevel: Int, gpuLevel: Int): Boolean
+package org.godotengine.plugin.vr.oculus.mobile.api
 
-    @JvmStatic
-    external fun setExtraLatencyMode(latencyMode: Int): Boolean
+import kotlinx.coroutines.withContext
+import org.godotengine.plugin.vr.oculus.mobile.OvrMobilePlugin
 
-    @JvmStatic
-    external fun setFoveationLevel(foveationLevel: Int): Boolean
+suspend fun OvrMobilePlugin.setClockLevels(cpuLevel: Int, gpuLevel: Int) =
+    withContext(this.glDispatcher) {
+        nativeSetClockLevels(cpuLevel, gpuLevel)
+    }
 
-    @JvmStatic
-    external fun setSwapInterval(swapInterval: Int): Boolean
-}
+suspend fun OvrMobilePlugin.setExtraLatencyMode(latencyMode: Int) =
+    withContext(this.glDispatcher) {
+        nativeSetExtraLatencyMode(latencyMode)
+    }
+
+suspend fun OvrMobilePlugin.setFoveationLevel(foveationLevel: Int) =
+    withContext(this.glDispatcher) {
+        nativeSetFoveationLevel(foveationLevel)
+    }
+
+suspend fun OvrMobilePlugin.setSwapInterval(swapInterval: Int) =
+    withContext(this.glDispatcher) {
+        nativeSetSwapInterval(swapInterval)
+    }
+
+private external fun nativeSetClockLevels(cpuLevel: Int, gpuLevel: Int): Boolean
+
+private external fun nativeSetExtraLatencyMode(latencyMode: Int): Boolean
+
+private external fun nativeSetFoveationLevel(foveationLevel: Int): Boolean
+
+private external fun nativeSetSwapInterval(swapInterval: Int): Boolean

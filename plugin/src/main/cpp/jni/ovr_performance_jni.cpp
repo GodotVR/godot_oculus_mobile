@@ -15,23 +15,23 @@
 
 extern "C" {
 JNIEXPORT jboolean JNICALL
-JNI_METHOD(setClockLevels)(JNIEnv *env, jclass clazz, jint cpu_level, jint gpu_level) {
+JNI_METHOD(nativeSetClockLevels)(JNIEnv *env, jclass clazz, jint cpu_level, jint gpu_level) {
     return static_cast<jboolean>(ovrmobile::set_clock_levels(get_session(), cpu_level,
                                                              gpu_level));
 }
 
 JNIEXPORT jboolean JNICALL
-JNI_METHOD(setExtraLatencyMode)(JNIEnv *env, jclass clazz, jint latency_mode) {
+JNI_METHOD(nativeSetExtraLatencyMode)(JNIEnv *env, jclass clazz, jint latency_mode) {
     return static_cast<jboolean>(ovrmobile::set_extra_latency_mode(get_session(), latency_mode));
 }
 
 JNIEXPORT jboolean JNICALL
-JNI_METHOD(setFoveationLevel)(JNIEnv *env, jclass clazz, jint foveation_level) {
+JNI_METHOD(nativeSetFoveationLevel)(JNIEnv *env, jclass clazz, jint foveation_level) {
     return static_cast<jboolean>(ovrmobile::set_foveation_level(get_session(), foveation_level));
 }
 
 JNIEXPORT jboolean JNICALL
-JNI_METHOD(setSwapInterval)(JNIEnv *env, jclass clazz, jint swap_interval) {
+JNI_METHOD(nativeSetSwapInterval)(JNIEnv *env, jclass clazz, jint swap_interval) {
     return static_cast<jboolean>(ovrmobile::set_swap_interval(get_session(), swap_interval));
 }
 };

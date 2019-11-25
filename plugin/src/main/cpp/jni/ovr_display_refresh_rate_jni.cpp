@@ -15,13 +15,13 @@
 
 extern "C" {
 JNIEXPORT jboolean JNICALL
-JNI_METHOD(setDisplayRefreshRate)(JNIEnv *env, jclass clazz, jfloat refresh_rate) {
+JNI_METHOD(nativeSetDisplayRefreshRate)(JNIEnv *env, jclass clazz, jfloat refresh_rate) {
     return static_cast<jboolean>(ovrmobile::set_display_refresh_rate(get_session(),
                                                                      refresh_rate));
 }
 
 JNIEXPORT jfloatArray JNICALL
-JNI_METHOD(getSupportedDisplayRefreshRates)(JNIEnv *env, jclass clazz) {
+JNI_METHOD(nativeGetSupportedDisplayRefreshRates)(JNIEnv *env, jclass clazz) {
     std::vector<float> refresh_rates = ovrmobile::get_supported_display_refresh_rates(
             get_session());
 

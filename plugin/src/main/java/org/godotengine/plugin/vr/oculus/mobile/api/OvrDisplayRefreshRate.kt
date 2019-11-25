@@ -1,10 +1,20 @@
+@file:JvmName("OvrDisplayRefreshRate")
+
 package org.godotengine.plugin.vr.oculus.mobile.api
 
-object OvrDisplayRefreshRate {
+import kotlinx.coroutines.withContext
+import org.godotengine.plugin.vr.oculus.mobile.OvrMobilePlugin
 
-    @JvmStatic
-    external fun setDisplayRefreshRate(refreshRate: Float): Boolean
+suspend fun OvrMobilePlugin.getSupportedDisplayRefreshRates() =
+    withContext(this.glDispatcher) {
+        nativeGetSupportedDisplayRefreshRates()
+    }
 
-    @JvmStatic
-    external fun getSupportedDisplayRefreshRates(): FloatArray
-}
+suspend fun OvrMobilePlugin.setDisplayRefreshRate(refreshRate: Float) =
+    withContext(this.glDispatcher) {
+        nativeSetDisplayRefreshRate(refreshRate)
+    }
+
+private external fun nativeSetDisplayRefreshRate(refreshRate: Float): Boolean
+
+private external fun nativeGetSupportedDisplayRefreshRates(): FloatArray

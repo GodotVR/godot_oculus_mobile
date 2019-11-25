@@ -1,10 +1,20 @@
+@file:JvmName("OvrGuardianSystem")
+
 package org.godotengine.plugin.vr.oculus.mobile.api
 
-object OvrGuardianSystem {
+import kotlinx.coroutines.withContext
+import org.godotengine.plugin.vr.oculus.mobile.OvrMobilePlugin
 
-    @JvmStatic
-    external fun isBoundaryVisible(): Boolean
+suspend fun OvrMobilePlugin.isBoundaryVisible() =
+    withContext(this.glDispatcher) {
+        nativeIsBoundaryVisible()
+    }
 
-    @JvmStatic
-    external fun requestBoundaryVisible(visible: Boolean): Boolean
-}
+suspend fun OvrMobilePlugin.requestBoundaryVisible(visible: Boolean) =
+    withContext(this.glDispatcher) {
+        nativeRequestBoundaryVisible(visible)
+    }
+
+private external fun nativeIsBoundaryVisible(): Boolean
+
+private external fun nativeRequestBoundaryVisible(visible: Boolean): Boolean

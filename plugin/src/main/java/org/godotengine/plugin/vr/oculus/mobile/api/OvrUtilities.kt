@@ -1,39 +1,88 @@
-package org.godotengine.plugin.vr.oculus.mobile.api
-
 /**
  * Vrapi utility functions
  */
-object OvrUtilities {
+@file:JvmName("OvrUtilities")
 
-    /**
-     * Uses the internal left and right view matrix to compute the IPD.
-     */
-    @JvmStatic
-    external fun getIpd(): Float
+package org.godotengine.plugin.vr.oculus.mobile.api
 
-    /**
-     * Sets the color multiplier for the default layer used by the VrApi compositor.
-     */
-    @JvmStatic external fun setDefaultLayerColorScale(
-        red: Float,
-        green: Float,
-        blue: Float,
-        alpha: Float
-    ): Boolean
+import android.graphics.Color
+import androidx.annotation.ColorInt
+import kotlinx.coroutines.withContext
+import org.godotengine.plugin.vr.oculus.mobile.OvrMobilePlugin
 
-    @JvmStatic external fun getControllerAngularVelocity(controllerId: Int): FloatArray
-
-    @JvmStatic external fun getControllerLinearVelocity(controllerId: Int): FloatArray
-
-    @JvmStatic external fun getControllerAngularAcceleration(controllerId: Int): FloatArray
-
-    @JvmStatic external fun getControllerLinearAcceleration(controllerId: Int): FloatArray
-
-    @JvmStatic external fun getHeadAngularVelocity(): FloatArray
-
-    @JvmStatic external fun getHeadLinearVelocity(): FloatArray
-
-    @JvmStatic external fun getHeadAngularAcceleration(): FloatArray
-
-    @JvmStatic external fun getHeadLinearAcceleration(): FloatArray
+/**
+ * Uses the internal left and right view matrix to compute the IPD.
+ */
+suspend fun OvrMobilePlugin.getIpd() = withContext(this.glDispatcher) {
+    nativeGetIpd()
 }
+
+suspend fun OvrMobilePlugin.setDefaultLayerColorScale(@ColorInt color: Int) =
+    withContext(this.glDispatcher) {
+        nativeSetDefaultLayerColorScale(
+            Color.red(color).toFloat(),
+            Color.green(color).toFloat(),
+            Color.blue(color).toFloat(),
+            Color.alpha(color).toFloat()
+        )
+    }
+
+suspend fun OvrMobilePlugin.getControllerAngularVelocity(controllerId: Int) = withContext(this.glDispatcher) {
+    nativeGetControllerAngularVelocity(controllerId)
+}
+
+suspend fun OvrMobilePlugin.getControllerLinearVelocity(controllerId: Int) = withContext(this.glDispatcher) {
+    nativeGetControllerLinearVelocity(controllerId)
+}
+
+suspend fun OvrMobilePlugin.getControllerAngularAcceleration(controllerId: Int) = withContext(this.glDispatcher) {
+    nativeGetControllerAngularAcceleration(controllerId)
+}
+
+suspend fun OvrMobilePlugin.getControllerLinearAcceleration(controllerId: Int) = withContext(this.glDispatcher) {
+    nativeGetControllerLinearAcceleration(controllerId)
+}
+
+suspend fun OvrMobilePlugin.getHeadAngularVelocity() = withContext(this.glDispatcher) {
+    nativeGetHeadAngularVelocity()
+}
+
+suspend fun OvrMobilePlugin.getHeadLinearVelocity() = withContext(this.glDispatcher) {
+    nativeGetHeadLinearVelocity()
+}
+
+suspend fun OvrMobilePlugin.getHeadAngularAcceleration() = withContext(this.glDispatcher) {
+    nativeGetHeadAngularAcceleration()
+}
+
+suspend fun OvrMobilePlugin.getHeadLinearAcceleration() = withContext(this.glDispatcher) {
+    nativeGetHeadLinearAcceleration()
+}
+
+private external fun nativeGetIpd(): Float
+
+/**
+ * Sets the color multiplier for the default layer used by the VrApi compositor.
+ */
+private external fun nativeSetDefaultLayerColorScale(
+    red: Float,
+    green: Float,
+    blue: Float,
+    alpha: Float
+): Boolean
+
+private external fun nativeGetControllerAngularVelocity(controllerId: Int): FloatArray
+
+private external fun nativeGetControllerLinearVelocity(controllerId: Int): FloatArray
+
+private external fun nativeGetControllerAngularAcceleration(controllerId: Int): FloatArray
+
+private external fun nativeGetControllerLinearAcceleration(controllerId: Int): FloatArray
+
+private external fun nativeGetHeadAngularVelocity(): FloatArray
+
+private external fun nativeGetHeadLinearVelocity(): FloatArray
+
+private external fun nativeGetHeadAngularAcceleration(): FloatArray
+
+private external fun nativeGetHeadLinearAcceleration(): FloatArray

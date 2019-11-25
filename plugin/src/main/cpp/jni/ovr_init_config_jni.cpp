@@ -16,7 +16,7 @@
 extern "C" {
 
 JNIEXPORT jboolean JNICALL
-JNI_METHOD(setRenderTargetSizeMultiplier)(JNIEnv *env, jclass clazz, jdouble multiplier) {
+JNI_METHOD(nativeSetRenderTargetSizeMultiplier)(JNIEnv *env, jclass clazz, jdouble multiplier) {
     return static_cast<jboolean>(ovrmobile::set_render_target_size_multiplier(get_session(),
                                                                               multiplier));
 }
