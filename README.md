@@ -25,7 +25,7 @@ Setup
 -----
 After cloning this repository make sure to initialise the submodules with `git submodule init`.
 When you've pulled a newer version make sure to run `git submodule update`.<br>
-The project uses `cmake` as its primary build system, which you can configure by following the setup instructions
+The project uses `gradle` as its primary build system, which you can configure by following the setup instructions
 for the **Android SDK & NDK**.
 
 #### Android SDK & NDK
@@ -43,7 +43,7 @@ for the **Android SDK & NDK**.
 
 #### Godot headers
 By default the project is configured to checkout the [godot_headers](https://github.com/GodotNativeTools/godot_headers) 
-repo as a submodule under the `godot_headers` directory when you run 
+repo as a submodule under the `plugin/libs/godot_headers` directory when you run 
 the `git submodule init` and `git submodule update` commands.<br>
 You can edit the `GODOT_HEADERS_DIR` cmake variable in the `CMakeLists.txt` 
 build file if you'd like to provide a different source for the Godot headers.<br>
@@ -51,14 +51,23 @@ build file if you'd like to provide a different source for the Godot headers.<br
 #### Oculus Mobile SDK
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
 (version **1.25.0** or higher) of the Oculus Mobile SDK into the 
-`ovr_sdk_mobile` directory (create the directory if it doesn't exist).
+`plugin/libs/ovr_sdk_mobile` directory (create the directory if it doesn't exist).
 - If needed, update the `OVR_ROOT_DIR` cmake variable in the the `CMakeLists.txt` build file to point to the Oculus Mobile SDK 
 containing folder.
 
 Build
 ---------
-**Note**: Ensure you're using the **Android SDK**'s version of `cmake`.<br><br>
+#### Generate shared libraries
 In the project root directory:
+ - Run `./gradlew :generateSharedLibs` to generate the plugin shared libraries.
+ - Once the build successfully completes, the shared libraries can be found in the `build/outputs/sharedLibs` directory.
+ 
+#### Generate plugin AAR files
+In the project root directory:
+ - Run `./gradlew :generatePluginBinary` to generate the plugin AAR files.
+ - Once the build successfully completes, the AAR files can be found in the `build/outputs/pluginBin` directory.
+
+#### Deprecated
  - Navigate to the `build` directory: `cd build`
  - Run:
 ```
