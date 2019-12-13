@@ -15,7 +15,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="OVR demo"
+config/name="Oculus Mobile Demo"
 run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
 
@@ -36,7 +36,17 @@ singletons=[ "res://addons/godot_ovrmobile/godot_ovrmobile.gdnlib" ]
 [rendering]
 
 quality/driver/driver_name="GLES2"
+quality/intended_usage/framebuffer_allocation=3
 vram_compression/import_etc=true
-quality/filters/msaa=1
+vram_compression/import_etc2=false
+quality/directional_shadow/size=2048
+quality/shadow_atlas/size=2048
+quality/reflections/texture_array_reflections=false
+quality/reflections/high_quality_ggx=false
+quality/shading/force_vertex_shading.mobile=false
+quality/shading/force_lambert_over_burley.mobile=false
+quality/shading/force_blinn_over_ggx.mobile=false
+quality/filters/msaa=6
+quality/depth/hdr=false
 environment/default_environment="res://default_env.tres"
 quality/voxel_cone_tracing/high_quality=false
