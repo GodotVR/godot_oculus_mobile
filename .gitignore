@@ -18,4 +18,5 @@ oculussig_*
 .idea
 cmake-build-debug
 demo/addons/godot_ovrmobile/libs/
+demo/export_presets.cfg
 ovr_sdk_mobile

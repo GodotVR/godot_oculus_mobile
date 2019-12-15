@@ -38,7 +38,7 @@ size = Vector3( 0.02, 0.02, 0.02 )
 [node name="Main" type="Spatial"]
 script = ExtResource( 1 )
 
-[node name="ARVROrigin" parent="." instance=ExtResource( 3 )]
+[node name="ARVROriginWithInitAndMovement" parent="." instance=ExtResource( 3 )]
 
 [node name="Ground" type="MeshInstance" parent="."]
 mesh = SubResource( 4 )

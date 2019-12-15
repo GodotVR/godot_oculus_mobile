@@ -17,8 +17,13 @@ public:
 	struct ControllerState {
 		bool connected = false;
 		int godot_controller_id = 0;
-		ovrInputTrackedRemoteCapabilities remote_capabilities;
+		union {
+			ovrInputCapabilityHeader header;
+			ovrInputTrackedRemoteCapabilities remote_capabilities;
+			ovrInputHandCapabilities hand_capabilities;
+		};
 		ovrTracking tracking_state;
+		ovrHandPose hand_pose;
 	};
 
 	OvrMobileController();
@@ -79,8 +84,20 @@ private:
 		return check_bit(capabilities.ControllerCapabilities, ovrControllerCaps_LeftHand);
 	}
 
+	inline bool is_left_hand_controller(const ovrInputHandCapabilities &capabilities) const {
+		return check_bit(capabilities.HandCapabilities, ovrHandCaps_LeftHand);
+	}
+
 	inline bool is_right_hand_controller(const ovrInputTrackedRemoteCapabilities &capabilities) const {
 		return check_bit(capabilities.ControllerCapabilities, ovrControllerCaps_RightHand);
+	}
+
+	inline bool is_right_hand_controller(const ovrInputHandCapabilities &capabilities) const {
+		return check_bit(capabilities.HandCapabilities, ovrHandCaps_RightHand);
+	}
+
+	inline ControllerHand get_controller_handedness(const ovrInputHandCapabilities &capabilities) const {
+		return is_left_hand_controller(capabilities) ? LEFT_HAND : RIGHT_HAND;
 	}
 
 	inline ControllerHand get_controller_handedness(const ovrInputTrackedRemoteCapabilities &capabilities) const {
@@ -99,13 +116,17 @@ private:
 		return check_bit(capabilities.ControllerCapabilities, ovrControllerCaps_HasSimpleHapticVibration);
 	}
 
-	const char *get_controller_model_name(const ovrInputTrackedRemoteCapabilities &capabilities);
+	const char *get_controller_model_name(const ControllerState& controller_state);
 
 	void update_controllers_connection_state(ovrMobile *ovr, ovrJava *java);
 
 	void update_controller_tracking_state(ovrMobile *ovr, ControllerState& controller_state, double predicted_display_time);
+	void update_controller_tracking_state_tracked_remote(ovrMobile *ovr, ControllerState& controller_state, double predicted_display_time);
+	void update_controller_tracking_state_hand(ovrMobile *ovr, ControllerState& controller_state, double predicted_display_time);
 
 	void update_controller_input_state(ovrMobile *ovr, ControllerState& controller_state);
+	void update_controller_input_state_tracked_remote(ovrMobile *ovr, ControllerState& controller_state);
+	void update_controller_input_state_hand(ovrMobile *ovr, ControllerState& controller_state);
 
 	void update_controller_vibration(ovrMobile *ovr, ControllerState& controller_state);
 

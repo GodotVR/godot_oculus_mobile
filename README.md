@@ -50,7 +50,7 @@ build file if you'd like to provide a different source for the Godot headers.<br
 
 #### Oculus Mobile SDK
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
-(version **1.25.0** or higher) of the Oculus Mobile SDK into the 
+(**Oculus Mobile SDK 12.0** (1.29.0) or higher) of the Oculus Mobile SDK into the 
 `ovr_sdk_mobile` directory (create the directory if it doesn't exist).
 - If needed, update the `OVR_ROOT_DIR` cmake variable in the the `CMakeLists.txt` build file to point to the Oculus Mobile SDK 
 containing folder.
@@ -120,6 +120,18 @@ func do_something():
   print(ovrUtilities.get_head_angular_acceleration());
   print(ovrUtilities.get_head_linear_acceleration());
 ```
+
+Hand Tracking (experimental)
+------------
+The hand tracking API is still in a very early state and might change in future updates. It is contained in `OvrHandTracking.gdns`. To see an example
+on how it can be used check the example setup in [demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd](demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd) and the associated scene file. To test this in the demo replace the ARVROriginWithInitiAndMovement scene reference with the provided ARVROriginWithHandTracking.tscn.
+To enable hand tracking there need to be special permissions inside the AndroidManifest.xml of the godot export template
+that are not yet on master. What needs to be added is:
+```
+<uses-permission android:name="oculus.permission.handtracking" />
+<uses-feature android:name="oculus.software.handtracking" android:required="false" />
+```
+
 
 Advanced GDScript Oculus VrApi access
 ------------
