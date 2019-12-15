@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/touch_controller.dae-b0891cb2b038e7a7a4fc7f74f7237392.scn"
+path="res://.import/touch_controller.dae-173498c575c00b5da5457c9fbea54cbe.scn"
 
 [deps]
 
-source_file="res://addons/example_scenes/touch_controller.dae"
-dest_files=[ "res://.import/touch_controller.dae-b0891cb2b038e7a7a4fc7f74f7237392.scn" ]
+source_file="res://addons/godot_ovrmobile/example_scenes/touch_controller.dae"
+dest_files=[ "res://.import/touch_controller.dae-173498c575c00b5da5457c9fbea54cbe.scn" ]
 
 [params]
 
