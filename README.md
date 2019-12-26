@@ -1,7 +1,6 @@
 # Oculus Mobile Godot plugin
 
 **Note:**<br> 
-This plugin is in **beta**.<br>
 If you'd like to contribute to the testing process, follow the instructions below to setup and use the plugin, 
 and report any issues you encounter. Thanks!<br>
 
@@ -25,20 +24,15 @@ Setup
 After cloning this repository make sure to initialise the submodules with `git submodule init`.
 When you've pulled a newer version make sure to run `git submodule update`.<br>
 The project uses `gradle` as its primary build system, which you can configure by following the setup instructions
-for the **Android SDK & NDK**.
+for the **Android SDK**.
 
-#### Android SDK & NDK
+#### Android SDK
 - Download and setup the [Android SDK](https://developer.android.com/studio/#command-tools).
   - If using Android Studio, download version **3.5** or higher.
   - If using the [command line tools](https://developer.android.com/studio/#command-tools), 
   download revision **26.1.1** or higher. 
-  - To ensure you have the latest version, check [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.  
-- Add the Android SDK **cmake** binaries directory to the environment path. The directory can be found under 
-`<android_sdk_location>/cmake/<cmake_version>/bin`.
-  - Ensure that `cmake_version` is greater or equal to version `3.6.0`.   
-- Download and setup the [latest version](https://developer.android.com/ndk/downloads) 
-(version **r20** or higher) of the **Android NDK**.
-- Set the environment variable `ANDROID_NDK_HOME` to the Android NDK location. 
+  - To ensure you have the latest version, check [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.
+  - Set the environment variable `ANDROID_HOME` to the Android SDK location. 
 
 #### Godot headers
 By default the project is configured to checkout the [godot_headers](https://github.com/GodotNativeTools/godot_headers) 
@@ -51,7 +45,7 @@ build file if you'd like to provide a different source for the Godot headers.<br
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
 (**Oculus Mobile SDK 12.0** (1.29.0) or higher) of the Oculus Mobile SDK into the 
 `plugin/libs/ovr_sdk_mobile` directory (create the directory if it doesn't exist).
-- If needed, update the `OVR_ROOT_DIR` cmake variable in the the `CMakeLists.txt` build file to point to the Oculus Mobile SDK 
+- If needed, update the `OVR_ROOT_DIR` cmake variable in the the `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK 
 containing folder.
 
 Build
@@ -59,23 +53,12 @@ Build
 #### Generate shared libraries
 In the project root directory:
  - Run `./gradlew :generateSharedLibs` to generate the plugin shared libraries.
- - Once the build successfully completes, the shared libraries can be found in the `build/outputs/sharedLibs` directory.
+ - Once the build successfully completes, the shared libraries can be found in the `build/outputs/sharedLibs` and `demo/addons/godot_ovrmobile/libs` directories.
  
 #### Generate plugin AAR files
 In the project root directory:
  - Run `./gradlew :generatePluginBinary` to generate the plugin AAR files.
  - Once the build successfully completes, the AAR files can be found in the `build/outputs/pluginBin` directory.
-
-#### Deprecated
- - Navigate to the `build` directory: `cd build`
- - Run:
-```
-cmake -GNinja ..
-cmake --build .
-```
-
-Once the build successfully completes, the plugin and its dependencies shared libraries can be found in the 
-default output location: `demo/addons/godot_ovrmobile/libs/<arch>`
 
 Deployment
 ------------
@@ -93,8 +76,7 @@ When exporting the project apk in Godot, the following Android export
 
 GDScript Oculus VrApi access
 ------------
-This plugin exposes parts of the Oculus VrApi via GDNative script classes. The actual exported functions
-can be found in [src/config/](src/config/).
+This plugin exposes parts of the Oculus VrApi via GDNative script classes.
 
 Here is an example of how to use these classes inside GDScript:
 ```

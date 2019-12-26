@@ -23,12 +23,23 @@ allprojects {
 }
 
 val outputDir = "build/outputs"
+val addonsLibsDir = "demo/addons/godot_ovrmobile/libs"
 
 tasks.register<Delete>("clean") {
     delete(rootProject.buildDir)
 
     // Delete the contents of the outputs directory.
     delete(outputDir)
+    delete(addonsLibsDir)
+}
+
+/**
+ * Copy the generated shared libs to the `demo/addons/godot_ovrmobile/libs` directory.
+ */
+tasks.register<Copy>("updateAddonsLibs") {
+    dependsOn("generateSharedLibs")
+    from("$outputDir/sharedLibs/release")
+    into(addonsLibsDir)
 }
 
 /**
@@ -51,6 +62,8 @@ tasks.register<Copy>("generateSharedLibs") {
     from("plugin/build/intermediates/cmake/release/obj") {
         into("release")
     }
+
+    finalizedBy("updateAddonsLibs")
 }
 
 /**
