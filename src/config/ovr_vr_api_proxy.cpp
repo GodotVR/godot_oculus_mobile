@@ -34,6 +34,11 @@ void register_gdnative_vr_api_proxy(void *p_handle) {
 		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "vrapi_get_system_status_int", attributes, method);
 		method.method = &vrapi_get_system_status_float;
 		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "vrapi_get_system_status_float", attributes, method);
+
+		method.method = &vrapi_get_hand_pose;
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "vrapi_get_hand_pose", attributes, method);
+
+		
 	}
 }
 
@@ -122,5 +127,42 @@ GDCALLINGCONV godot_variant vrapi_get_system_status_float(godot_object *p_instan
 		ovrSystemStatus statusType = (ovrSystemStatus)api->godot_variant_as_int(p_args[0]);
 		godot_real status = vrapi_GetSystemStatusFloat(ovr_java, statusType);
 		api->godot_variant_new_real(&ret, status);
+	)
+}
+
+
+
+GDCALLINGCONV godot_variant vrapi_get_hand_pose(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+		int controller_id = api->godot_variant_as_int(p_args[0]) - 1;
+		const ovrmobile::OvrMobileController* pController = ovr_mobile_session->get_ovr_mobile_controller();
+		if (pController != nullptr) {
+			const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state(controller_id);
+			if (pState != nullptr && pState->connected) {
+				//ovrHandPose pose;
+				//pose.Header.Version = ovrHandVersion_1;
+				//vrapi_GetHandPose(ovr, pState->header.DeviceID, ovr_mobile_session->get_predicted_display_time(), &pose.Header);
+				
+				godot_array rotations = api->godot_variant_as_array(p_args[1]);
+
+				if (api->godot_array_size(&rotations) != ovrHandBone_Max) {
+					ALOGE("get_hand_pose(...) expect p_args[1] to be an array of size %d; got %d.", ovrHandBone_Max, api->godot_array_size(&rotations));
+				} else {
+
+					for (int i = 0; i < ovrHandBone_Max; i++) {
+						//godot_quat quat = godot_variant_as_quat(godot_array_get(rotations, i));
+						godot_variant v_quat;
+						godot_quat g_quat;
+						//ovrQuatf ovr_quat = pose.BoneRotations[i];
+						ovrQuatf ovr_quat = pState->hand_pose.BoneRotations[i];
+						api->godot_quat_new(&g_quat, ovr_quat.x, ovr_quat.y, ovr_quat.z, ovr_quat.w);
+						api->godot_variant_new_quat(&v_quat, &g_quat);
+						api->godot_array_set(&rotations, i, &v_quat);
+					}
+
+					api->godot_variant_new_bool(&ret, true);
+				}
+			}
+		}
 	)
 }

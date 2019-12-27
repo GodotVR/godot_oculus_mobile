@@ -52,6 +52,10 @@ GDCALLINGCONV godot_variant vrapi_get_system_status_float(godot_object *p_instan
 
 
 
+// implements VrApi_Input.h: ovrResult vrapi_GetHandPose(ovrMobile * ovr, const ovrDeviceID deviceID, const double absTimeInSeconds, ovrHandPoseHeader * header);
+GDCALLINGCONV godot_variant vrapi_get_hand_pose(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+
+
 #ifdef __cplusplus
 }
 #endif

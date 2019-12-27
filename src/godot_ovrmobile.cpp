@@ -13,6 +13,7 @@
 #include "config/ovr_init_config.h"
 #include "config/ovr_performance.h"
 #include "config/ovr_tracking_transform.h"
+#include "config/ovr_hand_tracking.h"
 #include "config/ovr_utilities.h"
 
 // experimental low-level VrApi access
@@ -35,5 +36,6 @@ void GDN_EXPORT godot_ovrmobile_nativescript_init(void *p_handle) {
 	register_gdnative_performance(p_handle);
 	register_gdnative_tracking_transform(p_handle);
 	register_gdnative_utilities(p_handle);
+	register_gdnative_hand_tracking(p_handle);
 	register_gdnative_vr_api_proxy(p_handle);
 }

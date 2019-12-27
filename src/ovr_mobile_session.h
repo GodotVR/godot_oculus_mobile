@@ -76,6 +76,8 @@ public:
 		return &java;
 	}
 
+	double get_predicted_display_time() const {return predicted_display_time;};
+
 
 private:
 

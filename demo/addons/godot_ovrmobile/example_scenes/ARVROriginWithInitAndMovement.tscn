@@ -3,7 +3,7 @@
 [ext_resource path="res://addons/godot_ovrmobile/example_scenes/touch_controller.dae" type="PackedScene" id=1]
 [ext_resource path="res://addons/godot_ovrmobile/example_scenes/ARVROriginWithInitAndMovement.gd" type="Script" id=3]
 
-[node name="ARVROrigin" type="ARVROrigin"]
+[node name="ARVROriginWithInitAndMovement" type="ARVROrigin"]
 script = ExtResource( 3 )
 
 [node name="ARVRCamera" type="ARVRCamera" parent="."]
