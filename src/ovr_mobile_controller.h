@@ -18,9 +18,14 @@ public:
 		bool connected = false;
 		int godot_controller_id = 0;
 		union {
-			ovrInputCapabilityHeader header;
+			ovrInputCapabilityHeader capability_header;
 			ovrInputTrackedRemoteCapabilities remote_capabilities;
 			ovrInputHandCapabilities hand_capabilities;
+		};
+		union {
+			ovrInputStateHeader input_header;
+			ovrInputStateHand input_hand;
+			ovrInputStateTrackedRemote input_tracked_remote;
 		};
 		ovrTracking tracking_state;
 		ovrHandPose hand_pose;

@@ -27,6 +27,12 @@ GDCALLINGCONV godot_variant get_hand_pose(godot_object *p_instance, void *p_meth
 // returns 0.0 if the system is unable to get the hand scale; else returns the scale given by VrApi
 GDCALLINGCONV godot_variant get_hand_scale(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
 
+// check if the current pointer pose is valid; only then get_pointer_pose will return a useful value
+GDCALLINGCONV godot_variant is_pointer_pose_valid(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+
+// return the VrApi hand pointer pose
+GDCALLINGCONV godot_variant get_pointer_pose(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+
 
 #ifdef __cplusplus
 }

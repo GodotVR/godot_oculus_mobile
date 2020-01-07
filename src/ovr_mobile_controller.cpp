@@ -40,13 +40,12 @@ void OvrMobileController::process(ovrMobile *ovr, ovrJava *java, double predicte
 	}
 }
 
-void OvrMobileController::update_controller_vibration(ovrMobile *ovr,
-		ControllerState& controller_state) {
+void OvrMobileController::update_controller_vibration(ovrMobile *ovr, ControllerState& controller_state) {
 	if (!controller_state.connected || controller_state.godot_controller_id == kInvalidGodotControllerId) {
 		return;
 	}
 
-	if (controller_state.header.Type == ovrControllerType_TrackedRemote) {
+	if (controller_state.capability_header.Type == ovrControllerType_TrackedRemote) {
 		if (!supports_haptic_vibration(controller_state.remote_capabilities)) {
 			return;
 		}
@@ -64,9 +63,9 @@ void OvrMobileController::update_controller_input_state(ovrMobile *ovr,Controlle
 		return;
 	}
 
-	if (controller_state.header.Type == ovrControllerType_TrackedRemote) {
+	if (controller_state.capability_header.Type == ovrControllerType_TrackedRemote) {
 		update_controller_input_state_tracked_remote(ovr, controller_state);
-	} else if (controller_state.header.Type == ovrControllerType_Hand) {
+	} else if (controller_state.capability_header.Type == ovrControllerType_Hand) {
 		update_controller_input_state_hand(ovr, controller_state);
 	} else {
 		// unsupported controller
@@ -75,11 +74,12 @@ void OvrMobileController::update_controller_input_state(ovrMobile *ovr,Controlle
 
 void OvrMobileController::update_controller_input_state_tracked_remote(ovrMobile *ovr, ControllerState& controller_state) {
 	// Get the device input state.
-	ovrInputStateTrackedRemote input_state;
-	input_state.Header.ControllerType = ovrControllerType_TrackedRemote;
-	if (vrapi_GetCurrentInputState(ovr, controller_state.remote_capabilities.Header.DeviceID, &input_state.Header) < 0) {
+	controller_state.input_header.ControllerType = ovrControllerType_TrackedRemote;
+	if (vrapi_GetCurrentInputState(ovr, controller_state.remote_capabilities.Header.DeviceID, &controller_state.input_header) < 0) {
 		return;
 	}
+
+	ovrInputStateTrackedRemote& input_state = controller_state.input_tracked_remote;
 
 	// Update the controller axis.
 	if (has_joystick(controller_state.remote_capabilities)) {
@@ -144,12 +144,13 @@ void OvrMobileController::update_controller_input_state_tracked_remote(ovrMobile
 }
 
 void OvrMobileController::update_controller_input_state_hand(ovrMobile *ovr, ControllerState& controller_state) {
-	ovrInputStateHand input_state;
-	input_state.Header.ControllerType = ovrControllerType_Hand;
+	controller_state.input_header.ControllerType = ovrControllerType_Hand;
 
-	if (vrapi_GetCurrentInputState(ovr, controller_state.remote_capabilities.Header.DeviceID, &input_state.Header) < 0) {
+	if (vrapi_GetCurrentInputState(ovr, controller_state.remote_capabilities.Header.DeviceID, &controller_state.input_header) < 0) {
 		return;
 	}
+
+	ovrInputStateHand& input_state = controller_state.input_hand;
 
 	// we map pinch index and middle to button presses with same id as X/Y and A/B
 	arvr_api->godot_arvr_set_controller_button(controller_state.godot_controller_id, 7, check_bit(input_state.InputStateStatus, ovrInputStateHandStatus_IndexPinching));
@@ -173,9 +174,9 @@ void OvrMobileController::update_controller_tracking_state(ovrMobile *ovr, Contr
 		return;
 	}
 
-	if (controller_state.header.Type == ovrControllerType_TrackedRemote) {
+	if (controller_state.capability_header.Type == ovrControllerType_TrackedRemote) {
 		update_controller_tracking_state_tracked_remote(ovr, controller_state, predicted_display_time);
-	} else if (controller_state.header.Type == ovrControllerType_Hand) {
+	} else if (controller_state.capability_header.Type == ovrControllerType_Hand) {
 		update_controller_tracking_state_hand(ovr, controller_state, predicted_display_time);
 	} else {
 		// unsupported controller type
@@ -197,12 +198,12 @@ void OvrMobileController::update_controller_tracking_state_tracked_remote(ovrMob
 }
 
 void OvrMobileController::update_controller_tracking_state_hand(ovrMobile *ovr, ControllerState& controller_state, double predicted_display_time) {
-	if (vrapi_GetInputTrackingState(ovr, controller_state.header.DeviceID, predicted_display_time, &controller_state.tracking_state) < 0) {
+	if (vrapi_GetInputTrackingState(ovr, controller_state.capability_header.DeviceID, predicted_display_time, &controller_state.tracking_state) < 0) {
 		return;
 	}
 
 	controller_state.hand_pose.Header.Version = ovrHandVersion_1; //!!TODO: set in initialization
-	vrapi_GetHandPose(ovr, controller_state.header.DeviceID, predicted_display_time, &controller_state.hand_pose.Header);
+	vrapi_GetHandPose(ovr, controller_state.capability_header.DeviceID, predicted_display_time, &controller_state.hand_pose.Header);
 
 	// Update the controller transform.
 	godot_transform transform;
@@ -240,7 +241,7 @@ void OvrMobileController::update_controllers_connection_state(ovrMobile *ovr, ov
 			}
 
 			// this check forces a reconnect below because the type of the controller changed
-			if (controllers[handedness].header.Type != ovrControllerType_TrackedRemote && controllers[handedness].godot_controller_id != kInvalidGodotControllerId) {
+			if (controllers[handedness].capability_header.Type != ovrControllerType_TrackedRemote && controllers[handedness].godot_controller_id != kInvalidGodotControllerId) {
 				arvr_api->godot_arvr_remove_controller(controllers[handedness].godot_controller_id);
 				ALOGV("Removed Controller Tracked Remote (Godot id %d)", controllers[handedness].godot_controller_id);
 				controllers[handedness].godot_controller_id = kInvalidGodotControllerId;
@@ -258,7 +259,7 @@ void OvrMobileController::update_controllers_connection_state(ovrMobile *ovr, ov
 			ControllerHand handedness = get_controller_handedness(tracked_hand_capabilities);
 			
 			// this check forces a reconnect below because the type of the controller changed
-			if (controllers[handedness].header.Type != ovrControllerType_Hand && controllers[handedness].godot_controller_id != kInvalidGodotControllerId) {
+			if (controllers[handedness].capability_header.Type != ovrControllerType_Hand && controllers[handedness].godot_controller_id != kInvalidGodotControllerId) {
 				arvr_api->godot_arvr_remove_controller(controllers[handedness].godot_controller_id);
 				ALOGV("Removed Tracked Hand (Godot id %d)", controllers[handedness].godot_controller_id);
 				controllers[handedness].godot_controller_id = kInvalidGodotControllerId;
@@ -276,12 +277,12 @@ void OvrMobileController::update_controllers_connection_state(ovrMobile *ovr, ov
 
 		if (controller->connected && controller->godot_controller_id == kInvalidGodotControllerId) {
 			// Register the controller with Godot.
-			if (controller->header.Type == ovrControllerType_TrackedRemote) {
+			if (controller->capability_header.Type == ovrControllerType_TrackedRemote) {
 				controller->godot_controller_id = arvr_api->godot_arvr_add_controller(
 						const_cast<char *>(get_controller_model_name(*controller)), get_godot_hand(static_cast<ControllerHand>(hand)),
 						has_orientation_tracking(controller->remote_capabilities),
 						has_position_tracking(controller->remote_capabilities));
-			} else if (controller->header.Type == ovrControllerType_Hand) {
+			} else if (controller->capability_header.Type == ovrControllerType_Hand) {
 				controller->godot_controller_id = arvr_api->godot_arvr_add_controller(
 						const_cast<char *>(get_controller_model_name(*controller)), get_godot_hand(static_cast<ControllerHand>(hand)),
 						true, true);
@@ -297,7 +298,7 @@ void OvrMobileController::update_controllers_connection_state(ovrMobile *ovr, ov
 }
 
 const char *OvrMobileController::get_controller_model_name(const ControllerState& controller_state) {
-	if (controller_state.header.Type == ovrControllerType_TrackedRemote) {
+	if (controller_state.capability_header.Type == ovrControllerType_TrackedRemote) {
 		if (is_gear_vr_controller(controller_state.remote_capabilities)) {
 			return kGearVRController;
 		}
@@ -315,7 +316,7 @@ const char *OvrMobileController::get_controller_model_name(const ControllerState
 				return kOculusTouchRightController;
 			}
 		}
-	} else if (controller_state.header.Type == ovrControllerType_Hand) {
+	} else if (controller_state.capability_header.Type == ovrControllerType_Hand) {
 		if (is_left_hand_controller(controller_state.hand_capabilities)) {
 			return kOculusTrackedLeftHand;
 		}
