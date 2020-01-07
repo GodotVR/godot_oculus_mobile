@@ -28,6 +28,9 @@ void register_gdnative_performance(void *handle) {
     method.method = &set_foveation_level;
     nativescript_api->godot_nativescript_register_method(handle, kClassName, "set_foveation_level", attributes, method);
 
+	method.method = &set_enable_dynamic_foveation;
+    nativescript_api->godot_nativescript_register_method(handle, kClassName, "set_enable_dynamic_foveation", attributes, method);
+
     method.method = &set_swap_interval;
     nativescript_api->godot_nativescript_register_method(handle, kClassName, "set_swap_interval", attributes, method);
 }
@@ -93,6 +96,32 @@ GDCALLINGCONV godot_variant set_foveation_level(godot_object *, void *, void *p_
                 api->godot_variant_new_bool(&ret, foveation_valid);
 			}
 
+	)
+}
+
+GDCALLINGCONV godot_variant set_enable_dynamic_foveation(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+		if (p_num_args != 1) {
+			ALOGW("set_enable_dynamic_foveation(enabled) requires 1 parameter; got %d", p_num_args);
+		} else {
+			// Check if foveation is available.
+			int foveation_available = vrapi_GetSystemPropertyInt(ovr_java, VRAPI_SYS_PROP_FOVEATION_AVAILABLE);
+			if (foveation_available == VRAPI_TRUE) {
+				// Retrieve if set enable or disable
+				bool enable_dynamic_foveation = api->godot_variant_as_bool(p_args[0]);
+				bool dynamic_foveation_valid = false;
+				if (ovrmobile::is_oculus_go_device(ovr_java)) {
+					dynamic_foveation_valid = false;
+				} else if (ovrmobile::is_oculus_quest_device(ovr_java)) {
+					dynamic_foveation_valid = true;
+				}
+
+				if (dynamic_foveation_valid) {
+					vrapi_SetPropertyInt(ovr_java, VRAPI_DYNAMIC_FOVEATION_ENABLED, enable_dynamic_foveation);
+				}
+				api->godot_variant_new_bool(&ret, dynamic_foveation_valid);
+			}
+		}
 	)
 }
 

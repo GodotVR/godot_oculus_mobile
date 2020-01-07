@@ -121,6 +121,24 @@ func do_something():
   print(ovrUtilities.get_head_linear_acceleration());
 ```
 
+Performance settings are in the OvrPerformance GDNative script class:
+```
+onready var ovrPerformance = preload("res://addons/godot_ovrmobile/OvrPerformance.gdns").new()
+
+func change_performance_settings():
+    # enable the extra latency mode: this gives some performance headroom at the cost
+    # of one more frame of latency
+  	ovrPerformance.set_extra_latency_mode(1); 
+		
+    # set fixed foveation level
+    # for details see https://developer.oculus.com/documentation/quest/latest/concepts/mobile-ffr/
+		ovrPerformance.set_foveation_level(4); 
+
+    # if you want dynamic foveation make sure to set the maximum desired foveation with the previous function
+    # before you enable dynamic foveation
+		ovrPerformance.set_enable_dynamic_foveation(true);
+```
+
 Hand Tracking (experimental)
 ------------
 The hand tracking API is still in a very early state and might change in future updates. It is contained in `OvrHandTracking.gdns`. To see an example
