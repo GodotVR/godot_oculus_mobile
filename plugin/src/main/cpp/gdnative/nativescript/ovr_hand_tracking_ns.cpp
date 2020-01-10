@@ -1,5 +1,5 @@
-#include "config_common.h"
-#include "ovr_hand_tracking.h"
+#include "nativescript_common.h"
+#include "ovr_hand_tracking_ns.h"
 
 static const char *kClassName = "OvrHandTracking";
 
@@ -60,10 +60,10 @@ GDCALLINGCONV godot_variant get_hand_pose(godot_object *p_instance, void *p_meth
 		if (p_num_args != 2) {
 			ALOGW("ovrHandTracking.gdns: get_hand_pose(controller_id, pose_quaternions[]) requires 2 parameters; got %d", p_num_args);
 		} else {
-			int controller_id = api->godot_variant_as_int(p_args[0]) - 1;
+			int controller_id = api->godot_variant_as_int(p_args[0]);
 			const ovrmobile::OvrMobileController* pController = ovr_mobile_session->get_ovr_mobile_controller();
 			if (pController != nullptr) {
-				const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state(controller_id);
+				const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state_by_id(controller_id);
 				if (pState != nullptr && pState->connected) {
 					godot_array rotations = api->godot_variant_as_array(p_args[1]);
 
@@ -109,10 +109,10 @@ GDCALLINGCONV godot_variant get_hand_scale(godot_object *p_instance, void *p_met
 		if (p_num_args != 1) {
 			ALOGW("ovrHandTracking.gdns: get_hand_scale(controller_id) requires 1 parameters; got %d", p_num_args);
 		} else {
-			int controller_id = api->godot_variant_as_int(p_args[0]) - 1;
+			int controller_id = api->godot_variant_as_int(p_args[0]);
 			const ovrmobile::OvrMobileController* pController = ovr_mobile_session->get_ovr_mobile_controller();
 			if (pController != nullptr) {
-				const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state(controller_id);
+				const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state_by_id(controller_id);
 				if (pState != nullptr && pState->connected) {
 					api->godot_variant_new_real(&ret, pState->hand_pose.HandScale);
 				}
@@ -127,10 +127,10 @@ GDCALLINGCONV godot_variant is_pointer_pose_valid(godot_object *p_instance, void
 		if (p_num_args != 1) {
 			ALOGW("ovrHandTracking.gdns: is_pointer_pose_valid(controller_id) requires 1 parameters; got %d", p_num_args);
 		} else {
-			int controller_id = api->godot_variant_as_int(p_args[0]) - 1;
+			int controller_id = api->godot_variant_as_int(p_args[0]);
 			const ovrmobile::OvrMobileController* pController = ovr_mobile_session->get_ovr_mobile_controller();
 			if (pController != nullptr) {
-				const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state(controller_id);
+				const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state_by_id(controller_id);
 				if (pState != nullptr && pState->connected) {
 					if (ovrmobile::check_bit(pState->input_hand.InputStateStatus, ovrInputStateHandStatus_PointerValid)) {
 						api->godot_variant_new_bool(&ret, true);
@@ -149,10 +149,10 @@ GDCALLINGCONV godot_variant get_pointer_pose(godot_object *p_instance, void *p_m
 		if (p_num_args != 1) {
 			ALOGW("ovrHandTracking.gdns: get_pointer_pose(controller_id) requires 1 parameters; got %d", p_num_args);
 		} else {
-			int controller_id = api->godot_variant_as_int(p_args[0]) - 1;
+			int controller_id = api->godot_variant_as_int(p_args[0]);
 			const ovrmobile::OvrMobileController* pController = ovr_mobile_session->get_ovr_mobile_controller();
 			if (pController != nullptr) {
-				const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state(controller_id);
+				const ovrmobile::OvrMobileController::ControllerState* pState = pController->get_controller_state_by_id(controller_id);
 				if (pState != nullptr && pState->connected) {
 					godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
 					godot_transform gd_transform;

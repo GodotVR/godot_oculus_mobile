@@ -14,7 +14,7 @@
 #include "gdnative/nativescript/ovr_performance_ns.h"
 #include "gdnative/nativescript/ovr_tracking_transform_ns.h"
 #include "gdnative/nativescript/ovr_utilities_ns.h"
-#include "gdnative/nativescript/ovr_hand_tracking.h"
+#include "gdnative/nativescript/ovr_hand_tracking_ns.h"
 
 // experimental low-level VrApi access
 #include "gdnative/nativescript/ovr_vr_api_proxy_ns.h"

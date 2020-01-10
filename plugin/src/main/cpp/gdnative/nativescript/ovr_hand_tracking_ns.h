@@ -3,10 +3,10 @@
 // of the VrApi.h directly to gdscript and is for low level access of VrApi features.
 // It might get replaced by dedicated functions in the future.
 
-#ifndef OVR_HAND_TRACKING_H
-#define OVR_HAND_TRACKING_H
+#ifndef OVR_HAND_TRACKING_NS_H
+#define OVR_HAND_TRACKING_NS_H
 
-#include "../godot_calls.h"
+#include "gdnative/godot_calls.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,4 +38,4 @@ GDCALLINGCONV godot_variant get_pointer_pose(godot_object *p_instance, void *p_m
 }
 #endif
 
-#endif /* !OVR_HAND_TRACKNG_H */
+#endif /* !OVR_HAND_TRACKING_NS_H */
