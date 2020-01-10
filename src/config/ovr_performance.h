@@ -35,6 +35,11 @@ GDCALLINGCONV godot_variant set_extra_latency_mode(godot_object *p_instance, voi
 // - Oculus Go: https://developer.oculus.com/documentation/mobilesdk/latest/concepts/mobile-ffr/
 GDCALLINGCONV godot_variant set_foveation_level(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
 
+// Enables or disables dynamic foveation
+// Returns true if it's available 
+GDCALLINGCONV godot_variant set_enable_dynamic_foveation(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
+
+
 // Sets the swap interval to control the application frame timing.
 // See https://developer.oculus.com/documentation/mobilesdk/latest/concepts/mobile-vrapi#frame-timing for additional background.
 GDCALLINGCONV godot_variant set_swap_interval(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
