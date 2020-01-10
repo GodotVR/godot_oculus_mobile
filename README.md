@@ -2,7 +2,6 @@
 
 **Note:**<br> 
 This plugin is in **beta**.<br>
-Testing needs to be complete before it's deemed stable and ready for use.<br>
 If you'd like to contribute to the testing process, follow the instructions below to setup and use the plugin, 
 and report any issues you encounter. Thanks!<br>
 
@@ -72,12 +71,16 @@ default output location: `demo/addons/godot_ovrmobile/libs/<arch>`
 Deployment
 ------------
 When exporting the project apk in Godot, the following Android export 
-`Graphics` options should be set:
+`Xr Features` options should be set:
 - `Xr Mode` must be set to `Oculus Mobile VR`.
 - `Degrees of Freedom`:
   - If deploying only on Oculus Quest, this must be set to `6DOF`
   - If deploying on Oculus Go, or on Oculus Go and Oculus Quest, 
   this must be set to `3DOF and 6DOF`
+- `Hand Tracking`: This is only supported on the **Oculus Quest**
+  - Select `None` if your app doesn't need hand tracking
+  - Select `Optional` if your app can use hand tracking, but doesn't require it (i.e: also works with controllers).
+  - Select `Required` if your app only uses hand tracking.
 
 GDScript Oculus VrApi access
 ------------
@@ -142,13 +145,10 @@ func change_performance_settings():
 Hand Tracking (experimental)
 ------------
 The hand tracking API is still in a very early state and might change in future updates. It is contained in `OvrHandTracking.gdns`. To see an example
-on how it can be used check the example setup in [demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd](demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd) and the associated scene file. To test this in the demo replace the ARVROriginWithInitiAndMovement scene reference with the provided ARVROriginWithHandTracking.tscn.
-To enable hand tracking there need to be special permissions inside the AndroidManifest.xml of the godot export template
-that are not yet on master. What needs to be added is:
-```
-<uses-permission android:name="oculus.permission.handtracking" />
-<uses-feature android:name="oculus.software.handtracking" android:required="false" />
-```
+on how it can be used check the example setup in [demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd](demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd) and the associated scene file. 
+To test this in the demo replace the ARVROriginWithInitiAndMovement scene reference with the provided ARVROriginWithHandTracking.tscn.
+
+To enable hand tracking, make sure to follow the **Deployment/Hand Tracking** steps above.
 
 
 Advanced GDScript Oculus VrApi access
