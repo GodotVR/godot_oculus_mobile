@@ -1,7 +1,6 @@
 # Oculus Mobile Godot plugin
 
 **Note:**<br> 
-This plugin is in **beta**.<br>
 If you'd like to contribute to the testing process, follow the instructions below to setup and use the plugin, 
 and report any issues you encounter. Thanks!<br>
 
@@ -17,7 +16,7 @@ The use of this plugin require Godot 3.2 or later.
 License
 -------
 - This project is released under a MIT license.
-- Please check the [Oculus Mobile SDK license](https://developer.oculus.com/licenses/mobile-3.2.1/) for information 
+- Please check the [Oculus Mobile SDK license](https://developer.oculus.com/licenses) for information 
 about the Oculus Mobile SDK used in this project.
 
 Setup
