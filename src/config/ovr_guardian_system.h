@@ -19,7 +19,7 @@ GDCALLINGCONV void *ovr_guardian_system_constructor(godot_object *p_instance, vo
 GDCALLINGCONV void ovr_guardian_system_destructor(godot_object *p_instance, void *p_method_data, void *p_user_data);
 
 // implements VrApi.h: ovrResult vrapi_GetBoundaryGeometry( ovrMobile * ovr, const uint32_t pointsCountInput, uint32_t * pointsCountOutput, ovrVector3f * points );
-// not yet implemented
+GDCALLINGCONV godot_variant get_boundary_geometry(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);
 
 // implements VrApi.h: ovrResult vrapi_GetBoundaryOrientedBoundingBox( ovrMobile * ovr, ovrPosef * pose, ovrVector3f * scale );
 GDCALLINGCONV godot_variant get_boundary_oriented_bounding_box(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args);

@@ -24,6 +24,9 @@ void register_gdnative_guardian_system(void *p_handle) {
 		method.method = &get_boundary_visible;
 		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_boundary_visible", attributes, method);
 
+		method.method = &get_boundary_geometry;
+		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_boundary_geometry", attributes, method);
+
 		method.method = &get_boundary_oriented_bounding_box;
 		nativescript_api->godot_nativescript_register_method(p_handle, kClassName, "get_boundary_oriented_bounding_box", attributes, method);
 	}
@@ -68,6 +71,35 @@ GDCALLINGCONV godot_variant get_boundary_visible(godot_object *p_instance, void 
 	)	
 }
 
+GDCALLINGCONV godot_variant get_boundary_geometry(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
+	CHECK_OVR(
+		uint32_t pointsCountInput = 0;
+		uint32_t pointsCountOutput = 0;
+
+		// Get number of points in geometry
+		if (vrapi_GetBoundaryGeometry(ovr, 0, &pointsCountInput, NULL) == ovrSuccess) {
+			ovrVector3f* boundaryPoints = (ovrVector3f*)api->godot_alloc(sizeof(ovrVector3f) * pointsCountInput);
+			if (vrapi_GetBoundaryGeometry(ovr, pointsCountInput, &pointsCountOutput, boundaryPoints) == ovrSuccess) {
+				godot_array gd_returnArray;
+				api->godot_array_new(&gd_returnArray);
+
+				godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
+
+				for (uint32_t i = 0; i < pointsCountOutput; i++) {
+					godot_vector3 gd_point;
+					godot_variant vPoint;
+					api->godot_vector3_new(&gd_point, boundaryPoints[i].x * world_scale, boundaryPoints[i].y * world_scale, boundaryPoints[i].z * world_scale);
+					api->godot_variant_new_vector3(&vPoint, &gd_point);
+					api->godot_array_push_back(&gd_returnArray, &vPoint);
+				}
+
+				api->godot_free(boundaryPoints);
+
+				api->godot_variant_new_array(&ret, &gd_returnArray);
+			}
+		}
+	)	
+}
 
 GDCALLINGCONV godot_variant get_boundary_oriented_bounding_box(godot_object *p_instance, void *p_method_data, void *p_user_data, int p_num_args, godot_variant **p_args) {
 	CHECK_OVR(
