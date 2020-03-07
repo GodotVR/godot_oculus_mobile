@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(29)
-    buildToolsVersion = "29.0.1"
+    compileSdkVersion(Versions.compileSdk)
+    buildToolsVersion = Versions.buildTools
     defaultConfig {
-        minSdkVersion(18)
-        targetSdkVersion(29)
+        minSdkVersion(Versions.minSdk)
+        targetSdkVersion(Versions.targetSdk)
         versionName = "1.0"
         versionCode = 1
         externalNativeBuild {
@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.70")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlinVersion}")
     if (rootProject.findProject(":godot:lib") != null) {
         compileOnly(project(":godot:lib"))
     } else {
