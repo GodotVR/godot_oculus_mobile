@@ -54,7 +54,7 @@ func _initialize_ovr_mobile_arvr_interface():
 		# Configure the interface init parameters.
 		if arvr_interface.initialize():
 			get_viewport().arvr = true
-			Engine.target_fps = 72 # Quest
+			Engine.iterations_per_second = 72 # Quest
 
 			# load the .gdns classes.
 			ovr_display_refresh_rate = load("res://addons/godot_ovrmobile/OvrDisplayRefreshRate.gdns");
@@ -178,7 +178,7 @@ func _on_LeftTouchController_button_pressed(button):
 
 	if (ovr_utilities):
 		print(" ovr_utilities.get_ipd() == " + str(ovr_utilities.get_ipd()));
-		
+
 		# you can access the accelerations and velocitys for the head and controllers
 		# that are predicted by the Oculus VrApi via these funcitons:
 		var controller_id = $LeftTouchController.controller_id;

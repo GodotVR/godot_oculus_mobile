@@ -42,7 +42,7 @@ Quat(-0.081241, -0.013242, 0.560496, 0.824056), Quat(0.00276, 0.037404, 0.637818
 # the rotations we get from the OVR sdk are absolute and not relative
 # to the rest pose we have in the model; so we clear them here to be
 # able to use set pose
-# This is more like a workaround then a clean solution but allows to use 
+# This is more like a workaround then a clean solution but allows to use
 # the hand model from the sample without major modifications
 func _clear_bone_rest(skel):
 	for i in range(0, skel.get_bone_count()):
@@ -57,7 +57,7 @@ func _update_hand_model(hand: ARVRController, model : Spatial, skel: Skeleton):
 		# scale of the hand model as reported by VrApi
 		var ls = ovr_hand_tracking.get_hand_scale(hand.controller_id);
 		if (ls > 0.0): model.scale = Vector3(ls, ls, ls);
-		
+
 		var confidence = ovr_hand_tracking.get_hand_pose(hand.controller_id, _vrapi_bone_orientations);
 		if (confidence > 0.0):
 			model.visible = true;
@@ -71,39 +71,39 @@ func _update_hand_model(hand: ARVRController, model : Spatial, skel: Skeleton):
 
 func _ready():
 	_initialize_ovr_mobile_arvr_interface();
-	
+
 	_clear_bone_rest(left_skel);
 	_clear_bone_rest(right_skel);
-		
+
 	_vrapi_bone_orientations.resize(24);
-	
+
 
 var t = 0.0;
 func _process(delta_t):
 	_check_and_perform_runtime_config()
-	
+
 	_update_hand_model(left_hand, left_model, left_skel);
 	_update_hand_model(right_hand, right_model, right_skel);
-	
+
 	# If we are on desktop or don't have hand tracking we set a debug pose on the left hand
 	if (!ovr_hand_tracking):
 		for i in range(0, _hand_bone_mappings.size()):
 			left_skel.set_bone_pose(_hand_bone_mappings[i], Transform(test_pose_left_ThumbsUp[i]));
-	
-	
-	
+
+
+
 	t += delta_t;
 	if (t > 1.0):
 		t = 0.0;
-		
+
 		# here we print every second the state of the pinches; they are mapped at the moment
 		# to the first 4 joystick axis 0==index; 1==middle; 2==ring; 3==pinky
-		print("Left Pinches: %.3f %.3f %.3f %.3f; Right Pinches %.3f %.3f %.3f %.3f" % 
+		print("Left Pinches: %.3f %.3f %.3f %.3f; Right Pinches %.3f %.3f %.3f %.3f" %
 			 [left_hand.get_joystick_axis(0), left_hand.get_joystick_axis(1), left_hand.get_joystick_axis(2), left_hand.get_joystick_axis(3),
 			  right_hand.get_joystick_axis(0), right_hand.get_joystick_axis(1), right_hand.get_joystick_axis(2), right_hand.get_joystick_axis(3)]);
 
-	
-				
+
+
 
 
 
@@ -124,7 +124,7 @@ func _initialize_ovr_mobile_arvr_interface():
 		# Configure the interface init parameters.
 		if arvr_interface.initialize():
 			get_viewport().arvr = true
-			Engine.target_fps = 72 # Quest
+			Engine.iterations_per_second = 72 # Quest
 
 			# load the .gdns classes.
 			ovr_display_refresh_rate = load("res://addons/godot_ovrmobile/OvrDisplayRefreshRate.gdns");
@@ -190,4 +190,3 @@ func _on_RightHand_pinch_pressed(button):
 	if (button == 1): print("Right Middle Pinching");
 	if (button == 2): print("Right Pinky Pinching");
 	if (button == 15): print("Right Ring Pinching");
-
