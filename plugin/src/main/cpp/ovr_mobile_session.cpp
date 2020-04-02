@@ -245,6 +245,8 @@ void OvrMobileSession::process() {
 		}
 		headset_mounted = is_mounted;
 	}
+
+	check_for_vrapi_events();
 }
 
 bool OvrMobileSession::is_headset_mounted() const {
@@ -254,6 +256,45 @@ bool OvrMobileSession::is_headset_mounted() const {
 
 	return vrapi_GetSystemStatusInt(&java, VRAPI_SYS_STATUS_MOUNTED)
 			== VRAPI_TRUE;
+}
+
+void OvrMobileSession::check_for_vrapi_events() const {
+	if (!in_vr_mode()) {
+		return;
+	}
+
+	ovrEventDataBuffer eventDataBuffer = {};
+	while (true) {
+
+		ovrEventHeader *eventHeader = (ovrEventHeader *)(&eventDataBuffer);
+		ovrResult res = vrapi_PollEvent(eventHeader);
+		if (res != ovrSuccess) {
+			return;
+		}
+
+		switch (eventHeader->EventType) {
+			case VRAPI_EVENT_FOCUS_GAINED:
+				// FOCUS_GAINED is sent when the application is in the foreground and has
+				// input focus. This may be due to a system overlay relinquishing focus
+				// back to the application.
+				OvrMobilePluginWrapper::on_input_focus_gained();
+				break;
+
+			case VRAPI_EVENT_FOCUS_LOST:
+				// FOCUS_GAINED is sent when the application is in the foreground and has
+				// input focus. This may be due to a system overlay relinquishing focus
+				// back to the application.
+				OvrMobilePluginWrapper::on_input_focus_lost();
+				break;
+
+			case VRAPI_EVENT_NONE:
+				// No more pending events.
+				return;
+
+			default:
+				break;
+		}
+	}
 }
 
 bool OvrMobileSession::enter_vr_mode() {

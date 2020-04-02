@@ -92,7 +92,11 @@ private:
 		return godot_eye == /* EYE_RIGHT */ 2 ? static_cast<int>(ovrEye::VRAPI_EYE_RIGHT) : static_cast<int>(ovrEye::VRAPI_EYE_LEFT);
 	}
 
+	// Returns true if the headset is mounted, false otherwise.
 	bool is_headset_mounted() const;
+
+	// Poll for VrApi events. Should be called every frame.
+	void check_for_vrapi_events() const;
 
 	static OvrMobileSession* singleton_instance;
 
