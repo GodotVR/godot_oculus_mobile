@@ -5,6 +5,7 @@
 #include "ovr_mobile_session.h"
 #include "common.h"
 #include <unistd.h>
+#include "jni/ovr_mobile_plugin_wrapper.h"
 
 namespace ovrmobile {
 
@@ -231,6 +232,28 @@ void OvrMobileSession::process() {
 
 	// Update the oculus controllers state.
 	ovr_mobile_controller->process(ovr, &java, predicted_display_time);
+
+	// Update the headset_mounted state if necessary
+	bool is_mounted = is_headset_mounted();
+	if (headset_mounted != is_mounted) {
+		if (is_mounted) {
+			// Notify that the headset is mounted.
+			OvrMobilePluginWrapper::on_headset_mounted();
+		} else {
+			// Notify that the headset is unmounted.
+			OvrMobilePluginWrapper::on_headset_unmounted();
+		}
+		headset_mounted = is_mounted;
+	}
+}
+
+bool OvrMobileSession::is_headset_mounted() const {
+	if (!in_vr_mode()) {
+		return false;
+	}
+
+	return vrapi_GetSystemStatusInt(&java, VRAPI_SYS_STATUS_MOUNTED)
+			== VRAPI_TRUE;
 }
 
 bool OvrMobileSession::enter_vr_mode() {

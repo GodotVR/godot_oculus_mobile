@@ -48,11 +48,11 @@ public:
 	// the api functionality.
 	bool initialize();
 
-	bool in_vr_mode() {
+	bool in_vr_mode() const {
 		return initialized && ovr != nullptr;
 	}
 
-	bool is_initialized() { return initialized; }
+	bool is_initialized() const { return initialized; }
 
 	// Notifies that the interface should be paused. For ovrmobile, this means we should leave vr mode if it's active.
 	void on_pause();
@@ -92,6 +92,8 @@ private:
 		return godot_eye == /* EYE_RIGHT */ 2 ? static_cast<int>(ovrEye::VRAPI_EYE_RIGHT) : static_cast<int>(ovrEye::VRAPI_EYE_LEFT);
 	}
 
+	bool is_headset_mounted() const;
+
 	static OvrMobileSession* singleton_instance;
 
 	bool initialized = false;
@@ -101,6 +103,7 @@ private:
 	unsigned int swap_interval;
 	uint64_t frame_index = 1;
 	double predicted_display_time = 0;
+	bool headset_mounted = true;
 
 	ovrVector4f default_layer_color_scale;
 
