@@ -10,6 +10,8 @@ namespace ovrmobile {
 jobject OvrMobilePluginWrapper::ovr_mobile_plugin_instance = nullptr;
 jmethodID OvrMobilePluginWrapper::on_headset_mounted_id = nullptr;
 jmethodID OvrMobilePluginWrapper::on_headset_unmounted_id = nullptr;
+jmethodID OvrMobilePluginWrapper::on_input_focus_gained_id = nullptr;
+jmethodID OvrMobilePluginWrapper::on_input_focus_lost_id = nullptr;
 
 OvrMobilePluginWrapper::OvrMobilePluginWrapper() {}
 
@@ -33,6 +35,12 @@ void OvrMobilePluginWrapper::initializeWrapper(JNIEnv* env,
       env->GetMethodID(ovr_mobile_plugin_class, "onHeadsetUnmounted", "()V");
   ALOG_ASSERT(on_headset_unmounted_id != nullptr,
               "Unable to find onHeadsetUnmounted");
+
+  on_input_focus_gained_id = env->GetMethodID(ovr_mobile_plugin_class, "onInputFocusGained", "()V");
+  ALOG_ASSERT(on_input_focus_gained_id != nullptr, "Unable to find onInputFocusGained");
+
+  on_input_focus_lost_id = env->GetMethodID(ovr_mobile_plugin_class, "onInputFocusLost", "()V");
+  ALOG_ASSERT(on_input_focus_lost_id != nullptr, "Unable to find onInputFocusLost");
 }
 
 void OvrMobilePluginWrapper::uninitializeWrapper(JNIEnv* env) {
@@ -41,6 +49,8 @@ void OvrMobilePluginWrapper::uninitializeWrapper(JNIEnv* env) {
     ovr_mobile_plugin_instance = nullptr;
     on_headset_mounted_id = nullptr;
     on_headset_unmounted_id = nullptr;
+    on_input_focus_gained_id = nullptr;
+    on_input_focus_lost_id = nullptr;
   }
 }
 
@@ -55,6 +65,20 @@ void OvrMobilePluginWrapper::on_headset_unmounted() {
   if (ovr_mobile_plugin_instance && on_headset_unmounted_id) {
     JNIEnv* env = android_api->godot_android_get_env();
     env->CallVoidMethod(ovr_mobile_plugin_instance, on_headset_unmounted_id);
+  }
+}
+
+void OvrMobilePluginWrapper::on_input_focus_gained() {
+  if (ovr_mobile_plugin_instance && on_input_focus_gained_id) {
+    JNIEnv* env = android_api->godot_android_get_env();
+    env->CallVoidMethod(ovr_mobile_plugin_instance, on_input_focus_gained_id);
+  }
+}
+
+void OvrMobilePluginWrapper::on_input_focus_lost() {
+  if (ovr_mobile_plugin_instance && on_input_focus_lost_id) {
+    JNIEnv* env = android_api->godot_android_get_env();
+    env->CallVoidMethod(ovr_mobile_plugin_instance, on_input_focus_lost_id);
   }
 }
 } // namespace ovrmobile

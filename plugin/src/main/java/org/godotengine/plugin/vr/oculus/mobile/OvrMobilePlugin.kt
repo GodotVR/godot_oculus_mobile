@@ -26,6 +26,21 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
         fun onHeadsetUnmounted()
     }
 
+    /**
+     * Used to query input focus state.
+     */
+    interface InputFocusListener {
+        /**
+         * Notifies when the input focus is gained.
+         */
+        fun onInputFocusGained()
+
+        /**
+         * Notifies when the input focus is lost.
+         */
+        fun onInputFocusLost()
+    }
+
     companion object {
         init {
             System.loadLibrary("godot_ovrmobile")
@@ -33,6 +48,7 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
     }
 
     private val headsetStateListeners = ConcurrentLinkedQueue<HeadsetStateListener>()
+    private val inputFocusListeners = ConcurrentLinkedQueue<InputFocusListener>()
 
     override fun getPluginGDNativeLibrariesPaths() =
         setOf("addons/godot_ovrmobile/godot_ovrmobile.gdnlib")
@@ -61,6 +77,14 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
         headsetStateListeners.remove(listener)
     }
 
+    fun registerInputFocusListener(listener: InputFocusListener) {
+        inputFocusListeners.add(listener)
+    }
+
+    fun unregisterInputFocusListener(listener: InputFocusListener) {
+        inputFocusListeners.remove(listener)
+    }
+
     /**
      * Invoked by the native code to signal the headset is mounted.
      */
@@ -78,6 +102,26 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
         // TODO(m4gr3d): Emit headset unmounted signal when https://github.com/godotengine/godot/pull/37305 is submitted.
         for (listener in headsetStateListeners) {
             listener.onHeadsetUnmounted()
+        }
+    }
+
+    /**
+     * Invoked by the native code to signal input focus gain.
+     */
+    private fun onInputFocusGained() {
+        // TODO(m4gr3d): Emit signal when https://github.com/godotengine/godot/pull/37305 is submitted.
+        for (listener in inputFocusListeners) {
+            listener.onInputFocusGained()
+        }
+    }
+
+    /**
+     * Invoked by the native code to signal input focus loss.
+     */
+    private fun onInputFocusLost() {
+        // TODO(m4gr3d): Emit signal when https://github.com/godotengine/godot/pull/37305 is submitted.
+        for (listener in inputFocusListeners) {
+            listener.onInputFocusLost()
         }
     }
 
