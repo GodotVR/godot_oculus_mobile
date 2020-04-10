@@ -13,26 +13,29 @@
 #undef JNI_CLASS_NAME
 #define JNI_CLASS_NAME OvrUtilities
 
-namespace {
-    inline jfloatArray from_ovrVector3f(JNIEnv *env, ovrVector3f vector) {
-        jfloatArray result = env->NewFloatArray(3);
-        if (result) {
-            float vector_data[3];
-            vector_data[0] = vector.x;
-            vector_data[1] = vector.y;
-            vector_data[2] = vector.z;
-
-            env->SetFloatArrayRegion(result, 0, 3, vector_data);
-        }
-
-        return result;
-    }
-}  // namespace
-
 extern "C" {
 
 JNIEXPORT jfloat JNICALL JNI_METHOD(nativeGetIpd)(JNIEnv *env, jclass clazz) {
     return ovrmobile::get_ipd(get_session());
+}
+
+JNIEXPORT jint JNICALL JNI_METHOD(nativeGetRenderTargetWidth)(JNIEnv *env, jclass ) {
+  return get_session()->get_render_target_width();
+}
+
+JNIEXPORT jint JNICALL JNI_METHOD(nativeGetRenderTargetHeight)(JNIEnv *env, jclass ) {
+  return get_session()->get_render_target_height();
+}
+
+JNIEXPORT jfloatArray JNICALL JNI_METHOD(nativeGetEyeFov)(JNIEnv *env, jclass, jint eye) {
+  ovrVector4f eye_fov = get_session()->get_eye_fov(static_cast<ovrEye>(eye));
+  return from_ovrVector4f(env, eye_fov);
+}
+
+JNIEXPORT jfloatArray JNICALL JNI_METHOD(nativeGetEyeViewportBounds)(JNIEnv *env, jclass, jint eye) {
+  ovrVector4f eye_viewport_bounds = get_session()->get_eye_viewport_bound(
+      static_cast<ovrEye>(eye));
+  return from_ovrVector4f(env, eye_viewport_bounds);
 }
 
 JNIEXPORT jboolean JNICALL

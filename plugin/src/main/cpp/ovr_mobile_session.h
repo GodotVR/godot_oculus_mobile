@@ -30,6 +30,18 @@ public:
 		return width;
 	}
 
+	/// Get the fov for the given eye.
+	/// The returned vector is of the form {left_fov_in_degrees, right_fov_in_degrees, down_fov_in_degrees, up_fov_in_degrees}.
+	ovrVector4f get_eye_fov(ovrEye eye) {
+	  return eye_fovs[eye];
+	}
+
+	/// Get the viewport bound for the given eye.
+	/// The returned vector is of the form {start_x, start_y, end_x, end_y}.
+	ovrVector4f get_eye_viewport_bound(ovrEye eye) {
+		return eye_viewport_bounds[eye];
+	}
+
 	void set_render_target_size_multiplier(double multiplier) {
 		this->render_target_size_multiplier = multiplier;
 	}
@@ -108,6 +120,8 @@ private:
 	uint64_t frame_index = 1;
 	double predicted_display_time = 0;
 	bool headset_mounted = true;
+	ovrVector4f eye_fovs[VRAPI_EYE_COUNT];
+	ovrVector4f eye_viewport_bounds[VRAPI_EYE_COUNT];
 
 	ovrVector4f default_layer_color_scale;
 
