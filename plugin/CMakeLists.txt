@@ -56,8 +56,9 @@ project(godot_ovrmobile)
 # Sets the path to the VrApi containing directory. Update this variable if the api is in another location.
 set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/libs/ovr_sdk_mobile")
 
-# Location to the Godot headers directory. The default location is "${CMAKE_SOURCE_DIR}/deps/godot_headers"
-set(GODOT_HEADERS_DIR "${CMAKE_SOURCE_DIR}/libs/godot_headers")
+# Location to the Godot headers directory.
+set(GODOT_CPP_DIR "${CMAKE_SOURCE_DIR}/libs/godot-cpp")
+set(GODOT_HEADERS_DIR "${GODOT_CPP_DIR}/godot_headers")
 ###############################################################################
 
 set(OVR_HEADERS_DIR "${OVR_ROOT_DIR}/VrApi/Include" CACHE STRING "")
@@ -89,11 +90,39 @@ else ()
     set(GODOT_COMPILE_FLAGS "${GODOT_COMPILE_FLAGS} -O3")
 endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
-# OVR library
+## OVR library
 set(VRAPI_LIB_PATH "${OVR_ROOT_DIR}/VrApi/Libs/Android/${ANDROID_ABI}/${VRAPI_LIB_BUILD_TYPE}/libvrapi.so")
 add_library(vrapi SHARED IMPORTED GLOBAL)
 set_target_properties(vrapi PROPERTIES IMPORTED_LOCATION ${VRAPI_LIB_PATH})
 
+## godot-cpp library
+set(GODOT-CPP "godot-cpp")
+
+file(GLOB_RECURSE GODOT_CPP_SOURCES ${GODOT_CPP_DIR}/src/*.c**)
+file(GLOB_RECURSE GODOT_CPP_HEADERS ${GODOT_CPP_DIR}/include/*.h**)
+
+add_library(${GODOT-CPP}
+        STATIC
+        ${GODOT_CPP_SOURCES} ${GODOT_CPP_HEADERS})
+
+target_include_directories(${GODOT-CPP}
+        PUBLIC
+        ${GODOT_CPP_DIR}/include
+        ${GODOT_CPP_DIR}/include/core
+        ${GODOT_CPP_DIR}/include/gen
+        )
+
+# Put godot headers as SYSTEM PUBLIC to exclude warnings from irrelevant headers
+target_include_directories(${GODOT-CPP}
+        SYSTEM PUBLIC
+        ${GODOT_HEADERS_DIR}
+        )
+
+# Add the compile flags
+set_property(TARGET ${GODOT-CPP} APPEND_STRING PROPERTY COMPILE_FLAGS ${GODOT_COMPILE_FLAGS})
+set_property(TARGET ${GODOT-CPP} APPEND_STRING PROPERTY LINK_FLAGS ${GODOT_LINKER_FLAGS})
+
+## Setup the plugin library
 # Get Sources
 file(GLOB_RECURSE SOURCES src/main/cpp/*.c**)
 file(GLOB_RECURSE HEADERS src/main/cpp/*.h**)
@@ -105,6 +134,12 @@ add_library(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME}
         PRIVATE
         src/main/cpp
+        ${GODOT_CPP_DIR}/src
+        ${GODOT_CPP_DIR}/src/core
+        ${GODOT_CPP_DIR}/src/gen
+        ${GODOT_CPP_DIR}/include
+        ${GODOT_CPP_DIR}/include/core
+        ${GODOT_CPP_DIR}/include/gen
         )
 
 # Put godot headers as SYSTEM PUBLIC to exclude warnings from irrelevant headers
@@ -119,7 +154,8 @@ target_link_libraries(${PROJECT_NAME}
         log
         EGL
         GLESv3
-        vrapi)
+        vrapi
+        ${GODOT-CPP})
 
 # Add the compile flags
 set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY COMPILE_FLAGS ${GODOT_COMPILE_FLAGS})

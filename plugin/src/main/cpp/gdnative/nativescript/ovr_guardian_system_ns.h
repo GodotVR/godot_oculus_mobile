@@ -6,7 +6,7 @@
 #ifndef OVR_GUARDIAN_SYSTEM_NS_H
 #define OVR_GUARDIAN_SYSTEM_NS_H
 
-#include "gdnative/godot_calls.h"
+#include "nativescript_common.h"
 
 #ifdef __cplusplus
 extern "C" {

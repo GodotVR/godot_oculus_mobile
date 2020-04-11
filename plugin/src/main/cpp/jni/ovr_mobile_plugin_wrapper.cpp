@@ -66,42 +66,42 @@ void OvrMobilePluginWrapper::uninitializeWrapper(JNIEnv* env) {
 
 void OvrMobilePluginWrapper::on_headset_mounted() {
   if (ovr_mobile_plugin_instance && on_headset_mounted_id) {
-    JNIEnv *env = android_api->godot_android_get_env();
+    JNIEnv *env = godot::android_api->godot_android_get_env();
     env->CallVoidMethod(ovr_mobile_plugin_instance, on_headset_mounted_id);
   }
 }
 
 void OvrMobilePluginWrapper::on_headset_unmounted() {
   if (ovr_mobile_plugin_instance && on_headset_unmounted_id) {
-    JNIEnv* env = android_api->godot_android_get_env();
+    JNIEnv* env = godot::android_api->godot_android_get_env();
     env->CallVoidMethod(ovr_mobile_plugin_instance, on_headset_unmounted_id);
   }
 }
 
 void OvrMobilePluginWrapper::on_input_focus_gained() {
   if (ovr_mobile_plugin_instance && on_input_focus_gained_id) {
-    JNIEnv* env = android_api->godot_android_get_env();
+    JNIEnv* env = godot::android_api->godot_android_get_env();
     env->CallVoidMethod(ovr_mobile_plugin_instance, on_input_focus_gained_id);
   }
 }
 
 void OvrMobilePluginWrapper::on_input_focus_lost() {
   if (ovr_mobile_plugin_instance && on_input_focus_lost_id) {
-    JNIEnv* env = android_api->godot_android_get_env();
+    JNIEnv* env = godot::android_api->godot_android_get_env();
     env->CallVoidMethod(ovr_mobile_plugin_instance, on_input_focus_lost_id);
   }
 }
 
 void OvrMobilePluginWrapper::on_enter_vr_mode() {
   if (ovr_mobile_plugin_instance && on_enter_vr_mode_id) {
-    JNIEnv *env = android_api->godot_android_get_env();
+    JNIEnv *env = godot::android_api->godot_android_get_env();
     env->CallVoidMethod(ovr_mobile_plugin_instance, on_enter_vr_mode_id);
   }
 }
 
 void OvrMobilePluginWrapper::on_leave_vr_mode() {
   if (ovr_mobile_plugin_instance && on_leave_vr_mode_id) {
-    JNIEnv *env = android_api->godot_android_get_env();
+    JNIEnv *env = godot::android_api->godot_android_get_env();
     env->CallVoidMethod(ovr_mobile_plugin_instance, on_leave_vr_mode_id);
   }
 }

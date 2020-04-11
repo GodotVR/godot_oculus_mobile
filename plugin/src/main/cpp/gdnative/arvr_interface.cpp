@@ -13,8 +13,8 @@ const char *kName = "OVRMobile";
 godot_string godot_arvr_get_name(const void *p_data) {
 	godot_string ret;
 
-	api->godot_string_new(&ret);
-	api->godot_string_parse_utf8(&ret, kName);
+	godot::api->godot_string_new(&ret);
+	godot::api->godot_string_parse_utf8(&ret, kName);
 
 	return ret;
 }
@@ -70,7 +70,7 @@ godot_vector2 godot_arvr_get_render_targetsize(const void *p_data) {
 	auto *arvr_data = (arvr_data_struct *)p_data;
 	godot_vector2 size;
 
-	api->godot_vector2_new(&size, arvr_data->ovr_mobile_session->get_render_target_width(),
+	godot::api->godot_vector2_new(&size, arvr_data->ovr_mobile_session->get_render_target_width(),
 			arvr_data->ovr_mobile_session->get_render_target_height());
 	return size;
 }
@@ -116,7 +116,7 @@ void godot_arvr_process(void *p_data) {
 
 void *godot_arvr_constructor(godot_object *p_instance) {
 	auto *arvr_data =
-			(arvr_data_struct *)api->godot_alloc(sizeof(arvr_data_struct));
+			(arvr_data_struct *)godot::api->godot_alloc(sizeof(arvr_data_struct));
 
 	ALOGV("Creating OVR Mobile session.");
 
@@ -129,6 +129,6 @@ void godot_arvr_destructor(void *p_data) {
 	if (p_data != nullptr) {
 		auto *arvr_data = (arvr_data_struct *)p_data;
 		ovrmobile::OvrMobileSession::delete_singleton_instance();
-		api->godot_free(p_data);
+		godot::api->godot_free(p_data);
 	}
 }

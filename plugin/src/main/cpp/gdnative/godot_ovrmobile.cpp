@@ -4,6 +4,8 @@
 // Written by Bastiaan "Mux213" Olij and Paritosh Sharma,
 // with loads of help from Thomas "Karroffel" Herzog
 
+#include <core/Godot.hpp>
+#include <core/GodotGlobal.hpp>
 #include "godot_ovrmobile.h"
 
 #include "arvr_interface.h"
@@ -19,23 +21,33 @@
 // experimental low-level VrApi access
 #include "gdnative/nativescript/ovr_vr_api_proxy_ns.h"
 
+void GDN_EXPORT godot_ovrmobile_gdnative_init(godot_gdnative_init_options *options) {
+	godot::Godot::gdnative_init(options);
+}
+
 void GDN_EXPORT godot_ovrmobile_gdnative_singleton() {
-	if (arvr_api != NULL) {
-		arvr_api->godot_arvr_register_interface(&interface_struct);
+	if (godot::arvr_api != nullptr) {
+		godot::arvr_api->godot_arvr_register_interface(&interface_struct);
 	}
 }
 
-void GDN_EXPORT godot_ovrmobile_nativescript_init(void *p_handle) {
-	if (nativescript_api == NULL) {
-		return;
-	}
+void GDN_EXPORT godot_ovrmobile_nativescript_init(void *handle) {
+	godot::Godot::nativescript_init(handle);
 
-	register_gdnative_display_refresh_rate(p_handle);
-	register_gdnative_guardian_system(p_handle);
-	register_gdnative_init_config(p_handle);
-	register_gdnative_performance(p_handle);
-	register_gdnative_tracking_transform(p_handle);
-	register_gdnative_utilities(p_handle);
-	register_gdnative_hand_tracking(p_handle);
-	register_gdnative_vr_api_proxy(p_handle);
+	register_gdnative_display_refresh_rate(handle);
+	register_gdnative_guardian_system(handle);
+	register_gdnative_init_config(handle);
+	register_gdnative_performance(handle);
+	register_gdnative_tracking_transform(handle);
+	register_gdnative_utilities(handle);
+	register_gdnative_hand_tracking(handle);
+	register_gdnative_vr_api_proxy(handle);
+}
+
+void GDN_EXPORT godot_ovrmobile_nativescript_terminate(void *handle) {
+	godot::Godot::nativescript_terminate(handle);
+}
+
+void GDN_EXPORT godot_ovrmobile_gdnative_terminate(godot_gdnative_terminate_options *options) {
+	godot::Godot::gdnative_terminate(options);
 }

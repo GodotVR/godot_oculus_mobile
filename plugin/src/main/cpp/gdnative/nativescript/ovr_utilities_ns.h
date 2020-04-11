@@ -4,7 +4,7 @@
 #ifndef OVR_UTILITIES_NS_H
 #define OVR_UTILITIES_NS_H
 
-#include "gdnative/godot_calls.h"
+#include "nativescript_common.h"
 
 #ifdef __cplusplus
 extern "C" {

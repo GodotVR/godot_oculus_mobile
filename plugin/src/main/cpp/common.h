@@ -45,7 +45,9 @@ typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC)(GLenum target
 typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei samples, GLint baseViewIndex, GLsizei numViews);
 #endif
 
-#include "gdnative/godot_calls.h"
+#include <core/Godot.hpp>
+#include <core/GodotGlobal.hpp>
+#include <gdnative_api_struct.gen.h>
 
 // Include the OVR SDK
 #include "VrApi.h"

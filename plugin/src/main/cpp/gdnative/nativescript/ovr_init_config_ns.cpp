@@ -1,6 +1,5 @@
 #include "api/ovr_init_config.h"
 #include "ovr_init_config_ns.h"
-#include "nativescript_common.h"
 
 static const char *kClassName = "OvrInitConfig";
 
@@ -12,14 +11,14 @@ void register_gdnative_init_config(void *handle) {
     godot_instance_destroy_func destroy = {nullptr, nullptr, nullptr};
     destroy.destroy_func = &ovr_init_config_destructor;
 
-    nativescript_api->godot_nativescript_register_class(handle, kClassName, "Reference", create, destroy);
+    godot::nativescript_api->godot_nativescript_register_class(handle, kClassName, "Reference", create, destroy);
 
     // register all the functions that we want to expose via the OvrInitConfig class in GDScript
     godot_instance_method method = {nullptr, nullptr, nullptr};
     godot_method_attributes attributes = {GODOT_METHOD_RPC_MODE_DISABLED};
 
     method.method = &set_render_target_size_multiplier;
-    nativescript_api->godot_nativescript_register_method(handle, kClassName, "set_render_target_size_multiplier", attributes, method);
+    godot::nativescript_api->godot_nativescript_register_method(handle, kClassName, "set_render_target_size_multiplier", attributes, method);
 }
 
 GDCALLINGCONV void *ovr_init_config_constructor(godot_object *instance, void *method_data) {
@@ -36,8 +35,8 @@ GDCALLINGCONV godot_variant
 set_render_target_size_multiplier(godot_object *, void *, void *p_user_data, int num_args,
                                   godot_variant **args) {
     CHECK_USER_DATA(
-            double multiplier = api->godot_variant_as_real(args[0]);
-            api->godot_variant_new_bool(&ret, ovrmobile::set_render_target_size_multiplier(
+            double multiplier = godot::api->godot_variant_as_real(args[0]);
+        godot::api->godot_variant_new_bool(&ret, ovrmobile::set_render_target_size_multiplier(
                     ovr_mobile_session, multiplier));
     )
 }

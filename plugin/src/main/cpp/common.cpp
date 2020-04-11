@@ -25,9 +25,9 @@ void godot_transform_from_ovrMatrix(godot_transform *p_dest, const ovrMatrix4f *
 	};
 
 	// get the translation part from the ovrMatrix4f
-	api->godot_vector3_new(&origin, _matrix.M[0][3] * p_world_scale, _matrix.M[1][3] * p_world_scale, _matrix.M[2][3] * p_world_scale);
+	godot::api->godot_vector3_new(&origin, _matrix.M[0][3] * p_world_scale, _matrix.M[1][3] * p_world_scale, _matrix.M[2][3] * p_world_scale);
 
-	api->godot_transform_new(p_dest, &basis, &origin);
+	godot::api->godot_transform_new(p_dest, &basis, &origin);
 }
 
 void godot_transform_from_ovr_pose(godot_transform *dest, const ovrPosef &pose, const float world_scale) {
@@ -35,16 +35,16 @@ void godot_transform_from_ovr_pose(godot_transform *dest, const ovrPosef &pose, 
 	godot_basis basis;
 	godot_vector3 origin;
 
-	api->godot_quat_new(&q, pose.Orientation.x, pose.Orientation.y, pose.Orientation.z, pose.Orientation.w);
-	api->godot_basis_new_with_euler_quat(&basis, &q);
+	godot::api->godot_quat_new(&q, pose.Orientation.x, pose.Orientation.y, pose.Orientation.z, pose.Orientation.w);
+	godot::api->godot_basis_new_with_euler_quat(&basis, &q);
 
-	api->godot_vector3_new(&origin, pose.Position.x * world_scale, pose.Position.y * world_scale,
+	godot::api->godot_vector3_new(&origin, pose.Position.x * world_scale, pose.Position.y * world_scale,
 			pose.Position.z * world_scale);
-	api->godot_transform_new(dest, &basis, &origin);
+	godot::api->godot_transform_new(dest, &basis, &origin);
 }
 
 void godot_vector3_from_ovrVector3f(godot_vector3 *dest, const ovrVector3f& vector) {
-    api->godot_vector3_new(dest, vector.x, vector.y, vector.z);
+    godot::api->godot_vector3_new(dest, vector.x, vector.y, vector.z);
 }
 
 bool is_oculus_go_device(const ovrJava *java) {

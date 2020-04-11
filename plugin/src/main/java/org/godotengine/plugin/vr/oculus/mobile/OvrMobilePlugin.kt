@@ -88,7 +88,7 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
 
     override fun onMainDestroy() {
         super.onMainDestroy()
-        runOnGLThread {
+        runOnRenderThread {
             uninitializeWrapper()
         }
     }

@@ -6,7 +6,7 @@
 #ifndef OVR_VR_API_PROXY_H
 #define OVR_VR_API_PROXY_H
 
-#include "gdnative/godot_calls.h"
+#include "nativescript_common.h"
 
 #ifdef __cplusplus
 extern "C" {
