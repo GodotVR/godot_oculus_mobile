@@ -24,6 +24,10 @@ class OvrMobilePluginWrapper {
 
   static void on_input_focus_lost();
 
+  static void on_enter_vr_mode();
+
+  static void on_leave_vr_mode();
+
  private:
   OvrMobilePluginWrapper();
   ~OvrMobilePluginWrapper();
@@ -33,6 +37,8 @@ class OvrMobilePluginWrapper {
   static jmethodID on_headset_unmounted_id;
   static jmethodID on_input_focus_gained_id;
   static jmethodID on_input_focus_lost_id;
+  static jmethodID on_enter_vr_mode_id;
+  static jmethodID on_leave_vr_mode_id;
 
 };
 

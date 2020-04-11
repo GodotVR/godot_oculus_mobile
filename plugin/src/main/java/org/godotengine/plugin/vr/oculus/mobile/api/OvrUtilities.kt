@@ -6,13 +6,40 @@
 package org.godotengine.plugin.vr.oculus.mobile.api
 
 import android.graphics.Color
+import android.graphics.RectF
+import android.util.Size
 import org.godotengine.plugin.vr.oculus.mobile.OvrMobilePlugin
+
+enum class OvrEye(internal val eyeIndex: Int) {
+    LEFT(0),
+    RIGHT(1)
+}
 
 /**
  * Uses the internal left and right view matrix to compute the IPD.
  */
 fun OvrMobilePlugin.getIpd() =
     nativeGetIpd()
+
+fun OvrMobilePlugin.getRenderTargetWidth() = nativeGetRenderTargetWidth()
+
+fun OvrMobilePlugin.getRenderTargetHeight() = nativeGetRenderTargetHeight()
+
+/**
+ * Returns the fov for the given [OvrEye] in degrees.
+ */
+fun OvrMobilePlugin.getEyeFov(eye: OvrEye): RectF {
+    val fovArray = nativeGetEyeFov(eye.eyeIndex)
+    return RectF(fovArray[0], fovArray[3], fovArray[1], fovArray[2])
+}
+
+/**
+ * Return the viewport bounnds for the given [OvrEye].
+ */
+fun OvrMobilePlugin.getEyeViewportBounds(eye: OvrEye): RectF {
+    val boundsArray = nativeGetEyeViewportBounds(eye.eyeIndex)
+    return RectF(boundsArray[0], boundsArray[3], boundsArray[2], boundsArray[1])
+}
 
 fun OvrMobilePlugin.setDefaultLayerColorScale(color: Int) =
     nativeSetDefaultLayerColorScale(
@@ -47,6 +74,14 @@ fun OvrMobilePlugin.getHeadLinearAcceleration() =
     nativeGetHeadLinearAcceleration()
 
 private external fun nativeGetIpd(): Float
+
+private external fun nativeGetRenderTargetWidth(): Int
+
+private external fun nativeGetRenderTargetHeight(): Int
+
+private external fun nativeGetEyeFov(eye: Int): FloatArray
+
+private external fun nativeGetEyeViewportBounds(eye: Int): FloatArray
 
 /**
  * Sets the color multiplier for the default layer used by the VrApi compositor.

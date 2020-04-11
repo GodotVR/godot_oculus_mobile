@@ -327,6 +327,30 @@ bool OvrMobileSession::enter_vr_mode() {
 
 		vrapi_SetPropertyInt(&java, VRAPI_REORIENT_HMD_ON_CONTROLLER_RECENTER,
 				VRAPI_TRUE);
+
+		// Update the eye fovs.
+		const ovrTracking2 current_tracking = vrapi_GetPredictedTracking2(ovr, 0.0);
+		for (int i = 0; i < VRAPI_EYE_COUNT; i++) {
+			float left_degrees, right_degrees, up_degrees, down_degrees;
+			ovrMatrix4f_ExtractFov(&current_tracking.Eye[i].ProjectionMatrix,
+								   &left_degrees, &right_degrees, &up_degrees,
+								   &down_degrees);
+
+			eye_fovs[i] = {left_degrees, right_degrees, down_degrees, up_degrees};
+		}
+
+		// Setup the eye viewport bounds
+		eye_viewport_bounds[VRAPI_EYE_LEFT].x = 0.0f;
+		eye_viewport_bounds[VRAPI_EYE_LEFT].y = 0.0f;
+		eye_viewport_bounds[VRAPI_EYE_LEFT].z = width / 2.0f;
+		eye_viewport_bounds[VRAPI_EYE_LEFT].w = height;
+
+		eye_viewport_bounds[VRAPI_EYE_RIGHT].x = width / 2.0f;
+		eye_viewport_bounds[VRAPI_EYE_RIGHT].y = 0.0f;
+		eye_viewport_bounds[VRAPI_EYE_RIGHT].z = width;
+		eye_viewport_bounds[VRAPI_EYE_RIGHT].w = height;
+
+		OvrMobilePluginWrapper::on_enter_vr_mode();
 	}
 
 	return true;
@@ -347,6 +371,8 @@ void OvrMobileSession::exit_vr_mode() {
 		vrapi_LeaveVrMode(ovr);
 		ovr = nullptr;
 		ALOGV("Left Oculus Mobile VR mode.");
+
+		OvrMobilePluginWrapper::on_leave_vr_mode();
 	}
 
 	if (native_window != nullptr) {

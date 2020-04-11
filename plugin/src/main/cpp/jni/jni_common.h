@@ -48,4 +48,10 @@
 
 ovrmobile::OvrMobileSession* get_session();
 
+jfloatArray from_ovrVector2f(JNIEnv *env, ovrVector2f vector);
+
+jfloatArray from_ovrVector3f(JNIEnv *env, ovrVector3f vector);
+
+jfloatArray from_ovrVector4f(JNIEnv *env, ovrVector4f vector);
+
 #endif // JNI_COMMON_H

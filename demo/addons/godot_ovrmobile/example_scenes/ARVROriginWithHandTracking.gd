@@ -143,6 +143,9 @@ func _initialize_ovr_mobile_arvr_interface():
 			if (ovr_utilities): ovr_utilities = ovr_utilities.new()
 			if (ovr_hand_tracking): ovr_hand_tracking = ovr_hand_tracking.new()
 			if (ovr_vr_api_proxy): ovr_vr_api_proxy = ovr_vr_api_proxy.new()
+			
+			# Connect to the plugin signals
+			_connect_to_signals()
 
 			print("Loaded OVRMobile")
 			return true
@@ -150,7 +153,36 @@ func _initialize_ovr_mobile_arvr_interface():
 			print("Failed to enable OVRMobile")
 			return false
 
+func _connect_to_signals():
+	if Engine.has_singleton("OVRMobile"):
+		var singleton = Engine.get_singleton("OVRMobile")
+		print("Connecting to OVRMobile signals")
+		singleton.connect("HeadsetMounted", self, "_on_headset_mounted")
+		singleton.connect("HeadsetUnmounted", self, "_on_headset_unmounted")
+		singleton.connect("InputFocusGained", self, "_on_input_focus_gained")
+		singleton.connect("InputFocusLost", self, "_on_input_focus_lost")
+		singleton.connect("EnterVrMode", self, "_on_enter_vr_mode")
+		singleton.connect("LeaveVrMode", self, "_on_leave_vr_mode")
+	else:
+		print("Unable to load OVRMobile singleton...")
 
+func _on_headset_mounted():
+	print("VR headset mounted")
+
+func _on_headset_unmounted():
+	print("VR headset unmounted")
+
+func _on_input_focus_gained():
+	print("Input focus gained")
+
+func _on_input_focus_lost():
+	print("Input focus lost")
+
+func _on_enter_vr_mode():
+	print("Entered Oculus VR mode")
+
+func _on_leave_vr_mode():
+	print("Left Oculus VR mode")
 
 # many settings should only be applied once when running; this variable
 # gets reset on application start or when it wakes up from sleep
