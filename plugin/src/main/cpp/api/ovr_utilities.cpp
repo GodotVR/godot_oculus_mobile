@@ -1,5 +1,13 @@
+#include <gen/Engine.hpp>
+#include <gen/MainLoop.hpp>
+#include <gen/SceneTree.hpp>
+#include <gen/Object.hpp>
+#include <core/NodePath.hpp>
+#include <gen/Viewport.hpp>
+#include <core/Vector3.hpp>
 #include "ovr_utilities.h"
 #include "api_common.h"
+#include "common.h"
 
 namespace ovrmobile {
 
@@ -19,6 +27,58 @@ namespace ovrmobile {
             float ipd = sqrtf(dx * dx + dy * dy + dz * dz);
             return ipd;
         }, []() { return 0.0F; });
+    }
+
+    godot::Node* get_node(const godot::String& node_path) {
+        if (node_path.empty()) {
+            ALOGE("Invalid node path argument: %s", node_path.utf8().get_data());
+            return nullptr;
+        }
+
+        godot::NodePath node_path_obj(node_path);
+        godot::MainLoop
+            * main_loop = godot::Engine::get_singleton()->get_main_loop();
+        if (!main_loop || !main_loop->is_class("SceneTree")) {
+            ALOGW("Unable to retrieve main loop.");
+            return nullptr;
+        }
+
+        auto* scene_tree = godot::Object::cast_to<godot::SceneTree>(main_loop);
+        godot::Node
+            * node = scene_tree->get_root()->get_node_or_null(node_path_obj);
+        return node;
+    }
+
+    godot::Spatial* get_spatial_node(const godot::String& node_path) {
+        godot::Node* node = get_node(node_path);
+        if (!node || !node->is_class("Spatial")) {
+            ALOGW("Unable to find a Spatial node with path %s",
+                  node_path.utf8().get_data());
+            return nullptr;
+        }
+
+        auto* spatial_node = godot::Object::cast_to<godot::Spatial>(node);
+        return spatial_node;
+    }
+
+    float get_distance_from_head(const godot::String& head_node_path,
+                                 const godot::String& to_node_path) {
+        float distance = -1.0f;
+        godot::Spatial* head_node = get_spatial_node(head_node_path);
+        if (!head_node) {
+            ALOGW("Unable to retrieve head with path %s", head_node_path.utf8().get_data());
+            return distance;
+        }
+
+        godot::Spatial* to_node = get_spatial_node(to_node_path);
+        if (!to_node) {
+            ALOGW("Unable to retrieve node with path %s", to_node_path.utf8().get_data());
+            return distance;
+        }
+
+        godot::Vector3 head_global_translation = head_node->to_global(head_node->get_translation());
+        godot::Vector3 to_global_translation = to_node->to_global(to_node->get_translation());
+        return head_global_translation.distance_to(to_global_translation);
     }
 
     bool set_default_layer_color_scale(OvrMobileSession *session,
@@ -43,7 +103,7 @@ namespace ovrmobile {
                 const OvrMobileController::ControllerState *state = controller->get_controller_state_by_id(
                         controller_id);
                 if (state) {
-                    float world_scale = arvr_api->godot_arvr_get_worldscale();
+                    float world_scale = godot::arvr_api->godot_arvr_get_worldscale();
                     ovrVector3f property = get_func(state->tracking_state.HeadPose);
                     scaled_property = {property.x * world_scale,
                                        property.y * world_scale,
@@ -57,7 +117,7 @@ namespace ovrmobile {
     ovrVector3f get_head_pose_properties(OvrMobileSession* session, get_pose_properties get_func) {
         return check_session_initialized<ovrVector3f>(session, [&]() {
             ovrTracking2 head_tracker = session->get_head_tracker();
-            float world_scale = arvr_api->godot_arvr_get_worldscale();
+            float world_scale = godot::arvr_api->godot_arvr_get_worldscale();
             ovrVector3f property = get_func(head_tracker.HeadPose);
             ovrVector3f scaled_property = {property.x * world_scale,
                                            property.y * world_scale,

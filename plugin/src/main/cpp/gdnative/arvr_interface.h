@@ -9,8 +9,7 @@
 
 #include <VrApi_Types.h>
 
-#include "godot_calls.h"
-#include "os.h"
+#include "common.h"
 
 // Include some OVR stuff
 #include "ovr_mobile_session.h"

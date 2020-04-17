@@ -5,6 +5,8 @@
 #ifndef JNI_COMMON_H
 #define JNI_COMMON_H
 
+#include <core/String.hpp>
+
 /** Auxiliary macros */
 #define __JNI_METHOD_BUILD(package, class_name, method) \
     Java_ ## package ## _ ## class_name ## _ ## method
@@ -53,5 +55,21 @@ jfloatArray from_ovrVector2f(JNIEnv *env, ovrVector2f vector);
 jfloatArray from_ovrVector3f(JNIEnv *env, ovrVector3f vector);
 
 jfloatArray from_ovrVector4f(JNIEnv *env, ovrVector4f vector);
+
+/**
+     * Converts JNI jstring to Godot String.
+     * @param source Source JNI string. If null an empty string is returned.
+     * @param env JNI environment instance.
+     * @return Godot string instance.
+     */
+godot::String jstring_to_string(JNIEnv *env, jstring source);
+
+/**
+ * Converts Godot String to JNI jstring.
+ * @param source Source Godot String.
+ * @param env JNI environment instance.
+ * @return JNI string instance.
+ */
+jstring string_to_jstring(JNIEnv *env, const godot::String& source);
 
 #endif // JNI_COMMON_H

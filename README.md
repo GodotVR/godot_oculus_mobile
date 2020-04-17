@@ -1,7 +1,7 @@
 # Oculus Mobile Godot plugin
 
-**Note:**<br> 
-If you'd like to contribute to the testing process, follow the instructions below to setup and use the plugin, 
+**Note:**<br>
+If you'd like to contribute to the testing process, follow the instructions below to setup and use the plugin,
 and report any issues you encounter. Thanks!<br>
 
 This repository contains the source code for the Oculus Mobile Godot plugin.
@@ -16,37 +16,35 @@ The use of this plugin require Godot 3.2 or later.
 License
 -------
 - This project is released under a MIT license.
-- Please check the [Oculus Mobile SDK license](https://developer.oculus.com/licenses) for information 
+- Please check the [Oculus Mobile SDK license](https://developer.oculus.com/licenses) for information
 about the Oculus Mobile SDK used in this project.
 
 Setup
 -----
-After cloning this repository make sure to initialise the submodules with `git submodule init`.
-When you've pulled a newer version make sure to run `git submodule update`.<br>
+After cloning this repository make sure to initialise the submodules with `git submodule update --init --recursive`.
+When you've pulled a newer version make sure to run `git submodule update --init --recursive`.<br>
 The project uses `gradle` as its primary build system, which you can configure by following the setup instructions
 for the **Android SDK & NDK**.
 
 #### Android SDK & NDK
 - Download and setup the [Android SDK](https://developer.android.com/studio/#command-tools).
   - If using Android Studio, download version **3.6.1** or higher.
-  - If using the [command line tools](https://developer.android.com/studio/#command-tools), 
-  download revision **26.1.1** or higher. 
+  - If using the [command line tools](https://developer.android.com/studio/#command-tools),
+  download revision **26.1.1** or higher.
   - To ensure you have the latest version, check [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.
   - Set the environment variable `ANDROID_HOME` to the Android SDK location.
 - Follow the instructions [here](https://developer.android.com/studio/projects/install-ndk#specific-version) and install version **21.0.6113669** of the NDK.
 
-#### Godot headers
-By default the project is configured to checkout the [godot_headers](https://github.com/GodotNativeTools/godot_headers) 
-repo as a submodule under the `plugin/libs/godot_headers` directory when you run 
-the `git submodule init` and `git submodule update` commands.<br>
-You can edit the `GODOT_HEADERS_DIR` cmake variable in the `CMakeLists.txt` 
-build file if you'd like to provide a different source for the Godot headers.<br>
+#### Godot libraries
+- Checkout the [godot-cpp](https://github.com/GodotNativeTools/godot-cpp) repo as a submodule by running the following command: `git submodule update --init --recursive`.
+  - The [godot-cpp](https://github.com/GodotNativeTools/godot-cpp) repo will checkout under the `plugin/libs/godot-cpp` directory.
+- Navigate to the `plugin/libs/godot-cpp` directory and follow [these steps](https://github.com/GodotNativeTools/godot-cpp/tree/master#compiling-the-cpp-bindings-library) to generate the cpp bindings.
 
 #### Oculus Mobile SDK
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
 (**Oculus Mobile SDK 14.0** (1.31.0) or higher) of the Oculus Mobile SDK and extract it into the
 `plugin/libs/ovr_sdk_mobile` directory (create the directory if it doesn't exist).
-- If needed, update the `OVR_ROOT_DIR` cmake variable in the the `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK 
+- If needed, update the `OVR_ROOT_DIR` cmake variable in the the `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK
 containing folder.
 
 Build
@@ -75,7 +73,7 @@ When exporting the project apk in Godot, the following Android export options sh
   - `Xr Mode` must be set to `Oculus Mobile VR`.
   - `Degrees of Freedom`:
     - If deploying only on Oculus Quest, this must be set to `6DOF`
-    - If deploying on Oculus Go, or on Oculus Go and Oculus Quest, 
+    - If deploying on Oculus Go, or on Oculus Go and Oculus Quest,
     this must be set to `3DOF and 6DOF`
   - `Hand Tracking`: This is only supported on the **Oculus Quest**
     - Select `None` if your app doesn't need hand tracking
@@ -101,7 +99,7 @@ func _process(delta):
 	print("GetBoundaryOrientedBoundingBox: ", ovrGuardianSystem.get_boundary_oriented_bounding_box())
 ```
 
-There is also a OvrUtility GDNative script class that exposes some utility functions to configure the 
+There is also a OvrUtility GDNative script class that exposes some utility functions to configure the
 compositor or query information:
 ```
 onready var ovrUtilities = preload("res://addons/godot_ovrmobile/OvrUtilities.gdns").new()
@@ -147,7 +145,7 @@ func change_performance_settings():
 Hand Tracking (experimental)
 ------------
 The hand tracking API is still in a very early state and might change in future updates. It is contained in `OvrHandTracking.gdns`. To see an example
-on how it can be used check the example setup in [demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd](demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd) and the associated scene file. 
+on how it can be used check the example setup in [demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd](demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd) and the associated scene file.
 To test this in the demo replace the ARVROriginWithInitiAndMovement scene reference with the provided ARVROriginWithHandTracking.tscn.
 
 To enable hand tracking, make sure to follow the **Deployment/Hand Tracking** steps above.

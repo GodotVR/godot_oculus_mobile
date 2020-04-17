@@ -24,7 +24,7 @@ void reset_ovr_config_data_struct(ovr_config_data_struct *ovr_config_data);
 #undef CHECK_USER_DATA
 #define CHECK_USER_DATA(_codeblock_) \
 	godot_variant ret; \
-	api->godot_variant_new_nil(&ret); \
+	godot::api->godot_variant_new_nil(&ret); \
 	if (p_user_data != NULL) { \
 		ovr_config_data_struct *ovr_config_data = (ovr_config_data_struct *) p_user_data; \
 		ovrmobile::OvrMobileSession *ovr_mobile_session = ovr_config_data->ovr_mobile_session; \
@@ -40,7 +40,7 @@ void reset_ovr_config_data_struct(ovr_config_data_struct *ovr_config_data);
 #undef CHECK_OVR
 #define CHECK_OVR(_codeblock_) \
 	godot_variant ret; \
-	api->godot_variant_new_nil(&ret); \
+	godot::api->godot_variant_new_nil(&ret); \
 	if (p_user_data != NULL) { \
 		ovr_config_data_struct *ovr_config_data = (ovr_config_data_struct *) p_user_data; \
 		ovrmobile::OvrMobileSession *ovr_mobile_session = ovr_config_data->ovr_mobile_session; \

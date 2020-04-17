@@ -35,10 +35,6 @@ OvrMobileSession::OvrMobileSession() :
 		height(kDefaultRenderTargetDimension),
 		render_target_size_multiplier(kDefaultRenderTargetSizeMultiplier),
 		swap_interval(kDefaultSwapInterval) {
-	JNIEnv *env = android_api->godot_android_get_env();
-	java.ActivityObject = env->NewGlobalRef(android_api->godot_android_get_activity());
-	java.Env = env;
-	env->GetJavaVM(&java.Vm);
 
 	default_layer_color_scale.x = 1.0f;
 	default_layer_color_scale.y = 1.0f;
@@ -64,6 +60,11 @@ bool OvrMobileSession::initialize() {
 	}
 
 	ALOGV("OvrMobileSession::initialize() called");
+
+    JNIEnv* env = godot::android_api->godot_android_get_env();
+    java.ActivityObject = env->NewGlobalRef(godot::android_api->godot_android_get_activity());
+    java.Env = env;
+    env->GetJavaVM(&java.Vm);
 
 	const ovrInitParms init_parms = vrapi_DefaultInitParms(&java);
 	ovrInitializeStatus init_status = vrapi_Initialize(&init_parms);
@@ -108,8 +109,8 @@ godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye, god
 	godot_transform ret;
 
 	godot_transform transform_for_eye;
-	godot_transform reference_frame = arvr_api->godot_arvr_get_reference_frame();
-	godot_real world_scale = arvr_api->godot_arvr_get_worldscale();
+	godot_transform reference_frame = godot::arvr_api->godot_arvr_get_reference_frame();
+	godot_real world_scale = godot::arvr_api->godot_arvr_get_worldscale();
 
 	if (in_vr_mode()) {
 		if (godot_eye == 1 || godot_eye == 2) { // check if we have the left(1) or right(2) eye
@@ -118,13 +119,13 @@ godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye, god
 		} else { // mono eye (godot_eye == 0); used by godot to set the ARVRCamera matrix
 			godot_transform_from_ovr_pose(&transform_for_eye, head_tracker.HeadPose.Pose, world_scale);
 		}
-	} else { 
-		api->godot_transform_new_identity(&transform_for_eye);
+	} else {
+		godot::api->godot_transform_new_identity(&transform_for_eye);
 	}
 
 	ret = *cam_transform;
-	ret = api->godot_transform_operator_multiply(&ret, &reference_frame);
-	ret = api->godot_transform_operator_multiply(&ret, &transform_for_eye);
+	ret = godot::api->godot_transform_operator_multiply(&ret, &reference_frame);
+	ret = godot::api->godot_transform_operator_multiply(&ret, &transform_for_eye);
 
 	return ret;
 }
@@ -206,7 +207,7 @@ void OvrMobileSession::fill_projection_for_eye(godot_real *projection, godot_int
 
 	matrix.M[2][2] = -(z_far + z_near) / (z_far - z_near);
 	matrix.M[2][3] = -(2.0f * z_far * z_near) / (z_far - z_near);
-	
+
 	int k = 0;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
@@ -300,7 +301,7 @@ void OvrMobileSession::check_for_vrapi_events() const {
 bool OvrMobileSession::enter_vr_mode() {
 	if (ovr == nullptr) {
 		if (native_window == nullptr) {
-			jobject surface = android_api->godot_android_get_surface();
+			jobject surface = godot::android_api->godot_android_get_surface();
 			native_window = ANativeWindow_fromSurface(java.Env, surface);
 		}
 

@@ -1,0 +1,16 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+insert_final_newline = true
+max_line_length = 100
+trim_trailing_whitespace = true
+
+[*.{cpp,hpp,c,h,mm}]
+indent_size = 4
+ij_c_indent_namespace_members = 4
+
+[{*.gradle,AndroidManifest.xml}]
+indent_size = 4

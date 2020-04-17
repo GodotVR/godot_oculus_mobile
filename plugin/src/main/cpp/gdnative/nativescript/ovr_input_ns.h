@@ -1,7 +1,7 @@
 #ifndef OVR_INPUT_NS_H
 #define OVR_INPUT_NS_H
 
-#include "gdnative/godot_calls.h"
+#include "nativescript_common.h"
 
 #ifdef __cplusplus
 extern "C" {
