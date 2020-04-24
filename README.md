@@ -28,7 +28,7 @@ for the **Android SDK & NDK**.
 
 #### Android SDK & NDK
 - Download and setup the [Android SDK](https://developer.android.com/studio/#command-tools).
-  - If using Android Studio, download version **3.6.1** or higher.
+  - If using Android Studio, download version **3.6.3** or higher.
   - If using the [command line tools](https://developer.android.com/studio/#command-tools),
   download revision **26.1.1** or higher.
   - To ensure you have the latest version, check [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.
@@ -42,7 +42,7 @@ for the **Android SDK & NDK**.
 
 #### Oculus Mobile SDK
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
-(**Oculus Mobile SDK 14.0** (1.31.0) or higher) of the Oculus Mobile SDK and extract it into the
+(**Oculus Mobile SDK 16.0** (1.33.0) or higher) of the Oculus Mobile SDK and extract it into the
 `plugin/libs/ovr_sdk_mobile` directory (create the directory if it doesn't exist).
 - If needed, update the `OVR_ROOT_DIR` cmake variable in the the `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK
 containing folder.
@@ -63,25 +63,26 @@ In the project root directory:
 
 Deployment
 ----------
-**Note:**  
-Version `2.0.0` (and higher) of the plugin requires the use of [Android custom build templates](https://docs.godotengine.org/en/3.2/getting_started/workflow/export/android_custom_build.html) ([setup instructions](https://docs.godotengine.org/en/3.2/getting_started/workflow/export/android_custom_build.html#set-up-the-custom-build-environment)).  
-Deployment instructions for version `1.0.0` of the plugin can be found [here](https://github.com/GodotVR/godot_oculus_mobile/tree/1.0.0#deployment).
+**Note:**
+- Version `2.0.0` (and higher) of the plugin is only supported starting with **Godot 3.2.2**.
+It requires the use of the **`plugin/ovrmobile.gdap`** configuration file and [Godot Android custom build templates](https://docs.godotengine.org/en/3.2/getting_started/workflow/export/android_custom_build.html) ([setup instructions](https://docs.godotengine.org/en/3.2/getting_started/workflow/export/android_custom_build.html#set-up-the-custom-build-environment)).
+- Deployment instructions for version `1.0.0` of the plugin can be found [here](https://github.com/GodotVR/godot_oculus_mobile/tree/1.0.0#deployment).
 
-In the editor `FileSystem` pane, make sure the plugin AAR file is added to the `res://android/plugins` directory.  
+In the editor `FileSystem` pane, make sure the plugin AAR binary file and its configuration file (`ovrmobile.gdap`) are added to the `res://android/plugins` directory.  
 When exporting the project apk in Godot, the following Android export options should be set:
 - `Xr Features`
   - `Xr Mode` must be set to `Oculus Mobile VR`.
   - `Degrees of Freedom`:
     - If deploying only on Oculus Quest, this must be set to `6DOF`
-    - If deploying on Oculus Go, or on Oculus Go and Oculus Quest,
-    this must be set to `3DOF and 6DOF`
+    - If deploying on Oculus Go, or on Oculus Go and Oculus Quest, this must be set to `3DOF and 6DOF`
   - `Hand Tracking`: This is only supported on the **Oculus Quest**
     - Select `None` if your app doesn't need hand tracking
     - Select `Optional` if your app can use hand tracking, but doesn't require it (i.e: also works with controllers).
     - Select `Required` if your app only uses hand tracking.
 - `Custom Template`
   - `Use Custom Build` must be enabled.
-  - `Plugins` list must contain `OVRMobile`. This enables the `OVRMobile` plugin for the project.
+- `Plugins`
+  -  `OVRMobile` must be listed and enabled in the `Plugins` section.
 
 GDScript Oculus VrApi access
 ------------
@@ -131,20 +132,20 @@ onready var ovrPerformance = preload("res://addons/godot_ovrmobile/OvrPerformanc
 func change_performance_settings():
     # enable the extra latency mode: this gives some performance headroom at the cost
     # of one more frame of latency
-  	ovrPerformance.set_extra_latency_mode(1); 
-		
+  	ovrPerformance.set_extra_latency_mode(1);
+
     # set fixed foveation level
     # for details see https://developer.oculus.com/documentation/quest/latest/concepts/mobile-ffr/
-		ovrPerformance.set_foveation_level(4); 
+		ovrPerformance.set_foveation_level(4);
 
     # if you want dynamic foveation make sure to set the maximum desired foveation with the previous function
     # before you enable dynamic foveation
 		ovrPerformance.set_enable_dynamic_foveation(true);
 ```
 
-Hand Tracking (experimental)
-------------
-The hand tracking API is still in a very early state and might change in future updates. It is contained in `OvrHandTracking.gdns`. To see an example
+Hand Tracking
+-------------
+The hand tracking API is still in early state and might change in future updates. It is contained in `OvrHandTracking.gdns`. To see an example
 on how it can be used check the example setup in [demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd](demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd) and the associated scene file.
 To test this in the demo replace the ARVROriginWithInitiAndMovement scene reference with the provided ARVROriginWithHandTracking.tscn.
 
@@ -168,17 +169,17 @@ func test_property_access():
 	print("System property:")
 	print("  vrapi_get_system_property_int(VRAPI_SYS_PROP_DEVICE_TYPE) = ", ovr_vr_api_proxy.vrapi_get_system_property_int(ovr_types.OvrSystemProperty.VRAPI_SYS_PROP_DEVICE_TYPE));
 	print("  vrapi_get_system_property_int(VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH) = ", ovr_vr_api_proxy.vrapi_get_system_property_int(ovr_types.OvrSystemProperty.VRAPI_SYS_PROP_SUGGESTED_EYE_TEXTURE_WIDTH));
-	
+
 	print("Property:")
 	print("  vrapi_get_property_int(VRAPI_DEVICE_EMULATION_MODE) = ", ovr_vr_api_proxy.vrapi_get_property_int(ovr_types.OvrProperty.VRAPI_DEVICE_EMULATION_MODE));
 	print("  vrapi_get_property_int(VRAPI_ACTIVE_INPUT_DEVICE_ID) = ", ovr_vr_api_proxy.vrapi_get_property_int(ovr_types.OvrProperty.VRAPI_ACTIVE_INPUT_DEVICE_ID));
 	print("  vrapi_get_property_int(VRAPI_FOVEATION_LEVEL) = ", ovr_vr_api_proxy.vrapi_get_property_int(ovr_types.OvrProperty.VRAPI_FOVEATION_LEVEL));
 	ovr_vr_api_proxy.vrapi_set_property_int(ovr_types.OvrProperty.VRAPI_FOVEATION_LEVEL, 3);
 	print("  vrapi_get_property_int(VRAPI_FOVEATION_LEVEL) = ", ovr_vr_api_proxy.vrapi_get_property_int(ovr_types.OvrProperty.VRAPI_FOVEATION_LEVEL));
-	
+
 	print("System Status:")
 	print("  vrapi_get_system_status_int(VRAPI_SYS_STATUS_MOUNTED) = ", ovr_vr_api_proxy.vrapi_get_system_status_int(ovr_types.OvrSystemStatus.VRAPI_SYS_STATUS_MOUNTED));
 	print("  vrapi_get_system_status_int(VRAPI_SYS_STATUS_RENDER_LATENCY_MILLISECONDS) = ", ovr_vr_api_proxy.vrapi_get_system_status_int(ovr_types.OvrSystemStatus.VRAPI_SYS_STATUS_RENDER_LATENCY_MILLISECONDS));
 	print("  vrapi_get_system_status_int(VRAPI_SYS_STATUS_FRONT_BUFFER_SRGB) = ", ovr_vr_api_proxy.vrapi_get_system_status_int(ovr_types.OvrSystemStatus.VRAPI_SYS_STATUS_FRONT_BUFFER_SRGB));
-	
+
 ```
