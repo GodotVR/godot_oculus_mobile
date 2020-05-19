@@ -30,6 +30,8 @@ var controllers_vibration_duration = {}
 # some of the Oculus VrAPI constants are defined in this file. Have a look into it to learn more
 var ovrVrApiTypes = load("res://addons/godot_ovrmobile/OvrVrApiTypes.gd").new();
 
+# react to the worldscale changing
+var was_world_scale = 1.0
 
 func _ready():
 	_initialize_ovr_mobile_arvr_interface();
@@ -38,6 +40,7 @@ func _ready():
 func _process(delta_t):
 	_check_and_perform_runtime_config()
 	_check_move(delta_t)
+	_check_worldscale()
 	_update_controllers_vibration(delta_t)
 
 
@@ -268,3 +271,11 @@ func _on_RightTouchController_button_release(button):
 	if (ovr_utilities):
 		# reset the color to neutral again
 		ovr_utilities.set_default_layer_color_scale(Color(1.0, 1.0, 1.0, 1.0));
+
+func _check_worldscale():
+	if was_world_scale != world_scale:
+		was_world_scale = world_scale
+		var inv_world_scale = 1.0 / was_world_scale
+		var controller_scale = Vector3(inv_world_scale, inv_world_scale, inv_world_scale)
+		$"LeftTouchController/left-controller".scale = controller_scale
+		$"RightTouchController/right-controller".scale = -controller_scale
