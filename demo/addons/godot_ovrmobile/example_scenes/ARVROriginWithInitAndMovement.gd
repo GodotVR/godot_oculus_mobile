@@ -23,6 +23,8 @@ var ovr_tracking_transform = null;
 var ovr_utilities = null;
 var ovr_vr_api_proxy = null;
 
+# Dictionary tracking the remaining duration for controllers vibration
+var controllers_vibration_duration = {}
 
 # some of the Oculus VrAPI constants are defined in this file. Have a look into it to learn more
 var ovrVrApiTypes = load("res://addons/godot_ovrmobile/OvrVrApiTypes.gd").new();
@@ -35,6 +37,7 @@ func _ready():
 func _process(delta_t):
 	_check_and_perform_runtime_config()
 	_check_move(delta_t)
+	_update_controllers_vibration(delta_t)
 
 
 # this code check for the OVRMobile inteface; and if successful also initializes the
@@ -71,7 +74,7 @@ func _initialize_ovr_mobile_arvr_interface():
 			if (ovr_tracking_transform): ovr_tracking_transform = ovr_tracking_transform.new()
 			if (ovr_utilities): ovr_utilities = ovr_utilities.new()
 			if (ovr_vr_api_proxy): ovr_vr_api_proxy = ovr_vr_api_proxy.new()
-			
+
 			# Connect to the plugin signals
 			_connect_to_signals()
 
@@ -164,6 +167,27 @@ func _check_move(delta_t):
 		self.transform.origin += strafe_dir * move_vector.x * delta_t;
 
 
+func _start_controller_vibration(controller, duration, rumble_intensity):
+	print("Starting vibration of controller " + str(controller) + " for " + str(duration) + "  at " + str(rumble_intensity))
+	controllers_vibration_duration[controller.controller_id] = duration
+	controller.set_rumble(rumble_intensity)
+
+func _update_controllers_vibration(delta_t):
+	# Check if there are any controllers currently vibrating
+	if (controllers_vibration_duration.empty()):
+		return
+
+	# Update the remaining vibration duration for each controller
+	for i in ARVRServer.get_tracker_count():
+		var tracker = ARVRServer.get_tracker(i)
+		if (controllers_vibration_duration.has(tracker.get_tracker_id())):
+			var remaining_duration = controllers_vibration_duration[tracker.get_tracker_id()] - (delta_t * 1000)
+			if (remaining_duration < 0):
+				controllers_vibration_duration.erase(tracker.get_tracker_id())
+				tracker.set_rumble(0)
+			else:
+				controllers_vibration_duration[tracker.get_tracker_id()] = remaining_duration
+
 # current button mapping for the touch controller
 # godot itself also exposes some of these constants via JOY_VR_* and JOY_OCULUS_*
 # this enum here is to document everything in place and includes the touch event mappings
@@ -188,44 +212,47 @@ enum CONTROLLER_BUTTON {
 
 # this is a function connected to the button release signal from the controller
 func _on_LeftTouchController_button_pressed(button):
-	if (button != CONTROLLER_BUTTON.YB): return;
+	if (button == CONTROLLER_BUTTON.YB):
+		# examples on using the ovr api from gdscript
+		if (ovr_guardian_system):
+			print(" ovr_guardian_system.get_boundary_visible() == " + str(ovr_guardian_system.get_boundary_visible()));
+			#ovr_guardian_system.request_boundary_visible(true); # make the boundary always visible
 
-	# examples on using the ovr api from gdscript
-	if (ovr_guardian_system):
-		print(" ovr_guardian_system.get_boundary_visible() == " + str(ovr_guardian_system.get_boundary_visible()));
-		#ovr_guardian_system.request_boundary_visible(true); # make the boundary always visible
+			# the oriented bounding box is the largest box that fits into the currently defined guardian
+			# the return value of this function is an array with [Transform(), Vector3()] where the Vector3
+			# is the scale of the box and Transform contains the position and orientation of the box.
+			# The height is not yet tracked by the oculus system and will be a default value.
+			print(" ovr_guardian_system.get_boundary_oriented_bounding_box() == " + str(ovr_guardian_system.get_boundary_oriented_bounding_box()));
 
-		# the oriented bounding box is the largest box that fits into the currently defined guardian
-		# the return value of this function is an array with [Transform(), Vector3()] where the Vector3
-		# is the scale of the box and Transform contains the position and orientation of the box.
-		# The height is not yet tracked by the oculus system and will be a default value.
-		print(" ovr_guardian_system.get_boundary_oriented_bounding_box() == " + str(ovr_guardian_system.get_boundary_oriented_bounding_box()));
+		if (ovr_tracking_transform):
+			print(" ovr_tracking_transform.get_tracking_space() == " + str(ovr_tracking_transform.get_tracking_space()));
 
-	if (ovr_tracking_transform):
-		print(" ovr_tracking_transform.get_tracking_space() == " + str(ovr_tracking_transform.get_tracking_space()));
+			# you can change the tracking space to control where the default floor level is and
+			# how recentring should behave.
+			#ovr_guardian_system.set_tracking_space(ovrVrApiTypes.OvrTrackingSpace.VRAPI_TRACKING_SPACE_STAGE);
 
-		# you can change the tracking space to control where the default floor level is and
-		# how recentring should behave.
-		#ovr_guardian_system.set_tracking_space(ovrVrApiTypes.OvrTrackingSpace.VRAPI_TRACKING_SPACE_STAGE);
+		if (ovr_utilities):
+			print(" ovr_utilities.get_ipd() == " + str(ovr_utilities.get_ipd()));
 
-	if (ovr_utilities):
-		print(" ovr_utilities.get_ipd() == " + str(ovr_utilities.get_ipd()));
+			# you can access the accelerations and velocitys for the head and controllers
+			# that are predicted by the Oculus VrApi via these funcitons:
+			var controller_id = $LeftTouchController.controller_id;
+			print(" ovr_utilities.get_controller_linear_velocity(controller_id) == " + str(ovr_utilities.get_controller_linear_velocity(controller_id)));
+			print(" ovr_utilities.get_controller_linear_acceleration(controller_id) == " + str(ovr_utilities.get_controller_linear_acceleration(controller_id)));
+			print(" ovr_utilities.get_controller_angular_velocity(controller_id) == " + str(ovr_utilities.get_controller_angular_velocity(controller_id)));
+			print(" ovr_utilities.get_controller_angular_acceleration(controller_id) == " + str(ovr_utilities.get_controller_angular_acceleration(controller_id)));
 
-		# you can access the accelerations and velocitys for the head and controllers
-		# that are predicted by the Oculus VrApi via these funcitons:
-		var controller_id = $LeftTouchController.controller_id;
-		print(" ovr_utilities.get_controller_linear_velocity(controller_id) == " + str(ovr_utilities.get_controller_linear_velocity(controller_id)));
-		print(" ovr_utilities.get_controller_linear_acceleration(controller_id) == " + str(ovr_utilities.get_controller_linear_acceleration(controller_id)));
-		print(" ovr_utilities.get_controller_angular_velocity(controller_id) == " + str(ovr_utilities.get_controller_angular_velocity(controller_id)));
-		print(" ovr_utilities.get_controller_angular_acceleration(controller_id) == " + str(ovr_utilities.get_controller_angular_acceleration(controller_id)));
-
+	if (button == CONTROLLER_BUTTON.XA):
+		_start_controller_vibration($LeftTouchController, 40, 0.5)
 
 func _on_RightTouchController_button_pressed(button):
-	if (button != CONTROLLER_BUTTON.YB): return;
+	if (button == CONTROLLER_BUTTON.YB):
+		if (ovr_utilities):
+			# use this for fade to black for example: here we just do a color change
+			ovr_utilities.set_default_layer_color_scale(Color(0.5, 0.0, 1.0, 1.0));
 
-	if (ovr_utilities):
-		# use this for fade to black for example: here we just do a color change
-		ovr_utilities.set_default_layer_color_scale(Color(0.5, 0.0, 1.0, 1.0));
+	if (button == CONTROLLER_BUTTON.XA):
+		_start_controller_vibration($RightTouchController, 40, 0.5)
 
 
 func _on_RightTouchController_button_release(button):

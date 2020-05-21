@@ -1,9 +1,11 @@
 /**
-* Created by Fredia Huya-Kouadio. 
+* Created by Fredia Huya-Kouadio.
 */
 
 #ifndef OVRMOBILE_OVR_MOBILE_CONTROLLER_H
 #define OVRMOBILE_OVR_MOBILE_CONTROLLER_H
+
+#include <map>
 
 #include "VrApi.h"
 #include "VrApi_Input.h"
@@ -12,10 +14,18 @@
 
 namespace ovrmobile {
 
+namespace {
+const int kInvalidGodotControllerId = 0;
+
+const int kPrimaryControllerId = -1;
+}
+
 class OvrMobileController {
 public:
 	struct ControllerState {
 		bool connected = false;
+		// Shows which controller is primary or most 'active'. See VRAPI_ACTIVE_INPUT_DEVICE_ID for reference.
+		bool primary = false;
 		int godot_controller_id = 0;
 		union {
 			ovrInputCapabilityHeader capability_header;
@@ -38,6 +48,9 @@ public:
 	void process(ovrMobile *ovr, ovrJava *java, double predicted_display_time);
 
 	const ControllerState* get_controller_state_by_id(int controller_id) const {
+        controller_id = controller_id == kPrimaryControllerId ? get_active_controller_id()
+                                                              : controller_id;
+
 	    for (int hand = 0; hand < MAX_HANDS; hand++) {
 	        auto* controller = &controllers[hand];
 	        if (controller->connected && controller->godot_controller_id == controller_id) {
@@ -51,12 +64,43 @@ public:
 		return check_bit(capabilities.ControllerCapabilities, ovrControllerCaps_HasSimpleHapticVibration);
 	}
 
+  void vibrate_controller(int controller_id, int duration_in_ms, float intensity) {
+      controller_id = controller_id == kPrimaryControllerId ? get_active_controller_id()
+                                                            : controller_id;
+      // Update the controller vibration state. Actual vibration will start in the next frame via
+      // OvrMobileController::update_controller_vibration(...).
+      if (duration_in_ms > 0 && intensity > 0.0f) {
+          ControllerVibration vibration =
+              {.is_vibrating = false, .end_time_in_ms = get_time_in_ms() + duration_in_ms, .intensity = intensity};
+          controllers_vibrations[controller_id] = vibration;
+      }
+  }
+
 private:
-	enum ControllerHand {
-		LEFT_HAND,
-		RIGHT_HAND,
-		MAX_HANDS
-	};
+  struct ControllerVibration {
+    float intensity;
+    double end_time_in_ms;
+    bool is_vibrating;
+  };
+
+  enum ControllerHand {
+    LEFT_HAND,
+    RIGHT_HAND,
+    MAX_HANDS
+  };
+
+  ControllerState controllers[MAX_HANDS];
+  std::map<int, ControllerVibration> controllers_vibrations;
+
+  int get_active_controller_id() const {
+      for (int hand = 0; hand < MAX_HANDS; hand++) {
+          auto* controller = &controllers[hand];
+          if (controller->connected && controller->primary) {
+              return controller->godot_controller_id;
+          }
+      }
+      return kInvalidGodotControllerId;
+  }
 
 	inline bool has_analog_grip_trigger(const ovrInputTrackedRemoteCapabilities &capabilities) const {
 		return check_bit(capabilities.ControllerCapabilities, ovrControllerCaps_HasAnalogGripTrigger);
@@ -118,10 +162,6 @@ private:
 		return is_left_hand_controller(capabilities) ? LEFT_HAND : RIGHT_HAND;
 	}
 
-	inline ControllerHand get_controller_handedness(const ovrHandedness &dominant_hand) const {
-		return dominant_hand == VRAPI_HAND_LEFT ? LEFT_HAND : RIGHT_HAND;
-	}
-
 	inline int get_godot_hand(ControllerHand hand) {
 		return hand == LEFT_HAND ? /* TRACKER_LEFT_HAND */ 1 : /* TRACKER_RIGHT_HAND */ 2;
 	}
@@ -139,8 +179,6 @@ private:
 	void update_controller_input_state_hand(ovrMobile *ovr, ControllerState& controller_state);
 
 	void update_controller_vibration(ovrMobile *ovr, ControllerState& controller_state);
-
-	ControllerState controllers[MAX_HANDS];
 };
 
 } // namespace ovrmobile

@@ -13,8 +13,6 @@ extern "C" {
   GDCALLINGCONV void *ovr_input_constructor(godot_object *instance, void *method_data);
   GDCALLINGCONV void ovr_input_destructor(godot_object *instance, void *method_data, void *user_data);
 
-  GDCALLINGCONV godot_variant vibrate_controller(godot_object *instance, void *method_data, void *p_user_data, int num_args, godot_variant **args);
-
 #ifdef __cplusplus
 };
 #endif

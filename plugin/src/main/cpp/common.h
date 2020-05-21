@@ -76,6 +76,10 @@ inline bool check_bit(uint32_t in, uint32_t bits) {
 	return (in & bits) != 0;
 }
 
+inline double get_time_in_ms() {
+    return vrapi_GetTimeInSeconds() * 1000;
+}
+
 void godot_transform_from_ovrMatrix(godot_transform *p_dest, const ovrMatrix4f *p_matrix, godot_real p_world_scale);
 
 void godot_transform_from_ovr_pose(godot_transform *dest, const ovrPosef &pose, const float world_scale);

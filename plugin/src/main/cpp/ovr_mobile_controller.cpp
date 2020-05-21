@@ -1,5 +1,5 @@
 /**
-* Created by Fredia Huya-Kouadio. 
+* Created by Fredia Huya-Kouadio.
 */
 
 #include "ovr_mobile_controller.h"
@@ -15,8 +15,6 @@ const int kAnalogGripTriggerAxis = 3;
 const float kIndexTriggerPressedThreshold = 0.6f;
 const float kGripTriggerPressedThreshold = 0.6f;
 
-const int kInvalidGodotControllerId = 0;
-
 const char *kUnsupportedController = "Unsupported Controller";
 const char *kGearVRController = "Gear VR Controller";
 const char *kOculusGoController = "Oculus Go Controller";
@@ -24,6 +22,11 @@ const char *kOculusTouchLeftController = "Oculus Touch Left Controller";
 const char *kOculusTouchRightController = "Oculus Touch Right Controller";
 const char *kOculusTrackedLeftHand = "Oculus Tracked Left Hand";
 const char *kOculusTrackedRightHand = "Oculus Tracked Right Hand";
+
+// We set the duration for the controller rumble to 1 ms so it's only active for one frame.
+const int kControllerRumbleDurationInMs = 1;
+
+const double kEspilonTimeInMs = 5;
 
 } // namespace
 
@@ -45,17 +48,41 @@ void OvrMobileController::update_controller_vibration(ovrMobile *ovr, Controller
 		return;
 	}
 
-	if (controller_state.capability_header.Type == ovrControllerType_TrackedRemote) {
-		if (!supports_haptic_vibration(controller_state.remote_capabilities)) {
-			return;
-		}
+    if (!(controller_state.capability_header.Type == ovrControllerType_TrackedRemote)
+        || !supports_haptic_vibration(controller_state.remote_capabilities)) {
+        // unsupported controller
+        return;
+    }
 
-		// Get the vibration intensity.
-		const float vibration = godot::arvr_api->godot_arvr_get_controller_rumble(controller_state.godot_controller_id);
-		vrapi_SetHapticVibrationSimple(ovr, controller_state.remote_capabilities.Header.DeviceID, vibration);
-	} else {
-		// unsupprted controller
-	}
+    // Get the controller rumble intensity. This will override previous controller vibration
+    // requests as this takes precedence.
+    const float intensity = godot::arvr_api->godot_arvr_get_controller_rumble(controller_state.godot_controller_id);
+	vibrate_controller(controller_state.godot_controller_id, kControllerRumbleDurationInMs, intensity);
+
+    // Process controller vibrations.
+    ControllerVibration& vibration = controllers_vibrations[controller_state.godot_controller_id];
+    double current_time_in_ms = get_time_in_ms();
+    if (vibration.is_vibrating
+        && (vibration.end_time_in_ms < (current_time_in_ms + kEspilonTimeInMs))) {
+        // Stop vibrating
+        vrapi_SetHapticVibrationSimple(ovr,
+                                       controller_state.remote_capabilities.Header.DeviceID,
+                                       0.0f);
+
+        // Reset the vibration parameters
+        vibration.end_time_in_ms = 0;
+        vibration.is_vibrating = false;
+        vibration.intensity = 0;
+        controllers_vibrations.erase(controller_state.godot_controller_id);
+    }
+
+    if (vibration.end_time_in_ms > 0) {
+        vrapi_SetHapticVibrationSimple(ovr,
+                                       controller_state.remote_capabilities.Header.DeviceID,
+                                       vibration.intensity);
+
+        vibration.is_vibrating = true;
+    }
 }
 
 void OvrMobileController::update_controller_input_state(ovrMobile *ovr,ControllerState& controller_state) {
@@ -214,9 +241,10 @@ void OvrMobileController::update_controller_tracking_state_hand(ovrMobile *ovr, 
 
 
 void OvrMobileController::update_controllers_connection_state(ovrMobile *ovr, ovrJava *java) {
-	// Reset the controllers connected state.
+	// Reset the controllers connected and active state.
 	for (auto &controller : controllers) {
 		controller.connected = false;
+		controller.primary = false;
 	}
 
 	// Check controller(s) connection state.
@@ -237,7 +265,7 @@ void OvrMobileController::update_controllers_connection_state(ovrMobile *ovr, ov
 				// We're handling a Gear VR or Oculus Go controller. Let's query the user dominant hand to find out where to
 				// assign the controller.
 				auto dominant_hand = static_cast<ovrHandedness>(vrapi_GetSystemPropertyInt(java, VRAPI_SYS_PROP_DOMINANT_HAND));
-				handedness = get_controller_handedness(dominant_hand);
+				handedness = dominant_hand == VRAPI_HAND_LEFT ? LEFT_HAND : RIGHT_HAND;
 			}
 
 			// this check forces a reconnect below because the type of the controller changed
@@ -257,7 +285,7 @@ void OvrMobileController::update_controllers_connection_state(ovrMobile *ovr, ov
 			}
 
 			ControllerHand handedness = get_controller_handedness(tracked_hand_capabilities);
-			
+
 			// this check forces a reconnect below because the type of the controller changed
 			if (controllers[handedness].capability_header.Type != ovrControllerType_Hand && controllers[handedness].godot_controller_id != kInvalidGodotControllerId) {
 				godot::arvr_api->godot_arvr_remove_controller(controllers[handedness].godot_controller_id);
@@ -271,24 +299,38 @@ void OvrMobileController::update_controllers_connection_state(ovrMobile *ovr, ov
 		}
 	}
 
-	// Notify Godot of the updated connection states.
+	// Get the active input device id.
+	int active_input_device_id = -1;
+	vrapi_GetPropertyInt(java, VRAPI_ACTIVE_INPUT_DEVICE_ID, &active_input_device_id);
+
 	for (int hand = 0; hand < MAX_HANDS; hand++) {
 		ControllerState *controller = &controllers[hand];
 
-		if (controller->connected && controller->godot_controller_id == kInvalidGodotControllerId) {
-			// Register the controller with Godot.
-			if (controller->capability_header.Type == ovrControllerType_TrackedRemote) {
-				controller->godot_controller_id = godot::arvr_api->godot_arvr_add_controller(
-						const_cast<char *>(get_controller_model_name(*controller)), get_godot_hand(static_cast<ControllerHand>(hand)),
-						has_orientation_tracking(controller->remote_capabilities),
-						has_position_tracking(controller->remote_capabilities));
-			} else if (controller->capability_header.Type == ovrControllerType_Hand) {
-				controller->godot_controller_id = godot::arvr_api->godot_arvr_add_controller(
-						const_cast<char *>(get_controller_model_name(*controller)), get_godot_hand(static_cast<ControllerHand>(hand)),
-						true, true);
-			}
-			ALOGV("Updated Controller '%s' (Godot id %d; Oculus id %d)", get_controller_model_name(*controller), controller->godot_controller_id, hand);
-		} else if (!controller->connected && controller->godot_controller_id != kInvalidGodotControllerId) {
+		// Notify Godot of the updated connection states.
+		if (controller->connected) {
+		    controller->primary = controller->capability_header.DeviceID == active_input_device_id;
+
+            if (controller->godot_controller_id == kInvalidGodotControllerId) {
+                // Register the controller with Godot.
+                if (controller->capability_header.Type == ovrControllerType_TrackedRemote) {
+                    controller->godot_controller_id = godot::arvr_api->godot_arvr_add_controller(
+                        const_cast<char*>(get_controller_model_name(*controller)),
+                        get_godot_hand(static_cast<ControllerHand>(hand)),
+                        has_orientation_tracking(controller->remote_capabilities),
+                        has_position_tracking(controller->remote_capabilities));
+                } else if (controller->capability_header.Type == ovrControllerType_Hand) {
+                    controller->godot_controller_id = godot::arvr_api->godot_arvr_add_controller(
+                        const_cast<char*>(get_controller_model_name(*controller)),
+                        get_godot_hand(static_cast<ControllerHand>(hand)),
+                        true,
+                        true);
+                }
+                ALOGV("Updated Controller '%s' (Godot id %d; Oculus id %d)",
+                      get_controller_model_name(*controller),
+                      controller->godot_controller_id,
+                      hand);
+            }
+        } else if (controller->godot_controller_id != kInvalidGodotControllerId) {
 			// Unregister the controller from Godot.
 			ALOGV("Unregistered Controller '%s' (Godot id %d; Oculus id %d)", get_controller_model_name(*controller), controller->godot_controller_id, hand);
 			godot::arvr_api->godot_arvr_remove_controller(controller->godot_controller_id);
