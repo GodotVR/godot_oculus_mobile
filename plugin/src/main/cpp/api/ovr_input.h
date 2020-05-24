@@ -6,7 +6,10 @@
 namespace ovrmobile {
 // Vibrate the controller matching the given controller ID.
 // Returns true if the controller was vibrated, false otherwise.
-bool vibrate_controller(OvrMobileSession *session, int controller_id, float intensity);
+bool vibrate_controller(OvrMobileSession* session,
+                        int controller_id,
+                        int duration_in_ms,
+                        float intensity);
 } // namespace ovrmobile
 
 #endif // OVR_INPUT_H

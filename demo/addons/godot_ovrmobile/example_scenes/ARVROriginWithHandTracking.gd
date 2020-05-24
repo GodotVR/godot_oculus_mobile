@@ -143,7 +143,7 @@ func _initialize_ovr_mobile_arvr_interface():
 			if (ovr_utilities): ovr_utilities = ovr_utilities.new()
 			if (ovr_hand_tracking): ovr_hand_tracking = ovr_hand_tracking.new()
 			if (ovr_vr_api_proxy): ovr_vr_api_proxy = ovr_vr_api_proxy.new()
-			
+
 			# Connect to the plugin signals
 			_connect_to_signals()
 
