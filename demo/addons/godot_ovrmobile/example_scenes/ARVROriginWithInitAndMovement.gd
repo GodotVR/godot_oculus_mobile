@@ -22,6 +22,7 @@ var ovr_guardian_system = null;
 var ovr_tracking_transform = null;
 var ovr_utilities = null;
 var ovr_vr_api_proxy = null;
+var ovr_input = null;
 
 # Dictionary tracking the remaining duration for controllers vibration
 var controllers_vibration_duration = {}
@@ -66,6 +67,7 @@ func _initialize_ovr_mobile_arvr_interface():
 			ovr_tracking_transform = load("res://addons/godot_ovrmobile/OvrTrackingTransform.gdns");
 			ovr_utilities = load("res://addons/godot_ovrmobile/OvrUtilities.gdns");
 			ovr_vr_api_proxy = load("res://addons/godot_ovrmobile/OvrVrApiProxy.gdns");
+			ovr_input = load("res://addons/godot_ovrmobile/OvrInput.gdns")
 
 			# and now instance the .gdns classes for use if load was successfull
 			if (ovr_display_refresh_rate): ovr_display_refresh_rate = ovr_display_refresh_rate.new()
@@ -74,6 +76,7 @@ func _initialize_ovr_mobile_arvr_interface():
 			if (ovr_tracking_transform): ovr_tracking_transform = ovr_tracking_transform.new()
 			if (ovr_utilities): ovr_utilities = ovr_utilities.new()
 			if (ovr_vr_api_proxy): ovr_vr_api_proxy = ovr_vr_api_proxy.new()
+			if (ovr_input): ovr_input = ovr_input.new()
 
 			# Connect to the plugin signals
 			_connect_to_signals()
@@ -212,6 +215,8 @@ enum CONTROLLER_BUTTON {
 
 # this is a function connected to the button release signal from the controller
 func _on_LeftTouchController_button_pressed(button):
+	print("Primary controller id: " + str(ovr_input.get_primary_controller_id()))
+
 	if (button == CONTROLLER_BUTTON.YB):
 		# examples on using the ovr api from gdscript
 		if (ovr_guardian_system):
@@ -246,6 +251,8 @@ func _on_LeftTouchController_button_pressed(button):
 		_start_controller_vibration($LeftTouchController, 40, 0.5)
 
 func _on_RightTouchController_button_pressed(button):
+	print("Primary controller id: " + str(ovr_input.get_primary_controller_id()))
+
 	if (button == CONTROLLER_BUTTON.YB):
 		if (ovr_utilities):
 			# use this for fade to black for example: here we just do a color change

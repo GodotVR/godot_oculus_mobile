@@ -76,6 +76,16 @@ public:
       }
   }
 
+  int get_active_controller_id() const {
+      for (int hand = 0; hand < MAX_HANDS; hand++) {
+          auto* controller = &controllers[hand];
+          if (controller->connected && controller->primary) {
+              return controller->godot_controller_id;
+          }
+      }
+      return kInvalidGodotControllerId;
+  }
+
 private:
   struct ControllerVibration {
     float intensity;
@@ -91,16 +101,6 @@ private:
 
   ControllerState controllers[MAX_HANDS];
   std::map<int, ControllerVibration> controllers_vibrations;
-
-  int get_active_controller_id() const {
-      for (int hand = 0; hand < MAX_HANDS; hand++) {
-          auto* controller = &controllers[hand];
-          if (controller->connected && controller->primary) {
-              return controller->godot_controller_id;
-          }
-      }
-      return kInvalidGodotControllerId;
-  }
 
 	inline bool has_analog_grip_trigger(const ovrInputTrackedRemoteCapabilities &capabilities) const {
 		return check_bit(capabilities.ControllerCapabilities, ovrControllerCaps_HasAnalogGripTrigger);

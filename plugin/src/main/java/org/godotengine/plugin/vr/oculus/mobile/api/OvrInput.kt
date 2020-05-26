@@ -17,3 +17,9 @@ private const val PRIMARY_CONTROLLER_ID = -1
  */
 @JvmOverloads
 external fun OvrMobilePlugin.vibrateController(controllerId: Int = PRIMARY_CONTROLLER_ID, durationInMs: Int, intensity: Float)
+
+/**
+ * Return the id for the primary controller.
+ * Returns -1 if there is no primary controller.
+ */
+external fun OvrMobilePlugin.getPrimaryControllerId(): Int
