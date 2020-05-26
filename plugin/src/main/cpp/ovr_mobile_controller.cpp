@@ -241,7 +241,7 @@ void OvrMobileController::update_controller_tracking_state_hand(ovrMobile *ovr, 
 
 
 void OvrMobileController::update_controllers_connection_state(ovrMobile *ovr, ovrJava *java) {
-	// Reset the controllers connected and active state.
+	// Reset the controllers connected and primary state.
 	for (auto &controller : controllers) {
 		controller.connected = false;
 		controller.primary = false;
@@ -299,16 +299,16 @@ void OvrMobileController::update_controllers_connection_state(ovrMobile *ovr, ov
 		}
 	}
 
-	// Get the active input device id.
-	int active_input_device_id = -1;
-	vrapi_GetPropertyInt(java, VRAPI_ACTIVE_INPUT_DEVICE_ID, &active_input_device_id);
+	// Get the primary input device id.
+	int primary_input_device_id = -1;
+	vrapi_GetPropertyInt(java, VRAPI_ACTIVE_INPUT_DEVICE_ID, &primary_input_device_id);
 
 	for (int hand = 0; hand < MAX_HANDS; hand++) {
 		ControllerState *controller = &controllers[hand];
 
 		// Notify Godot of the updated connection states.
 		if (controller->connected) {
-		    controller->primary = controller->capability_header.DeviceID == active_input_device_id;
+		    controller->primary = controller->capability_header.DeviceID == primary_input_device_id;
 
             if (controller->godot_controller_id == kInvalidGodotControllerId) {
                 // Register the controller with Godot.

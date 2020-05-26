@@ -10,6 +10,7 @@
 
 #include "arvr_interface.h"
 
+#include "api/ovr_input.h"
 #include "gdnative/nativescript/ovr_display_refresh_rate_ns.h"
 #include "gdnative/nativescript/ovr_guardian_system_ns.h"
 #include "gdnative/nativescript/ovr_init_config_ns.h"
@@ -17,7 +18,6 @@
 #include "gdnative/nativescript/ovr_tracking_transform_ns.h"
 #include "gdnative/nativescript/ovr_utilities_ns.h"
 #include "gdnative/nativescript/ovr_hand_tracking_ns.h"
-#include "gdnative/nativescript/ovr_input_ns.h"
 
 // experimental low-level VrApi access
 #include "gdnative/nativescript/ovr_vr_api_proxy_ns.h"
@@ -43,7 +43,8 @@ void GDN_EXPORT godot_ovrmobile_nativescript_init(void *handle) {
 	register_gdnative_utilities(handle);
 	register_gdnative_hand_tracking(handle);
 	register_gdnative_vr_api_proxy(handle);
-	register_gdnative_input(handle);
+
+	godot::register_class<ovrmobile::OvrInput>();
 }
 
 void GDN_EXPORT godot_ovrmobile_nativescript_terminate(void *handle) {
