@@ -222,6 +222,7 @@ void OvrMobileController::update_controller_tracking_state_tracked_remote(ovrMob
 	godot::arvr_api->godot_arvr_set_controller_transform(controller_state.godot_controller_id, &transform,
 			has_orientation_tracking(controller_state.remote_capabilities),
 			has_position_tracking(controller_state.remote_capabilities) || is_oculus_go_controller(controller_state.remote_capabilities));
+			// while the Oculus Go controller is not tracked (has_position_tracking == false), the Oculus API provides a position for it based on a simulated arm model
 }
 
 void OvrMobileController::update_controller_tracking_state_hand(ovrMobile *ovr, ControllerState& controller_state, double predicted_display_time) {
