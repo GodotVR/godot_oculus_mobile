@@ -1,16 +1,19 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply(from = "config.gradle.kts")
 
 buildscript {
+    apply(from = "config.gradle.kts")
+
+    val kotlinVersion: String by extra
+    val gradlePluginVersion: String by extra
+
     repositories {
         google()
         jcenter()
 
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.5.3")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinVersion}")
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath("com.android.tools.build:gradle:$gradlePluginVersion")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
     }
 }
 

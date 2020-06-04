@@ -42,7 +42,7 @@ for the **Android SDK & NDK**.
 
 #### Oculus Mobile SDK
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
-(**Oculus Mobile SDK 16.0** (1.33.0) or higher) of the Oculus Mobile SDK and extract it into the
+(**Oculus Mobile SDK 17.0** (1.34.0) or higher) of the Oculus Mobile SDK and extract it into the
 `plugin/libs/ovr_sdk_mobile` directory (create the directory if it doesn't exist).
 - If needed, update the `OVR_ROOT_DIR` cmake variable in the the `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK
 containing folder.
@@ -68,7 +68,7 @@ Deployment
 It requires the use of the **`plugin/ovrmobile.gdap`** configuration file and [Godot Android custom build templates](https://docs.godotengine.org/en/3.2/getting_started/workflow/export/android_custom_build.html) ([setup instructions](https://docs.godotengine.org/en/3.2/getting_started/workflow/export/android_custom_build.html#set-up-the-custom-build-environment)).
 - Deployment instructions for version `1.0.0` of the plugin can be found [here](https://github.com/GodotVR/godot_oculus_mobile/tree/1.0.0#deployment).
 
-In the editor `FileSystem` pane, make sure the plugin AAR binary file and its configuration file (`ovrmobile.gdap`) are added to the `res://android/plugins` directory.  
+In the editor `FileSystem` pane, make sure the plugin AAR binary file and its configuration file (`ovrmobile.gdap`) are added to the `res://android/plugins` directory.
 When exporting the project apk in Godot, the following Android export options should be set:
 - `Xr Features`
   - `Xr Mode` must be set to `Oculus Mobile VR`.
