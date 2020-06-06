@@ -118,10 +118,10 @@ void OvrMobileController::update_controller_input_state_tracked_remote(ovrMobile
 
 	if (has_trackpad(controller_state.remote_capabilities)) {
 		// X axis
-		float positionX = input_state.TrackpadStatus ? input_state.TrackpadPosition.x / controller_state.remote_capabilities.TrackpadMaxX : 0.0f;
+		float positionX = input_state.TrackpadStatus ? input_state.TrackpadPosition.x / controller_state.remote_capabilities.TrackpadMaxX : 0.5f;
 		godot::arvr_api->godot_arvr_set_controller_axis(controller_state.godot_controller_id, kXAxis, positionX, false /* can_be_negative */);
 		// Y axis
-		float positionY = input_state.TrackpadStatus ? input_state.TrackpadPosition.y /	controller_state.remote_capabilities.TrackpadMaxY : 0.0f;
+		float positionY = input_state.TrackpadStatus ? input_state.TrackpadPosition.y /	controller_state.remote_capabilities.TrackpadMaxY : 0.5f;
 		godot::arvr_api->godot_arvr_set_controller_axis(controller_state.godot_controller_id, kYAxis, positionY, false /* can_be_negative */);
 	}
 
