@@ -1,74 +1,36 @@
 # Oculus Mobile Godot plugin
 
-**Note:**<br>
-If you'd like to contribute to the testing process, follow the instructions below to setup and use the plugin,
-and report any issues you encounter. Thanks!<br>
+This repository contains the source code for the Godot Oculus Mobile plugin.
+See the [intro documentation](https://docs.godotengine.org/en/stable/tutorials/vr/developing_for_oculus_quest.html)
+for a reference on how to use the plugin.
 
-This repository contains the source code for the Oculus Mobile Godot plugin.
-See demo project as an example for how to use the plugin.
+This is a Godot Android plugin that supports the following Oculus Mobile devices:
+- [Oculus Quest](https://www.oculus.com/quest)
+- [Oculus Go](https://www.oculus.com/go/)
 
-This is an Android only plugin that is only supported on the following Oculus Mobile devices:
-- Oculus Quest
-- Oculus Go
+The use of this plugin require [Godot 3.2.2](https://godotengine.org/article/maintenance-release-godot-3-2-2) or later.
 
-The use of this plugin require Godot 3.2 or later.
+## License
 
-License
--------
-- This project is released under a MIT license.
+- This project is released under the MIT license.
 - Please check the [Oculus Mobile SDK license](https://developer.oculus.com/licenses) for information
 about the Oculus Mobile SDK used in this project.
 
-Setup
------
-After cloning this repository make sure to initialise the submodules with `git submodule update --init --recursive`.
-When you've pulled a newer version make sure to run `git submodule update --init --recursive`.<br>
-The project uses `gradle` as its primary build system, which you can configure by following the setup instructions
-for the **Android SDK & NDK**.
+## Getting the plugin
 
-#### Android SDK & NDK
-- Download and setup the [Android SDK](https://developer.android.com/studio/#command-tools).
-  - If using Android Studio, download version **3.6.3** or higher.
-  - If using the [command line tools](https://developer.android.com/studio/#command-tools),
-  download revision **26.1.1** or higher.
-  - To ensure you have the latest version, check [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.
-  - Set the environment variable `ANDROID_HOME` to the Android SDK location.
-- Follow the instructions [here](https://developer.android.com/studio/projects/install-ndk#specific-version) and install version **21.0.6113669** of the NDK.
+Official binaries can be found in the [project releases section](https://github.com/GodotVR/godot_oculus_mobile/releases).
 
-#### Godot libraries
-- Checkout the [godot-cpp](https://github.com/GodotNativeTools/godot-cpp) repo as a submodule by running the following command: `git submodule update --init --recursive`.
-  - The [godot-cpp](https://github.com/GodotNativeTools/godot-cpp) repo will checkout under the `plugin/libs/godot-cpp` directory.
-- Navigate to the `plugin/libs/godot-cpp` directory and follow [these steps](https://github.com/GodotNativeTools/godot-cpp/tree/master#compiling-the-cpp-bindings-library) to generate the cpp bindings.
+Instructions for building from source can be found in the [Contributions section](#contributions).
 
-#### Oculus Mobile SDK
-- Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
-(**Oculus Mobile SDK 17.0** (1.34.0) or higher) of the Oculus Mobile SDK and extract it into the
-`plugin/libs/ovr_sdk_mobile` directory (create the directory if it doesn't exist).
-- If needed, update the `OVR_ROOT_DIR` cmake variable in the the `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK
-containing folder.
+### Deployment
 
-Build
------
-#### Generate plugin AAR files
-In the project root directory:
- - Run `./gradlew :generatePluginBinary` to generate the plugin AAR files.
- - Once the build successfully completes, the AAR files can be found in the `build/outputs/pluginBin` directory.
-
-**Note:** A release version of the plugin AAR file will be made available for each version update in the [release section](https://github.com/GodotVR/godot_oculus_mobile/releases).
-
-##### Generate shared libraries ( Advanced - For maintainers only )
-In the project root directory:
- - Run `./gradlew :generateSharedLibs` to generate the plugin shared libraries.
- - Once the build successfully completes, the shared libraries can be found in the `build/outputs/sharedLibs` directory.
-
-Deployment
-----------
 **Note:**
 - Version `2.0.0` (and higher) of the plugin is only supported starting with **Godot 3.2.2**.
-It requires the use of the **`plugin/ovrmobile.gdap`** configuration file and [Godot Android custom build templates](https://docs.godotengine.org/en/3.2/getting_started/workflow/export/android_custom_build.html) ([setup instructions](https://docs.godotengine.org/en/3.2/getting_started/workflow/export/android_custom_build.html#set-up-the-custom-build-environment)).
 - Deployment instructions for version `1.0.0` of the plugin can be found [here](https://github.com/GodotVR/godot_oculus_mobile/tree/1.0.0#deployment).
 
-In the editor `FileSystem` pane, make sure the plugin AAR binary file and its configuration file (`ovrmobile.gdap`) are added to the `res://android/plugins` directory.
+In the Godot editor `FileSystem` pane, add the plugin binary (`.aar`) file and its
+configuration (`.gdap`) file to the Godot project `res://android/plugins` directory.
+
 When exporting the project apk in Godot, the following Android export options should be set:
 - `Xr Features`
   - `Xr Mode` must be set to `Oculus Mobile VR`.
@@ -84,8 +46,55 @@ When exporting the project apk in Godot, the following Android export options sh
 - `Plugins`
   -  `OVRMobile` must be listed and enabled in the `Plugins` section.
 
-GDScript Oculus VrApi access
-------------
+## Contributions
+
+### Setup
+
+Clone the repository and **initialise the submodules** with `git submodule update --init --recursive`.
+  - **Note**: When you've pulled a newer version make sure to run `git submodule update --init --recursive`.<br>
+
+#### Oculus Mobile SDK
+- Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
+(**Oculus Mobile SDK 17.0** (1.34.0) or higher) of the Oculus Mobile SDK and extract it into the
+`plugin/libs/ovr_sdk_mobile` directory (create the directory if it doesn't exist).
+  - If you change the default install location, update the `OVR_ROOT_DIR` cmake variable in the the
+  `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK install location.
+
+#### Godot libraries
+- Checkout the [godot-cpp](https://github.com/GodotNativeTools/godot-cpp) repo as a submodule by running the following command: `git submodule update --init --recursive`.
+  - The [godot-cpp](https://github.com/GodotNativeTools/godot-cpp) repo will checkout under the `plugin/libs/godot-cpp` directory.
+- Navigate to the `plugin/libs/godot-cpp` directory and follow [these steps](https://github.com/GodotNativeTools/godot-cpp/tree/master#compiling-the-cpp-bindings-library) to generate the cpp bindings.
+
+#### Android SDK & NDK
+- Download and setup [Android Studio version **4.0** or higher](https://developer.android.com/studio).
+  - After setup, ensure you have the latest versions by checking the [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.
+- Set the environment variable `ANDROID_HOME` to the Android SDK location.
+- Follow the instructions [here](https://developer.android.com/studio/projects/install-ndk#specific-version) and install version **21.0.6113669** of the NDK.
+
+### Build
+
+#### Generate plugin binary files
+In the project root directory:
+ - Run `./gradlew :generatePluginBinary` to generate the plugin binary files.
+ - Once the build successfully completes, the binary files can be found in the `build/outputs/pluginBin` directory.
+
+##### Generate shared libraries ( Advanced - For maintainers only )
+In the project root directory:
+ - Run `./gradlew :generateSharedLibs` to generate the plugin shared libraries.
+ - Once the build successfully completes, the shared libraries can be found in the `build/outputs/sharedLibs` directory.
+
+## Features
+
+### Hand Tracking
+
+The hand tracking API is still in early state and might change in future updates. It is contained in `OvrHandTracking.gdns`. To see an example
+on how it can be used check the example setup in [demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd](demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd) and the associated scene file.
+To test this in the demo replace the ARVROriginWithInitiAndMovement scene reference with the provided ARVROriginWithHandTracking.tscn.
+
+To enable hand tracking, make sure to follow the **Deployment/Hand Tracking** steps in the [Deployment section](#deployment).
+
+### GDScript Oculus VrApi access
+
 This plugin exposes parts of the Oculus VrApi via GDNative script classes.
 
 Here is an example of how to use these classes inside GDScript:
@@ -143,17 +152,8 @@ func change_performance_settings():
 		ovrPerformance.set_enable_dynamic_foveation(true);
 ```
 
-Hand Tracking
--------------
-The hand tracking API is still in early state and might change in future updates. It is contained in `OvrHandTracking.gdns`. To see an example
-on how it can be used check the example setup in [demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd](demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd) and the associated scene file.
-To test this in the demo replace the ARVROriginWithInitiAndMovement scene reference with the provided ARVROriginWithHandTracking.tscn.
+### Advanced GDScript Oculus VrApi access
 
-To enable hand tracking, make sure to follow the **Deployment/Hand Tracking** steps above.
-
-
-Advanced GDScript Oculus VrApi access
-------------
 In addition to the official API above there is the experimental `OvrVrApiProxy.gdns`
 class that exposes partially the low level property setters/getters from the VrApi.h.
 This API is to be considered temporary and might be removed in future releases of the plugin. If possible it is recommended to use the offical API described above.
