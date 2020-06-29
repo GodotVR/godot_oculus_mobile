@@ -26,10 +26,13 @@ Instructions for building from source can be found in the [Contributions section
 
 **Note:**
 - Version `2.0.0` (and higher) of the plugin is only supported starting with **Godot 3.2.2**.
-- Deployment instructions for version `1.0.0` of the plugin can be found [here](https://github.com/GodotVR/godot_oculus_mobile/tree/1.0.0#deployment).
+  - Deployment instructions for version `1.0.0` of the plugin can be found [here](https://github.com/GodotVR/godot_oculus_mobile/tree/1.0.0#deployment).
+- Using **Android custom builds** is required to use the plugin. The setup instructions can be found [here](https://docs.godotengine.org/en/stable/getting_started/workflow/export/android_custom_build.html).
 
-In the Godot editor `FileSystem` pane, add the plugin binary (`.aar`) file and its
-configuration (`.gdap`) file to the Godot project `res://android/plugins` directory.
+In the Godot editor project view:
+- Install the **Android build template** by following [these instructions](https://docs.godotengine.org/en/stable/getting_started/workflow/export/android_custom_build.html#set-up-the-custom-build-environment).
+- In the `FileSystem` pane, add the plugin binary (`.aar`) file and its configuration (`.gdap`)
+file to the Godot project's custom build directory: `res://android/plugins`.
 
 When exporting the project apk in Godot, the following Android export options should be set:
 - `Xr Features`
