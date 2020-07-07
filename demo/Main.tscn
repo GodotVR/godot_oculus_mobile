@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://CubeTree.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/godot_ovrmobile/example_scenes/ARVROriginWithInitAndMovement.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/godot_ovrmobile/example_scenes/arvr_origin.tscn" type="PackedScene" id=3]
 
 [sub_resource type="OpenSimplexNoise" id=1]
 octaves = 4
@@ -37,8 +37,6 @@ size = Vector3( 0.02, 0.02, 0.02 )
 
 [node name="Main" type="Spatial"]
 script = ExtResource( 1 )
-
-[node name="ARVROriginWithInitAndMovement" parent="." instance=ExtResource( 3 )]
 
 [node name="Ground" type="MeshInstance" parent="."]
 mesh = SubResource( 4 )
@@ -76,3 +74,5 @@ transform = Transform( 1.36963, 0, 1.45744, 0, 2, 0, -1.45744, 0, 1.36963, 3.431
 
 [node name="Tree04" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1.55405, 0, -1.25894, 0, 2, 0, 1.25894, 0, 1.55405, -2.40111, 2, 1.19577 )
+
+[node name="ARVROrigin" parent="." instance=ExtResource( 3 )]
