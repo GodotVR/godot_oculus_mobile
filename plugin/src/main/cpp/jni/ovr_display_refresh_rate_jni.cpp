@@ -1,10 +1,10 @@
 /**
-* Created by Fredia Huya-Kouadio. 
+* Created by Fredia Huya-Kouadio.
 */
 
 #include <jni.h>
 
-#include "api/ovr_display_refresh_rate.h"
+#include "api/ovr_display.h"
 #include "jni_common.h"
 
 #undef JNI_PACKAGE_NAME

@@ -10,6 +10,7 @@
 
 #include "arvr_interface.h"
 
+#include "api/ovr_display.h"
 #include "api/ovr_input.h"
 #include "gdnative/nativescript/ovr_display_refresh_rate_ns.h"
 #include "gdnative/nativescript/ovr_guardian_system_ns.h"
@@ -44,6 +45,7 @@ void GDN_EXPORT godot_ovrmobile_nativescript_init(void *handle) {
 	register_gdnative_hand_tracking(handle);
 	register_gdnative_vr_api_proxy(handle);
 
+	godot::register_class<ovrmobile::OvrDisplay>();
 	godot::register_class<ovrmobile::OvrInput>();
 }
 
