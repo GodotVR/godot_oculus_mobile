@@ -69,7 +69,8 @@ Clone the repository and **initialise the submodules** with `git submodule updat
 - Navigate to the `plugin/libs/godot-cpp` directory and follow [these steps](https://github.com/GodotNativeTools/godot-cpp/tree/master#compiling-the-cpp-bindings-library) to generate the cpp bindings.
 
 #### Android SDK & NDK
-- Download and setup [Android Studio version **4.1** or higher](https://developer.android.com/studio).
+- Download and setup
+  [Android Studio version **4.0** or higher](https://developer.android.com/studio).
   - After setup, ensure you have the latest versions by checking the [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.
 - Set the environment variable `ANDROID_HOME` to the Android SDK location.
 - Follow the instructions [here](https://developer.android.com/studio/projects/install-ndk#specific-version) and install version **21.0.6113669** of the NDK.

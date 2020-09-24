@@ -8,6 +8,8 @@ AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: All
 AllowShortIfStatementsOnASingleLine: true
+BinPackArguments: false
+BinPackParameters: false
 BreakBeforeTernaryOperators: false
 BreakConstructorInitializers: AfterColon
 ColumnLimit:     100
@@ -18,14 +20,6 @@ ContinuationIndentWidth: 8
 Cpp11BracedListStyle: false
 DisableFormat:   false
 FixNamespaceComments: true
-IncludeBlocks:   Regroup
-IncludeCategories:
-  - Regex:           '".*"'
-    Priority:        1
-  - Regex:           '^<.*\.h>'
-    Priority:        2
-  - Regex:           '^<.*'
-    Priority:        3
 IndentCaseLabels: true
 IndentWidth:     4
 KeepEmptyLinesAtTheStartOfBlocks: false
@@ -40,8 +34,16 @@ UseTab:          Never
 ### C++ specific config ###
 Language:        Cpp
 Standard:        Auto
-AccessModifierOffset: -4
+AccessModifierOffset: -3
 AllowShortFunctionsOnASingleLine: Inline
+IncludeBlocks:   Merge
+IncludeCategories:
+  - Regex:           '".*"'
+    Priority:        1
+  - Regex:           '^<.*\.h>'
+    Priority:        2
+  - Regex:           '^<.*'
+    Priority:        3
 ---
 ### Java specific config ###
 Language:        Java

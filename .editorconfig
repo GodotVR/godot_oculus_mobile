@@ -110,7 +110,7 @@ ij_c_indent_interface_members = 0
 ij_c_indent_interface_members_except_ivars_block = false
 ij_c_indent_namespace_members = 0
 ij_c_indent_preprocessor_directive = 0
-ij_c_indent_visibility_keywords = 0
+ij_c_indent_visibility_keywords = 1
 ij_c_insert_override = true
 ij_c_insert_virtual_with_override = false
 ij_c_introduce_auto_vars = false
@@ -297,7 +297,7 @@ ij_c_while_brace_force = always
 ij_c_while_on_new_line = false
 ij_c_wrap_property_declaration = off
 
-[{*.main.kts,*.kts,*.kt}]
+[{*.kts,*.kt}]
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
 ij_kotlin_align_multiline_extends_list = false
