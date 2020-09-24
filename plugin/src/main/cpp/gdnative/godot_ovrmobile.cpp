@@ -12,7 +12,6 @@
 
 #include "api/ovr_display.h"
 #include "api/ovr_input.h"
-#include "gdnative/nativescript/ovr_display_refresh_rate_ns.h"
 #include "gdnative/nativescript/ovr_guardian_system_ns.h"
 #include "gdnative/nativescript/ovr_init_config_ns.h"
 #include "gdnative/nativescript/ovr_performance_ns.h"
@@ -36,7 +35,6 @@ void GDN_EXPORT godot_ovrmobile_gdnative_singleton() {
 void GDN_EXPORT godot_ovrmobile_nativescript_init(void *handle) {
 	godot::Godot::nativescript_init(handle);
 
-	register_gdnative_display_refresh_rate(handle);
 	register_gdnative_guardian_system(handle);
 	register_gdnative_init_config(handle);
 	register_gdnative_performance(handle);

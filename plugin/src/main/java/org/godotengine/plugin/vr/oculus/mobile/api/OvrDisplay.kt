@@ -1,4 +1,4 @@
-@file:JvmName("OvrDisplayRefreshRate")
+@file:JvmName("OvrDisplay")
 
 package org.godotengine.plugin.vr.oculus.mobile.api
 

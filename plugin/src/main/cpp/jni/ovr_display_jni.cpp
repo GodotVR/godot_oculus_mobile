@@ -11,7 +11,7 @@
 #define JNI_PACKAGE_NAME org_godotengine_plugin_vr_oculus_mobile_api
 
 #undef JNI_CLASS_NAME
-#define JNI_CLASS_NAME OvrDisplayRefreshRate
+#define JNI_CLASS_NAME OvrDisplay
 
 extern "C" {
 JNIEXPORT jboolean JNICALL

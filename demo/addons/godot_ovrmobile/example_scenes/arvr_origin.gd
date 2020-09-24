@@ -13,7 +13,7 @@ var ovr_init_config = null;
 
 # the other APIs are available during runtime
 var ovr_performance = null;
-var ovr_display_refresh_rate = null;
+var ovr_display = null;
 var ovr_vr_api_proxy = null;
 
 # some of the Oculus VrAPI constants are defined in this file. Have a look into it to learn more
@@ -51,12 +51,12 @@ func _initialize_ovr_mobile_arvr_interface():
 			Engine.iterations_per_second = 72 # Quest
 
 			# load the .gdns classes.
-			ovr_display_refresh_rate = load("res://addons/godot_ovrmobile/OvrDisplayRefreshRate.gdns");
+			ovr_display = load("res://addons/godot_ovrmobile/OvrDisplay.gdns");
 			ovr_performance = load("res://addons/godot_ovrmobile/OvrPerformance.gdns");
 			ovr_vr_api_proxy = load("res://addons/godot_ovrmobile/OvrVrApiProxy.gdns");
 
 			# and now instance the .gdns classes for use if load was successfull
-			if (ovr_display_refresh_rate): ovr_display_refresh_rate = ovr_display_refresh_rate.new()
+			if (ovr_display): ovr_display = ovr_display.new()
 			if (ovr_performance): ovr_performance = ovr_performance.new()
 			if (ovr_vr_api_proxy): ovr_vr_api_proxy = ovr_vr_api_proxy.new()
 
