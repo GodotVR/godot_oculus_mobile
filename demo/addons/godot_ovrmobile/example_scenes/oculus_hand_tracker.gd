@@ -40,6 +40,7 @@ Quat(-0.081241, -0.013242, 0.560496, 0.824056), Quat(0.00276, 0.037404, 0.637818
 var _t = 0.0
 
 onready var hand_model : Spatial = $HandModel
+onready var hand_pointer : Spatial = $HandModel/HandPointer
 
 func _ready():
 	_initialize_hands()
@@ -53,6 +54,7 @@ func _ready():
 
 func _process(delta_t):
 	_update_hand_model(hand_model, hand_skel);
+	_update_hand_pointer(hand_pointer)
 
 	# If we are on desktop or don't have hand tracking we set a debug pose on the left hand
 	if (controller_id == LEFT_TRACKER_ID && !ovr_hand_tracking):
@@ -109,6 +111,15 @@ func _update_hand_model(model : Spatial, skel: Skeleton):
 		return true;
 	else:
 		return false;
+
+
+func _update_hand_pointer(model: Spatial):
+	if (ovr_hand_tracking): # check if the hand tracking API was loaded
+		if (ovr_hand_tracking.is_pointer_pose_valid(controller_id)):
+			model.visible = true
+			model.global_transform = ovr_hand_tracking.get_pointer_pose(controller_id)
+		else:
+			model.visible = false
 
 
 func _on_LeftHand_pinch_pressed(button):
