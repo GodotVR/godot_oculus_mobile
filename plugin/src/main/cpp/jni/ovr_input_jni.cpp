@@ -28,4 +28,8 @@ JNIEXPORT jint JNICALL JNI_METHOD(getPrimaryControllerId)(JNIEnv*, jclass, jobje
     return ovrmobile::get_primary_controller_id(get_session());
 }
 
+JNIEXPORT jint JNICALL JNI_METHOD(nativeGetPrimaryControllerType)(JNIEnv*, jclass) {
+    return ovrmobile::get_primary_controller_type(get_session());
+}
+
 };

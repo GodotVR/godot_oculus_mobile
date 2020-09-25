@@ -138,7 +138,7 @@ private:
 		return check_bit(capabilities.ControllerCapabilities, ovrControllerCaps_ModelOculusTouch);
 	}
 
-	inline bool is_left_hand_controller(const ovrInputTrackedRemoteCapabilities &capabilities) const {
+	inline bool is_left_touch_controller(const ovrInputTrackedRemoteCapabilities &capabilities) const {
 		return check_bit(capabilities.ControllerCapabilities, ovrControllerCaps_LeftHand);
 	}
 
@@ -146,7 +146,7 @@ private:
 		return check_bit(capabilities.HandCapabilities, ovrHandCaps_LeftHand);
 	}
 
-	inline bool is_right_hand_controller(const ovrInputTrackedRemoteCapabilities &capabilities) const {
+	inline bool is_right_touch_controller(const ovrInputTrackedRemoteCapabilities &capabilities) const {
 		return check_bit(capabilities.ControllerCapabilities, ovrControllerCaps_RightHand);
 	}
 
@@ -159,7 +159,7 @@ private:
 	}
 
 	inline ControllerHand get_controller_handedness(const ovrInputTrackedRemoteCapabilities &capabilities) const {
-		return is_left_hand_controller(capabilities) ? LEFT_HAND : RIGHT_HAND;
+		return is_left_touch_controller(capabilities) ? LEFT_HAND : RIGHT_HAND;
 	}
 
 	inline int get_godot_hand(ControllerHand hand) {

@@ -143,7 +143,7 @@ void OvrMobileController::update_controller_input_state_tracked_remote(ovrMobile
 		godot::arvr_api->godot_arvr_set_controller_button(controller_state.godot_controller_id, 12, check_bit(input_state.Touches, ovrTouch_IndexPointing));
 		godot::arvr_api->godot_arvr_set_controller_button(controller_state.godot_controller_id, 15, input_state.IndexTrigger > kIndexTriggerPressedThreshold);
 
-		if (is_left_hand_controller(controller_state.remote_capabilities)) {
+		if (is_left_touch_controller(controller_state.remote_capabilities)) {
 			godot::arvr_api->godot_arvr_set_controller_button(controller_state.godot_controller_id, 3, check_bit(input_state.Buttons, ovrButton_Enter)); // menu button
 			godot::arvr_api->godot_arvr_set_controller_button(controller_state.godot_controller_id, 14, check_bit(input_state.Buttons, ovrButton_LThumb));
 			godot::arvr_api->godot_arvr_set_controller_button(controller_state.godot_controller_id, 7, check_bit(input_state.Buttons, ovrButton_X));
@@ -152,7 +152,7 @@ void OvrMobileController::update_controller_input_state_tracked_remote(ovrMobile
 			godot::arvr_api->godot_arvr_set_controller_button(controller_state.godot_controller_id, 6, check_bit(input_state.Touches, ovrTouch_Y));
 		}
 
-		if (is_right_hand_controller(controller_state.remote_capabilities)) {
+		if (is_right_touch_controller(controller_state.remote_capabilities)) {
 			// 3 -> home button. The home button is not available for applications.
 			godot::arvr_api->godot_arvr_set_controller_button(controller_state.godot_controller_id, 7, check_bit(input_state.Buttons, ovrButton_A));
 			godot::arvr_api->godot_arvr_set_controller_button(controller_state.godot_controller_id, 5, check_bit(input_state.Touches, ovrTouch_A));
@@ -351,11 +351,11 @@ const char *OvrMobileController::get_controller_model_name(const ControllerState
 		}
 
 		if (is_oculus_touch_controller(controller_state.remote_capabilities)) {
-			if (is_left_hand_controller(controller_state.remote_capabilities)) {
+			if (is_left_touch_controller(controller_state.remote_capabilities)) {
 				return kOculusTouchLeftController;
 			}
 
-			if (is_right_hand_controller(controller_state.remote_capabilities)) {
+			if (is_right_touch_controller(controller_state.remote_capabilities)) {
 				return kOculusTouchRightController;
 			}
 		}
