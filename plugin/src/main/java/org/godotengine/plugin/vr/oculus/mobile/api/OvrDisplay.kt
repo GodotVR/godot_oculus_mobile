@@ -6,6 +6,7 @@ import org.godotengine.plugin.vr.oculus.mobile.OvrMobilePlugin
 
 /**
  * Color space types for HMDs
+ * @see https://developer.oculus.com/documentation/native/android/mobile-colorspace/
  */
 enum class ColorSpace(internal val value: Int) {
     /** No color correction, not recommended for production use. See notes above for more info */
@@ -44,12 +45,30 @@ enum class ColorSpace(internal val value: Int) {
     }
 }
 
+/**
+ * Used to retrieve the device color space.
+ */
 fun OvrMobilePlugin.getColorSpace() = ColorSpace.toColorSpace(nativeGetColorSpace())
 
+/**
+ * Used to update the device color space.
+ *
+ * @param[colorSpace] The new target color space.
+ * @return True if the device's color space was updated, false otherwise.
+ */
 fun OvrMobilePlugin.setColorSpace(colorSpace: ColorSpace) = nativeSetColorSpace(colorSpace.value)
 
+/**
+ * Used to access the display refresh rates supported by the device.
+ */
 fun OvrMobilePlugin.getSupportedDisplayRefreshRates() = nativeGetSupportedDisplayRefreshRates()
 
+/**
+ * Used to update the device display refresh rate.
+ *
+ * @param[refreshRate] Target refresh rate. Must be one of the supported values returned by
+ * [getSupportedDisplayRefreshRates].
+ */
 fun OvrMobilePlugin.setDisplayRefreshRate(refreshRate: Float) = nativeSetDisplayRefreshRate(refreshRate)
 
 private external fun nativeSetColorSpace(colorSpace: Int): Boolean

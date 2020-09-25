@@ -56,9 +56,17 @@ func _initialize_ovr_mobile_arvr_interface():
 			ovr_vr_api_proxy = load("res://addons/godot_ovrmobile/OvrVrApiProxy.gdns");
 
 			# and now instance the .gdns classes for use if load was successfull
-			if (ovr_display): ovr_display = ovr_display.new()
-			if (ovr_performance): ovr_performance = ovr_performance.new()
-			if (ovr_vr_api_proxy): ovr_vr_api_proxy = ovr_vr_api_proxy.new()
+			if (ovr_display): 
+				ovr_display = ovr_display.new()
+				# Get the list of supported display refresh rates.
+				print("Display refresh rates: " + str(ovr_display.get_supported_display_refresh_rates()))
+				# Get the device color space
+				print("Device color space: " + str(ovr_display.get_color_space()))
+				
+			if (ovr_performance): 
+				ovr_performance = ovr_performance.new()
+			if (ovr_vr_api_proxy): 
+				ovr_vr_api_proxy = ovr_vr_api_proxy.new()
 
 			# Connect to the plugin signals
 			_connect_to_signals()

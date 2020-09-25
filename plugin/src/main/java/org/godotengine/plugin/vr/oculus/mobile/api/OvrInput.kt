@@ -60,6 +60,9 @@ external fun OvrMobilePlugin.vibrateController(controllerId: Int = PRIMARY_CONTR
  */
 external fun OvrMobilePlugin.getPrimaryControllerId(): Int
 
+/**
+ * Return the [ControllerType] type of the primary controller.
+ */
 fun OvrMobilePlugin.getPrimaryControllerType() =
         ControllerType.toControllerType(nativeGetPrimaryControllerType())
 
