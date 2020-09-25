@@ -47,6 +47,8 @@ enum class ColorSpace(internal val value: Int) {
 
 /**
  * Used to retrieve the device color space.
+ * This is a constant for each device type.
+ * @see https://developer.oculus.com/documentation/native/android/mobile-colorspace/
  */
 fun OvrMobilePlugin.getColorSpace() = ColorSpace.toColorSpace(nativeGetColorSpace())
 

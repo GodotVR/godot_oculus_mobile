@@ -14,7 +14,9 @@ using namespace godot;
 /// For more info, see https://developer.oculus.com/documentation/native/android/mobile-colorspace/
 bool set_color_space(OvrMobileSession *session, ovrColorSpace color_space);
 
-/// Utility method to retrieve the device color space
+/// Utility method to retrieve the device color space.
+/// This is a constant for each device type.
+/// See https://developer.oculus.com/documentation/native/android/mobile-colorspace/
 ovrColorSpace get_color_space(OvrMobileSession *session);
 
 /// Utility method to update the device display refresh rate.
