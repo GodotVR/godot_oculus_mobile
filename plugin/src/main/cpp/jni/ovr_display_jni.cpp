@@ -14,9 +14,7 @@
 
 extern "C" {
 
-JNIEXPORT jboolean JNICALL JNI_METHOD(nativeSetColorSpace)(JNIEnv *env,
-                                                           jclass,
-                                                           jint color_space) {
+JNIEXPORT jboolean JNICALL JNI_METHOD(nativeSetColorSpace)(JNIEnv *env, jclass, jint color_space) {
     return ovrmobile::set_color_space(get_session(), static_cast<ovrColorSpace>(color_space));
 }
 
