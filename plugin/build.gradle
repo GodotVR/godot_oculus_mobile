@@ -35,7 +35,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    /*REQUIRES Android Studio 4.1+
     buildFeatures {
         prefabPublishing true
     }
@@ -44,7 +43,7 @@ android {
         godot_ovrmobile {
             headers "src/main/cpp"
         }
-    }*/
+    }
 }
 
 dependencies {
