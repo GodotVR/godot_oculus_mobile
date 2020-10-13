@@ -58,7 +58,7 @@ Clone the repository and **initialise the submodules** with `git submodule updat
 
 #### Oculus Mobile SDK
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
-(**Oculus Mobile SDK 17.0** (1.34.0) or higher) of the Oculus Mobile SDK and extract it into the
+(**Oculus Mobile SDK 19.0** (1.36.0) or higher) of the Oculus Mobile SDK and extract it into the
 `plugin/libs/ovr_sdk_mobile` directory (create the directory if it doesn't exist).
   - If you change the default install location, update the `OVR_ROOT_DIR` cmake variable in the the
   `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK install location.
@@ -69,7 +69,8 @@ Clone the repository and **initialise the submodules** with `git submodule updat
 - Navigate to the `plugin/libs/godot-cpp` directory and follow [these steps](https://github.com/GodotNativeTools/godot-cpp/tree/master#compiling-the-cpp-bindings-library) to generate the cpp bindings.
 
 #### Android SDK & NDK
-- Download and setup [Android Studio version **4.0** or higher](https://developer.android.com/studio).
+- Download and setup
+  [Android Studio version **4.1** or higher](https://developer.android.com/studio).
   - After setup, ensure you have the latest versions by checking the [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.
 - Set the environment variable `ANDROID_HOME` to the Android SDK location.
 - Follow the instructions [here](https://developer.android.com/studio/projects/install-ndk#specific-version) and install version **21.0.6113669** of the NDK.
