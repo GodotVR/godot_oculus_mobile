@@ -488,14 +488,14 @@ void OvrMobileController::update_controllers_connection_state(ovrMobile *ovr, ov
                 ALOGV("Updated Controller '%s' (Godot id %d; Oculus id %d)",
                       get_controller_model_name(*controller),
                       controller->godot_controller_id,
-                      hand);
+                      controller->capability_header.DeviceID);
             }
         } else if (controller->godot_controller_id != kInvalidGodotControllerId) {
             // Unregister the controller from Godot.
             ALOGV("Unregistered Controller '%s' (Godot id %d; Oculus id %d)",
                   get_controller_model_name(*controller),
                   controller->godot_controller_id,
-                  hand);
+                  controller->capability_header.DeviceID);
             godot::arvr_api->godot_arvr_remove_controller(controller->godot_controller_id);
             controller->godot_controller_id = kInvalidGodotControllerId;
         }

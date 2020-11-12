@@ -47,13 +47,6 @@ void godot_vector3_from_ovrVector3f(godot_vector3 *dest, const ovrVector3f& vect
     godot::api->godot_vector3_new(dest, vector.x, vector.y, vector.z);
 }
 
-bool is_oculus_quest_device(const ovrJava * java) {
-	auto device_type = static_cast<ovrDeviceType>(
-			vrapi_GetSystemPropertyInt(java, VRAPI_SYS_PROP_DEVICE_TYPE));
-	return device_type >= VRAPI_DEVICE_TYPE_OCULUSQUEST_START &&
-		   device_type <= VRAPI_DEVICE_TYPE_OCULUSQUEST_END;
-}
-
 // Must use EGLSyncKHR because the VrApi still supports OpenGL ES 2.0
 // EGL_KHR_reusable_sync
 PFNEGLCREATESYNCKHRPROC OpenGLExtensions::eglCreateSyncKHR;

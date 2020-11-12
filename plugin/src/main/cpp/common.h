@@ -86,8 +86,6 @@ void godot_transform_from_ovr_pose(godot_transform *dest, const ovrPosef &pose, 
 
 void godot_vector3_from_ovrVector3f(godot_vector3 *dest, const ovrVector3f& vector);
 
-bool is_oculus_quest_device(const ovrJava * java);
-
 class OpenGLExtensions {
 public:
 	// Must use EGLSyncKHR because the VrApi still supports OpenGL ES 2.0

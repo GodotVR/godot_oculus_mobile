@@ -8,6 +8,7 @@
 #include "api/ovr_display.h"
 #include "api/ovr_input.h"
 #include "api/ovr_performance.h"
+#include "api/ovr_system.h"
 #include "arvr_interface.h"
 #include "gdnative/nativescript/ovr_guardian_system_ns.h"
 #include "gdnative/nativescript/ovr_hand_tracking_ns.h"
@@ -43,6 +44,7 @@ void GDN_EXPORT godot_ovrmobile_nativescript_init(void *handle) {
     godot::register_class<ovrmobile::OvrDisplay>();
     godot::register_class<ovrmobile::OvrInput>();
     godot::register_class<ovrmobile::OvrPerformance>();
+    godot::register_class<ovrmobile::OvrSystem>();
 }
 
 void GDN_EXPORT godot_ovrmobile_nativescript_terminate(void *handle) {
