@@ -1,6 +1,6 @@
 /**
-* Created by Fredia Huya-Kouadio.
-*/
+ * Created by Fredia Huya-Kouadio.
+ */
 
 #include "ovr_system.h"
 #include "api_common.h"
@@ -22,8 +22,8 @@ ovrDeviceType get_device_type(OvrMobileSession *session) {
     return check_session_initialized<ovrDeviceType>(
             session,
             [&]() {
-                auto device_type = vrapi_GetSystemPropertyInt(session->get_ovr_java(),
-                                                              VRAPI_SYS_PROP_DEVICE_TYPE);
+                auto device_type = static_cast<ovrDeviceType>(vrapi_GetSystemPropertyInt(
+                        session->get_ovr_java(), VRAPI_SYS_PROP_DEVICE_TYPE));
                 return device_type;
             },
             []() { return VRAPI_DEVICE_TYPE_UNKNOWN; });
