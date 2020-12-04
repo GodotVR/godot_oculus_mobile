@@ -19,14 +19,6 @@ JNIEXPORT jfloat JNICALL JNI_METHOD(nativeGetIpd)(JNIEnv *env, jclass clazz) {
     return ovrmobile::get_ipd(get_session());
 }
 
-JNIEXPORT jfloat JNICALL JNI_METHOD(nativeGetDistanceFromHead)(JNIEnv* env,
-                                                               jclass,
-                                                               jstring head_node_path,
-                                                               jstring to_node_path) {
-    return ovrmobile::get_distance_from_head(jstring_to_string(env, head_node_path),
-                                             jstring_to_string(env, to_node_path));
-}
-
 JNIEXPORT jint JNICALL JNI_METHOD(nativeGetRenderTargetWidth)(JNIEnv *env, jclass ) {
   return get_session()->get_render_target_width();
 }
