@@ -143,8 +143,11 @@ func _check_and_perform_runtime_config():
 	if (ovr_performance):
 		# these are some examples of using the ovr .gdns APIs
 		ovr_performance.set_clock_levels(1, 1)
-		ovr_performance.set_extra_latency_mode(ovrVrApiTypes.OvrExtraLatencyMode.VRAPI_EXTRA_LATENCY_MODE_ON)
 		ovr_performance.set_enable_dynamic_foveation(true);  # Enable dynamic foveation
+		if (ovr_system and ovr_system.is_oculus_quest_2_device()):
+			ovr_performance.set_extra_latency_mode(ovrVrApiTypes.OvrExtraLatencyMode.VRAPI_EXTRA_LATENCY_MODE_OFF)
+		else:
+			ovr_performance.set_extra_latency_mode(ovrVrApiTypes.OvrExtraLatencyMode.VRAPI_EXTRA_LATENCY_MODE_ON)
 
 	_performed_runtime_config = true
 
