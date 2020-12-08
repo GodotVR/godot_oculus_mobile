@@ -40,9 +40,6 @@ class OvrSystem : public Reference {
     inline bool is_oculus_quest_2_device() {
         return ovrmobile::is_oculus_quest_2_device(OvrMobileSession::get_singleton_instance());
     }
-
- private:
-
 };
 } // namespace ovrmobile
 
