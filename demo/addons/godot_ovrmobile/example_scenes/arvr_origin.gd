@@ -15,6 +15,7 @@ var ovr_init_config = null;
 var ovr_performance = null;
 var ovr_display = null;
 var ovr_vr_api_proxy = null;
+var ovr_system = null;
 
 # some of the Oculus VrAPI constants are defined in this file. Have a look into it to learn more
 var ovrVrApiTypes = load("res://addons/godot_ovrmobile/OvrVrApiTypes.gd").new()
@@ -47,27 +48,40 @@ func _initialize_ovr_mobile_arvr_interface():
 
 		# Configure the interface init parameters.
 		if arvr_interface.initialize():
-			get_viewport().arvr = true
-			Engine.iterations_per_second = 72 # Quest
-
 			# load the .gdns classes.
 			ovr_display = load("res://addons/godot_ovrmobile/OvrDisplay.gdns");
 			ovr_performance = load("res://addons/godot_ovrmobile/OvrPerformance.gdns");
 			ovr_vr_api_proxy = load("res://addons/godot_ovrmobile/OvrVrApiProxy.gdns");
+			ovr_system = load("res://addons/godot_ovrmobile/OvrSystem.gdns")
 
-			# and now instance the .gdns classes for use if load was successfull
+			# And now instance the .gdns classes for use if load was successfull
+			
+			# Update the refresh rate based on the device type. The value could
+			# also be picked from the values returned by 
+			# ovr_display.get_supported_display_refresh_rates()
+			var refresh_rate = 72 # Default common value for Quest devices
+			if (ovr_system):
+				ovr_system = ovr_system.new()
+				if (ovr_system.is_oculus_quest_2_device()):
+					refresh_rate = 90 # Only supported on Quest 2 devices
+			
 			if (ovr_display): 
 				ovr_display = ovr_display.new()
 				# Get the list of supported display refresh rates.
 				print("Display refresh rates: " + str(ovr_display.get_supported_display_refresh_rates()))
 				# Get the device color space
 				print("Device color space: " + str(ovr_display.get_color_space()))
+				# Update the refresh rate
+				ovr_display.set_display_refresh_rate(refresh_rate)
 				
 			if (ovr_performance): 
 				ovr_performance = ovr_performance.new()
 			if (ovr_vr_api_proxy): 
 				ovr_vr_api_proxy = ovr_vr_api_proxy.new()
 
+			get_viewport().arvr = true
+			Engine.iterations_per_second = refresh_rate
+			
 			# Connect to the plugin signals
 			_connect_to_signals()
 
@@ -129,8 +143,11 @@ func _check_and_perform_runtime_config():
 	if (ovr_performance):
 		# these are some examples of using the ovr .gdns APIs
 		ovr_performance.set_clock_levels(1, 1)
-		ovr_performance.set_extra_latency_mode(ovrVrApiTypes.OvrExtraLatencyMode.VRAPI_EXTRA_LATENCY_MODE_ON)
-		ovr_performance.set_foveation_level(2);  # 0 == off; 4 == highest
+		ovr_performance.set_enable_dynamic_foveation(true);  # Enable dynamic foveation
+		if (ovr_system and ovr_system.is_oculus_quest_2_device()):
+			ovr_performance.set_extra_latency_mode(ovrVrApiTypes.OvrExtraLatencyMode.VRAPI_EXTRA_LATENCY_MODE_OFF)
+		else:
+			ovr_performance.set_extra_latency_mode(ovrVrApiTypes.OvrExtraLatencyMode.VRAPI_EXTRA_LATENCY_MODE_ON)
 
 	_performed_runtime_config = true
 

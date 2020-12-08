@@ -21,8 +21,6 @@ enum class OvrEye(internal val eyeIndex: Int) {
 fun OvrMobilePlugin.getIpd() =
     nativeGetIpd()
 
-fun OvrMobilePlugin.getDistanceFromHead(headNodePath: String, toNodePath: String) = nativeGetDistanceFromHead(headNodePath, toNodePath)
-
 fun OvrMobilePlugin.getRenderTargetWidth() = nativeGetRenderTargetWidth()
 
 fun OvrMobilePlugin.getRenderTargetHeight() = nativeGetRenderTargetHeight()
@@ -76,8 +74,6 @@ fun OvrMobilePlugin.getHeadLinearAcceleration() =
     nativeGetHeadLinearAcceleration()
 
 private external fun nativeGetIpd(): Float
-
-private external fun nativeGetDistanceFromHead(headNodePath: String, toNodePath: String): Float
 
 private external fun nativeGetRenderTargetWidth(): Int
 

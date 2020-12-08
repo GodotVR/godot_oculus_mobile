@@ -4,9 +4,7 @@ This repository contains the source code for the Godot Oculus Mobile plugin.
 See the [intro documentation](https://docs.godotengine.org/en/stable/tutorials/vr/developing_for_oculus_quest.html)
 for a reference on how to use the plugin.
 
-This is a Godot Android plugin that supports the following Oculus Mobile devices:
-- [Oculus Quest](https://www.oculus.com/quest)
-- [Oculus Go](https://www.oculus.com/go/)
+This is a Godot Android plugin that supports the [Oculus Quest 1 & 2 standalone headsets](https://www.oculus.com/quest).
 
 The use of this plugin require [Godot 3.2.2](https://godotengine.org/article/maintenance-release-godot-3-2-2) or later.
 
@@ -58,7 +56,7 @@ Clone the repository and **initialise the submodules** with `git submodule updat
 
 #### Oculus Mobile SDK
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
-(**Oculus Mobile SDK 19.0** (1.36.0) or higher) of the Oculus Mobile SDK and extract it into the
+(**Oculus Mobile SDK 23.0** (1.40.0) or higher) of the Oculus Mobile SDK and extract it into the
 `plugin/libs/ovr_sdk_mobile` directory (create the directory if it doesn't exist).
   - If you change the default install location, update the `OVR_ROOT_DIR` cmake variable in the the
   `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK install location.
@@ -73,7 +71,7 @@ Clone the repository and **initialise the submodules** with `git submodule updat
   [Android Studio version **4.1** or higher](https://developer.android.com/studio).
   - After setup, ensure you have the latest versions by checking the [SDK Manager](https://developer.android.com/studio/intro/update.html#sdk-manager) for updates.
 - Set the environment variable `ANDROID_HOME` to the Android SDK location.
-- Follow the instructions [here](https://developer.android.com/studio/projects/install-ndk#specific-version) and install version **21.0.6113669** of the NDK.
+- Follow the instructions [here](https://developer.android.com/studio/projects/install-ndk#specific-version) and install version **21.1.6352462** of the NDK.
 
 ### Build
 

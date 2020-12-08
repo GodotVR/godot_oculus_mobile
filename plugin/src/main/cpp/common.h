@@ -30,24 +30,44 @@
 #endif
 
 #if !defined(GL_EXT_multisampled_render_to_texture)
-typedef void(GL_APIENTRY *PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
-typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC)(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLsizei samples);
+typedef void(GL_APIENTRY *PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC)(GLenum target,
+                                                                      GLsizei samples,
+                                                                      GLenum internalformat,
+                                                                      GLsizei width,
+                                                                      GLsizei height);
+typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC)(GLenum target,
+                                                                       GLenum attachment,
+                                                                       GLenum textarget,
+                                                                       GLuint texture,
+                                                                       GLint level,
+                                                                       GLsizei samples);
 #endif
 
 #if !defined(GL_OVR_multiview)
 static const int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_OVR = 0x9630;
 static const int GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_OVR = 0x9632;
 static const int GL_MAX_VIEWS_OVR = 0x9631;
-typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint baseViewIndex, GLsizei numViews);
+typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC)(GLenum target,
+                                                                   GLenum attachment,
+                                                                   GLuint texture,
+                                                                   GLint level,
+                                                                   GLint baseViewIndex,
+                                                                   GLsizei numViews);
 #endif
 
 #if !defined(GL_OVR_multiview_multisampled_render_to_texture)
-typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei samples, GLint baseViewIndex, GLsizei numViews);
+typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC)(GLenum target,
+                                                                              GLenum attachment,
+                                                                              GLuint texture,
+                                                                              GLint level,
+                                                                              GLsizei samples,
+                                                                              GLint baseViewIndex,
+                                                                              GLsizei numViews);
 #endif
 
+#include <gdnative_api_struct.gen.h>
 #include <core/Godot.hpp>
 #include <core/GodotGlobal.hpp>
-#include <gdnative_api_struct.gen.h>
 
 // Include the OVR SDK
 #include "VrApi.h"
@@ -58,8 +78,8 @@ typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC)(GL
 #define DEBUG 1
 #define LOG_TAG "GodotOVRMobile"
 
-#define ALOG_ASSERT(_cond, ...) \
-	if (!(_cond)) __android_log_assert("conditional", LOG_TAG, __VA_ARGS__)
+#define ALOG_ASSERT(_cond, ...)                                                                    \
+    if (!(_cond)) __android_log_assert("conditional", LOG_TAG, __VA_ARGS__)
 #define ALOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 #define ALOGW(...) __android_log_print(ANDROID_LOG_WARN, LOG_TAG, __VA_ARGS__)
 #if DEBUG
@@ -73,47 +93,48 @@ typedef void(GL_APIENTRY *PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC)(GL
 namespace ovrmobile {
 
 inline bool check_bit(uint32_t in, uint32_t bits) {
-	return (in & bits) != 0;
+    return (in & bits) != 0;
 }
 
 inline double get_time_in_ms() {
     return vrapi_GetTimeInSeconds() * 1000;
 }
 
-void godot_transform_from_ovrMatrix(godot_transform *p_dest, const ovrMatrix4f *p_matrix, godot_real p_world_scale);
+void godot_transform_from_ovrMatrix(godot_transform *p_dest,
+                                    const ovrMatrix4f *p_matrix,
+                                    godot_real p_world_scale);
 
-void godot_transform_from_ovr_pose(godot_transform *dest, const ovrPosef &pose, const float world_scale);
+void godot_transform_from_ovr_pose(godot_transform *dest,
+                                   const ovrPosef &pose,
+                                   const float world_scale);
 
-void godot_vector3_from_ovrVector3f(godot_vector3 *dest, const ovrVector3f& vector);
-
-bool is_oculus_go_device(const ovrJava * java);
-
-bool is_oculus_quest_device(const ovrJava * java);
+void godot_vector3_from_ovrVector3f(godot_vector3 *dest, const ovrVector3f &vector);
 
 class OpenGLExtensions {
-public:
-	// Must use EGLSyncKHR because the VrApi still supports OpenGL ES 2.0
-	// EGL_KHR_reusable_sync
-	static PFNEGLCREATESYNCKHRPROC eglCreateSyncKHR;
-	static PFNEGLDESTROYSYNCKHRPROC eglDestroySyncKHR;
-	static PFNEGLCLIENTWAITSYNCKHRPROC eglClientWaitSyncKHR;
-	static PFNEGLSIGNALSYNCKHRPROC eglSignalSyncKHR;
-	static PFNEGLGETSYNCATTRIBKHRPROC eglGetSyncAttribKHR;
+ public:
+    // Must use EGLSyncKHR because the VrApi still supports OpenGL ES 2.0
+    // EGL_KHR_reusable_sync
+    static PFNEGLCREATESYNCKHRPROC eglCreateSyncKHR;
+    static PFNEGLDESTROYSYNCKHRPROC eglDestroySyncKHR;
+    static PFNEGLCLIENTWAITSYNCKHRPROC eglClientWaitSyncKHR;
+    static PFNEGLSIGNALSYNCKHRPROC eglSignalSyncKHR;
+    static PFNEGLGETSYNCATTRIBKHRPROC eglGetSyncAttribKHR;
 
-	static bool multi_view; // GL_OVR_multiview, GL_OVR_multiview2
-	static bool EXT_texture_border_clamp; // GL_EXT_texture_border_clamp, GL_OES_texture_border_clamp
+    static bool multi_view; // GL_OVR_multiview, GL_OVR_multiview2
+    static bool
+            EXT_texture_border_clamp; // GL_EXT_texture_border_clamp, GL_OES_texture_border_clamp
 
-	static void initExtensions();
-	static const char *errorString(const EGLint error);
-	static const char *GlFrameBufferStatusString(GLenum status);
-	static const char *GlErrorString(GLenum error);
-	static void GLCheckErrors(int line, const char* filename, const char* func);
+    static void initExtensions();
+    static const char *errorString(const EGLint error);
+    static const char *GlFrameBufferStatusString(GLenum status);
+    static const char *GlErrorString(GLenum error);
+    static void GLCheckErrors(int line, const char *filename, const char *func);
 };
 
 } // namespace ovrmobile
 
-#define GL(func) \
-	func;        \
-	ovrmobile::OpenGLExtensions::GLCheckErrors(__LINE__, __FILE__, #func);
+#define GL(func)                                                                                   \
+    func;                                                                                          \
+    ovrmobile::OpenGLExtensions::GLCheckErrors(__LINE__, __FILE__, #func);
 
 #endif // OVRMOBILE_COMMON_H
