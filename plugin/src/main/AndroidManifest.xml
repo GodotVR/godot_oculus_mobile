@@ -14,7 +14,7 @@
                 android:value="quest|delmar"
                 tools:node="replace" />
 
-        <!-- Enable Android views rendering on Quest 2. -->
+        <!-- Enable Android views rendering. -->
         <meta-data
                 android:name="com.oculus.always_draw_view_root"
                 android:value="true"
