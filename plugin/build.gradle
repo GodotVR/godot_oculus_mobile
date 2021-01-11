@@ -4,7 +4,7 @@ apply plugin: "kotlin-android"
 android {
     buildToolsVersion = versions.buildTools
     compileSdkVersion versions.compileSdk
-    ndkVersion "21.1.6352462"
+    ndkVersion versions.ndkVersion
 
     defaultConfig {
         minSdkVersion versions.minSdk
