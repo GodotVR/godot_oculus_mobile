@@ -39,6 +39,8 @@ OvrMobileSession::OvrMobileSession() :
     default_layer_color_scale.z = 1.0f;
     default_layer_color_scale.w = 1.0f;
 
+    head_tracker.Status = 0;
+
     ovr_mobile_controller = new OvrMobileController();
 }
 
@@ -111,7 +113,13 @@ godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye,
     godot_transform reference_frame = godot::arvr_api->godot_arvr_get_reference_frame();
     godot_real world_scale = godot::arvr_api->godot_arvr_get_worldscale();
 
-    if (in_vr_mode()) {
+    // Validate that we're in vr mode and have valid orientation and position data.
+    if (!in_vr_mode() ||
+        (head_tracker.Status &
+         (VRAPI_TRACKING_STATUS_ORIENTATION_VALID + VRAPI_TRACKING_STATUS_POSITION_VALID)) !=
+                (VRAPI_TRACKING_STATUS_ORIENTATION_VALID + VRAPI_TRACKING_STATUS_POSITION_VALID)) {
+        godot::api->godot_transform_new_identity(&transform_for_eye);
+    } else {
         if (godot_eye == 1 || godot_eye == 2) { // check if we have the left(1) or right(2) eye
             ovrMatrix4f *ovrEyeMatrix = &head_tracker.Eye[godot_eye - 1].ViewMatrix;
             godot_transform_from_ovrMatrix(&transform_for_eye, ovrEyeMatrix, world_scale);
@@ -119,8 +127,6 @@ godot_transform OvrMobileSession::get_transform_for_eye(godot_int godot_eye,
             godot_transform_from_ovr_pose(
                     &transform_for_eye, head_tracker.HeadPose.Pose, world_scale);
         }
-    } else {
-        godot::api->godot_transform_new_identity(&transform_for_eye);
     }
 
     ret = *cam_transform;
