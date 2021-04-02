@@ -40,7 +40,7 @@ android {
 dependencies {
 
     implementation project(":OVRMobile")
-    implementation(fileTree(dir: "../plugin/libs", include: ["godot-lib*.aar"]))
+    implementation(fileTree(dir: "../../plugin/libs", include: ["godot-lib*.aar"]))
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlinVersion}"
     implementation 'androidx.appcompat:appcompat:1.2.0'
 }
