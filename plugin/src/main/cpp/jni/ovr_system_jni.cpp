@@ -17,4 +17,8 @@ extern "C" {
 JNIEXPORT jint JNICALL JNI_METHOD(nativeGetDeviceType)(JNIEnv *, jclass) {
     return ovrmobile::get_device_type(get_session());
 }
+
+JNIEXPORT jstring JNICALL JNI_METHOD(nativeGetDriverVersion)(JNIEnv *env, jclass) {
+    return string_to_jstring(env, vrapi_GetVersionString());
+}
 };
