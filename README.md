@@ -90,7 +90,7 @@ In the project root directory:
 ### Hand Tracking
 
 The hand tracking API is still in early state and might change in future updates. It is contained in `OvrHandTracking.gdns`. To see an example
-on how it can be used check the example setup in [demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd](demo/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd) and the associated scene file.
+on how it can be used check the example setup in [samples/demo/godot/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd](samples/demo/godot/addons/godot_ovrmobile/example_scenes/ARVROriginWithHandTracking.gd) and the associated scene file.
 To test this in the demo replace the ARVROriginWithInitiAndMovement scene reference with the provided ARVROriginWithHandTracking.tscn.
 
 To enable hand tracking, make sure to follow the **Deployment/Hand Tracking** steps in the [Deployment section](#deployment).
