@@ -103,8 +103,12 @@ class OvrMobileSession {
     // Poll for VrApi events. Should be called every frame.
     void check_for_vrapi_events() const;
 
+    // Check every frame whether recenter events were triggered.
+    void check_for_recenter_events();
+
     static OvrMobileSession *singleton_instance;
 
+    int last_recenter_count = 0;
     bool initialized = false;
     int width;
     int height;

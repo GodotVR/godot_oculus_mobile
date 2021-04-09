@@ -1,5 +1,5 @@
 /**
-* Created by Fredia Huya-Kouadio. 
+* Created by Fredia Huya-Kouadio.
 */
 
 #ifndef OVRMOBILE_OVR_MOBILE_PLUGIN_WRAPPER_H
@@ -28,6 +28,8 @@ class OvrMobilePluginWrapper {
 
   static void on_leave_vr_mode();
 
+  static void on_pose_recentered();
+
  private:
   OvrMobilePluginWrapper();
   ~OvrMobilePluginWrapper();
@@ -39,6 +41,7 @@ class OvrMobilePluginWrapper {
   static jmethodID on_input_focus_lost_id;
   static jmethodID on_enter_vr_mode_id;
   static jmethodID on_leave_vr_mode_id;
+  static jmethodID on_pose_recentered_id;
 
 };
 

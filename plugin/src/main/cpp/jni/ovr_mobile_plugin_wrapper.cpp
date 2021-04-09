@@ -1,5 +1,5 @@
 /**
-* Created by Fredia Huya-Kouadio. 
+* Created by Fredia Huya-Kouadio.
 */
 
 #include "ovr_mobile_plugin_wrapper.h"
@@ -14,6 +14,7 @@ jmethodID OvrMobilePluginWrapper::on_input_focus_gained_id = nullptr;
 jmethodID OvrMobilePluginWrapper::on_input_focus_lost_id = nullptr;
 jmethodID OvrMobilePluginWrapper::on_enter_vr_mode_id = nullptr;
 jmethodID OvrMobilePluginWrapper::on_leave_vr_mode_id = nullptr;
+jmethodID OvrMobilePluginWrapper::on_pose_recentered_id = nullptr;
 
 OvrMobilePluginWrapper::OvrMobilePluginWrapper() {}
 
@@ -49,6 +50,11 @@ void OvrMobilePluginWrapper::initializeWrapper(JNIEnv* env,
 
   on_leave_vr_mode_id = env->GetMethodID(ovr_mobile_plugin_class, "onLeaveVrMode", "()V");
   ALOG_ASSERT(on_leave_vr_mode_id != nullptr, "Unable to find onLeaveVrMode");
+
+  on_pose_recentered_id =
+      env->GetMethodID(ovr_mobile_plugin_class, "onPoseRecentered", "()V");
+  ALOG_ASSERT(on_pose_recentered_id != nullptr,
+              "Unable to find onPoseRecentered");
 }
 
 void OvrMobilePluginWrapper::uninitializeWrapper(JNIEnv* env) {
@@ -61,6 +67,7 @@ void OvrMobilePluginWrapper::uninitializeWrapper(JNIEnv* env) {
     on_input_focus_lost_id = nullptr;
     on_enter_vr_mode_id = nullptr;
     on_leave_vr_mode_id = nullptr;
+    on_pose_recentered_id = nullptr;
   }
 }
 
@@ -104,5 +111,12 @@ void OvrMobilePluginWrapper::on_leave_vr_mode() {
     JNIEnv *env = godot::android_api->godot_android_get_env();
     env->CallVoidMethod(ovr_mobile_plugin_instance, on_leave_vr_mode_id);
   }
+}
+
+void OvrMobilePluginWrapper::on_pose_recentered() {
+    if (ovr_mobile_plugin_instance && on_pose_recentered_id) {
+        JNIEnv *env = godot::android_api->godot_android_get_env();
+        env->CallVoidMethod(ovr_mobile_plugin_instance, on_pose_recentered_id);
+    }
 }
 } // namespace ovrmobile

@@ -255,6 +255,7 @@ void OvrMobileSession::process() {
         headset_mounted = is_mounted;
     }
 
+    check_for_recenter_events();
     check_for_vrapi_events();
 }
 
@@ -264,6 +265,19 @@ bool OvrMobileSession::is_headset_mounted() const {
     }
 
     return vrapi_GetSystemStatusInt(&java, VRAPI_SYS_STATUS_MOUNTED) == VRAPI_TRUE;
+}
+
+void OvrMobileSession::check_for_recenter_events() {
+    if (!in_vr_mode()) {
+        return;
+    }
+
+    const int current_recenter_count =
+        vrapi_GetSystemStatusInt(&java, VRAPI_SYS_STATUS_RECENTER_COUNT);
+    if (last_recenter_count != current_recenter_count) {
+        OvrMobilePluginWrapper::on_pose_recentered();
+        last_recenter_count = current_recenter_count;
+    }
 }
 
 void OvrMobileSession::check_for_vrapi_events() const {
