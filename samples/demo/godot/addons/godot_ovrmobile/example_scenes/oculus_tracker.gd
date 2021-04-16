@@ -1,6 +1,6 @@
 class_name OculusTracker
 extends ARVRController
-# Contains common logic and functionality for the ARVR positional tracker 
+# Contains common logic and functionality for the ARVR positional tracker
 # supported by Oculus.
 
 
@@ -10,7 +10,7 @@ const RIGHT_TRACKER_ID = 2
 
 var _remove_tracker_on_first_frame = false
 
-# Parent node for the touch controller. This will be used to remove this node 
+# Parent node for the touch controller. This will be used to remove this node
 # when the tracker is removed.
 onready var origin : ARVROrigin = get_parent()
 
@@ -49,12 +49,12 @@ func _on_arvr_tracker_removed(tracker_name, type, id):
 func _enable_tracker(tracker_name, enabled):
 	if (_get_tracker_label() == tracker_name):
 		if (enabled):
-			print("Enabled " + _get_tracker_label())
+			print("Enabled " + _get_tracker_label() + " with device id: " + str(get_joystick_id()))
 			if (!origin.is_a_parent_of(self)):
 				origin.add_child(self)
 			visible = true
 		else:
-			print("Disabled " + _get_tracker_label())
+			print("Disabled " + _get_tracker_label() + " with device id: " + str(get_joystick_id()))
 			visible = false
 			if (origin.is_a_parent_of(self)):
 				origin.remove_child(self)
