@@ -30,7 +30,7 @@ script = ExtResource( 5 )
 transform = Transform( 1, 0, -8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0 )
 
 [node name="LeftHand" type="ARVRController" parent="."]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.132544, 1.65044, -0.301362 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.2, 1.727, -0.4 )
 script = ExtResource( 6 )
 
 [node name="HandModel" parent="LeftHand" instance=ExtResource( 2 )]
@@ -39,7 +39,7 @@ script = ExtResource( 6 )
 visible = false
 
 [node name="RightHand" type="ARVRController" parent="."]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.346606, 1.72656, -0.4 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.2, 1.727, -0.4 )
 controller_id = 2
 script = ExtResource( 6 )
 

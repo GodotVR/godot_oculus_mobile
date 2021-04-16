@@ -4,6 +4,7 @@
 
 #include "ovr_display.h"
 #include "api_common.h"
+#include <gen/Engine.hpp>
 
 namespace ovrmobile {
 OvrDisplay::OvrDisplay() {}
@@ -53,6 +54,7 @@ std::vector<float> get_supported_display_refresh_rates(OvrMobileSession *session
 
 bool set_display_refresh_rate(OvrMobileSession *session, float refresh_rate) {
     return check_session_initialized<bool>(session, [&]() {
+        Engine::get_singleton()->set_iterations_per_second(refresh_rate);
         return vrapi_SetDisplayRefreshRate(session->get_ovr_mobile_context(), refresh_rate) ==
                ovrSuccess;
     });
