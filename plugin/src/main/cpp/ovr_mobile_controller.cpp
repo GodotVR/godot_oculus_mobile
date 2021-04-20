@@ -12,6 +12,11 @@ const int kYAxis = 1;
 const int kAnalogIndexTriggerAxis = 2;
 const int kAnalogGripTriggerAxis = 3;
 
+const int kIndexPinchStrengthAxis = 4;
+const int kMiddlePinchStrengthAxis = 5;
+const int kRingPinchStrengthAxis = 8;
+const int kPinkyPinchStrengthAxis = 9;
+
 const float kIndexTriggerPressedThreshold = 0.6f;
 const float kGripTriggerPressedThreshold = 0.6f;
 
@@ -107,7 +112,7 @@ void OvrMobileController::update_controller_input_state_tracked_remote(
         ovrMobile *ovr,
         ControllerState &controller_state) {
     // Get the device input state.
-    ovrInputStateTrackedRemote  input_state;
+    ovrInputStateTrackedRemote input_state;
     input_state.Header.ControllerType = ovrControllerType_TrackedRemote;
 
     if (vrapi_GetCurrentInputState(ovr,
@@ -300,22 +305,22 @@ void OvrMobileController::update_controller_input_state_hand(ovrMobile *ovr,
     // without the need to query specific APIs
     godot::arvr_api->godot_arvr_set_controller_axis(
             controller_state.godot_controller_id,
-            kXAxis,
+            kIndexPinchStrengthAxis,
             input_state.PinchStrength[ovrHandPinchStrength_Index],
             false);
     godot::arvr_api->godot_arvr_set_controller_axis(
             controller_state.godot_controller_id,
-            kYAxis,
+            kMiddlePinchStrengthAxis,
             input_state.PinchStrength[ovrHandPinchStrength_Middle],
             false);
     godot::arvr_api->godot_arvr_set_controller_axis(
             controller_state.godot_controller_id,
-            kAnalogIndexTriggerAxis,
+            kRingPinchStrengthAxis,
             input_state.PinchStrength[ovrHandPinchStrength_Ring],
             false);
     godot::arvr_api->godot_arvr_set_controller_axis(
             controller_state.godot_controller_id,
-            kAnalogGripTriggerAxis,
+            kPinkyPinchStrengthAxis,
             input_state.PinchStrength[ovrHandPinchStrength_Pinky],
             false);
 }
