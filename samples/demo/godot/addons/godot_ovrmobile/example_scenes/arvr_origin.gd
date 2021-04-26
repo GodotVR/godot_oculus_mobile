@@ -62,6 +62,10 @@ func _initialize_ovr_mobile_arvr_interface():
 			var refresh_rate = 72 # Default common value for Quest devices
 			if (ovr_system):
 				ovr_system = ovr_system.new()
+
+				# Display the vrapi driver version
+				print("VrApi driver version: " + ovr_system.get_driver_version())
+
 				if (ovr_system.is_oculus_quest_2_device()):
 					refresh_rate = 90 # Only supported on Quest 2 devices
 

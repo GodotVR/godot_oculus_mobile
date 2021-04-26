@@ -19,6 +19,6 @@ JNIEXPORT jint JNICALL JNI_METHOD(nativeGetDeviceType)(JNIEnv *, jclass) {
 }
 
 JNIEXPORT jstring JNICALL JNI_METHOD(nativeGetDriverVersion)(JNIEnv *env, jclass) {
-    return string_to_jstring(env, vrapi_GetVersionString());
+    return string_to_jstring(env, ovrmobile::get_driver_version());
 }
 };

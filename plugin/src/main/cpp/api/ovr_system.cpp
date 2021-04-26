@@ -14,6 +14,7 @@ void OvrSystem::_init() {}
 
 void OvrSystem::_register_methods() {
     register_method("get_device_type", &OvrSystem::get_device_type);
+    register_method("get_driver_version", &OvrSystem::get_driver_version);
     register_method("is_oculus_quest_1_device", &OvrSystem::is_oculus_quest_1_device);
     register_method("is_oculus_quest_2_device", &OvrSystem::is_oculus_quest_2_device);
 }
@@ -39,6 +40,10 @@ bool is_oculus_quest_2_device(OvrMobileSession *session) {
     ovrDeviceType device_type = get_device_type(session);
     return device_type >= VRAPI_DEVICE_TYPE_OCULUSQUEST2_START &&
            device_type <= VRAPI_DEVICE_TYPE_OCULUSQUEST2_END;
+}
+
+String get_driver_version() {
+    return vrapi_GetVersionString();
 }
 
 } // namespace ovrmobile

@@ -273,7 +273,7 @@ void OvrMobileSession::check_for_recenter_events() {
     }
 
     const int current_recenter_count =
-        vrapi_GetSystemStatusInt(&java, VRAPI_SYS_STATUS_RECENTER_COUNT);
+            vrapi_GetSystemStatusInt(&java, VRAPI_SYS_STATUS_RECENTER_COUNT);
     if (last_recenter_count != current_recenter_count) {
         OvrMobilePluginWrapper::on_pose_recentered();
         last_recenter_count = current_recenter_count;

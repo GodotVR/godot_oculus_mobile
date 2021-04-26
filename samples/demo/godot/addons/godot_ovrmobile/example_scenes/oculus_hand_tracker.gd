@@ -8,9 +8,9 @@ extends OculusTracker
 # this enum here is to document everything in place and includes the pinch event mappings
 enum FINGER_PINCH {
 	MIDDLE_PINCH = 1,
-	PINKY_PINCH = 2,
+	PINKY_PINCH = 15,
 	INDEX_PINCH = 7,
-	RING_PINCH = 15,
+	RING_PINCH = 2,
 }
 
 # Current hand ping strength axis mapping for tracked hands.

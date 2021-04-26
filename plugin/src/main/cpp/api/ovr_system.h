@@ -17,6 +17,9 @@ bool is_oculus_quest_2_device(OvrMobileSession *session);
 /// Return the current device type.
 ovrDeviceType get_device_type(OvrMobileSession *session);
 
+/// Return the version of the vrapi driver.
+String get_driver_version();
+
 class OvrSystem : public Reference {
     GODOT_CLASS(OvrSystem, Reference)
 
@@ -40,6 +43,8 @@ class OvrSystem : public Reference {
     inline bool is_oculus_quest_2_device() {
         return ovrmobile::is_oculus_quest_2_device(OvrMobileSession::get_singleton_instance());
     }
+
+    inline String get_driver_version() { return ovrmobile::get_driver_version(); }
 };
 } // namespace ovrmobile
 
