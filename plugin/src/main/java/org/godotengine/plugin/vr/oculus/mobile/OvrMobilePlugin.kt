@@ -74,8 +74,6 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
     override fun getPluginGDNativeLibrariesPaths() =
         setOf("addons/godot_ovrmobile/godot_ovrmobile.gdnlib")
 
-    override fun getPluginMethods() = listOf<String>()
-
     override fun getPluginName() = "OVRMobile"
 
     override fun getPluginSignals() = mutableSetOf(
