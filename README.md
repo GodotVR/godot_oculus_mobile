@@ -56,7 +56,7 @@ Clone the repository and **initialise the submodules** with `git submodule updat
 
 #### Oculus Mobile SDK
 - Download the [latest version](https://developer.oculus.com/downloads/package/oculus-mobile-sdk/)
-(**Oculus Mobile SDK 27.0** (1.44.0) or higher) of the Oculus Mobile SDK and extract it into the
+(**Oculus Mobile SDK 29.0** (1.46.0) or higher) of the Oculus Mobile SDK and extract it into the
 `plugin/libs/ovr_sdk_mobile` directory (create the directory if it doesn't exist).
   - If you change the default install location, update the `OVR_ROOT_DIR` cmake variable in the the
   `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK install location.
