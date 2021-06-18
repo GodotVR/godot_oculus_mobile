@@ -47,6 +47,11 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
          * Notifies when the plugin leaves VR mode.
          */
         fun onLeaveVrMode()
+
+        /**
+         * Notifies when the pose is recentered.
+         */
+        fun onPoseRecentered()
     }
 
     companion object {
@@ -61,14 +66,13 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
         private val INPUT_FOCUS_LOST_SIGNAL = SignalInfo("InputFocusLost")
         private val ENTER_VR_MODE_SIGNAL = SignalInfo("EnterVrMode")
         private val LEAVE_VR_MODE_SIGNAL = SignalInfo("LeaveVrMode")
+        private val POSE_RECENTERED_SIGNAL = SignalInfo("PoseRecentered")
     }
 
     private val ovrEventListeners = ConcurrentLinkedQueue<OvrEventListener>()
 
     override fun getPluginGDNativeLibrariesPaths() =
         setOf("addons/godot_ovrmobile/godot_ovrmobile.gdnlib")
-
-    override fun getPluginMethods() = listOf<String>()
 
     override fun getPluginName() = "OVRMobile"
 
@@ -78,7 +82,8 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
         INPUT_FOCUS_GAINED_SIGNAL,
         INPUT_FOCUS_LOST_SIGNAL,
         ENTER_VR_MODE_SIGNAL,
-        LEAVE_VR_MODE_SIGNAL
+        LEAVE_VR_MODE_SIGNAL,
+        POSE_RECENTERED_SIGNAL,
     )
 
     override fun onGLSurfaceCreated(gl: GL10, config: EGLConfig) {
@@ -158,6 +163,14 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
         emitSignal(LEAVE_VR_MODE_SIGNAL.name)
         for (listener in ovrEventListeners) {
             listener.onLeaveVrMode()
+        }
+    }
+
+    private fun onPoseRecentered() {
+        // Emit pose recentered signal.
+        emitSignal(POSE_RECENTERED_SIGNAL.name)
+        for (listener in ovrEventListeners) {
+            listener.onPoseRecentered()
         }
     }
 

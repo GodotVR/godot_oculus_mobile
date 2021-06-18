@@ -8,9 +8,17 @@ extends OculusTracker
 # this enum here is to document everything in place and includes the pinch event mappings
 enum FINGER_PINCH {
 	MIDDLE_PINCH = 1,
-	PINKY_PINCH = 2,
+	PINKY_PINCH = 15,
 	INDEX_PINCH = 7,
-	RING_PINCH = 15,
+	RING_PINCH = 2,
+}
+
+# Current hand ping strength axis mapping for tracked hands.
+enum FINGER_PINCH_STRENGTH_AXIS {
+	INDEX = 4,
+	MIDDLE = 5,
+	RING = 8,
+	PINKY = 9,
 }
 
 var hand_skel : Skeleton = null
@@ -65,10 +73,13 @@ func _process(delta_t):
 	if (_t > 1.0):
 		_t = 0.0;
 
-		# here we print every second the state of the pinches; they are mapped at the moment
-		# to the first 4 joystick axis 0==index; 1==middle; 2==ring; 3==pinky
+		# here we print every second the state of the pinches
 		print("%s Pinches: %.3f %.3f %.3f %.3f" %
-			 ["Left" if controller_id == LEFT_TRACKER_ID else "Right", get_joystick_axis(0), get_joystick_axis(1), get_joystick_axis(2), get_joystick_axis(3)]);
+			["Left" if controller_id == LEFT_TRACKER_ID else "Right",
+			get_joystick_axis(FINGER_PINCH_STRENGTH_AXIS.INDEX),
+			get_joystick_axis(FINGER_PINCH_STRENGTH_AXIS.MIDDLE),
+			get_joystick_axis(FINGER_PINCH_STRENGTH_AXIS.RING),
+			get_joystick_axis(FINGER_PINCH_STRENGTH_AXIS.PINKY)]);
 
 
 func _initialize_hands():

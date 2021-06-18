@@ -12,6 +12,11 @@ const int kYAxis = 1;
 const int kAnalogIndexTriggerAxis = 2;
 const int kAnalogGripTriggerAxis = 3;
 
+const int kIndexPinchStrengthAxis = 4;
+const int kMiddlePinchStrengthAxis = 5;
+const int kRingPinchStrengthAxis = 8;
+const int kPinkyPinchStrengthAxis = 9;
+
 const float kIndexTriggerPressedThreshold = 0.6f;
 const float kGripTriggerPressedThreshold = 0.6f;
 
@@ -107,14 +112,16 @@ void OvrMobileController::update_controller_input_state_tracked_remote(
         ovrMobile *ovr,
         ControllerState &controller_state) {
     // Get the device input state.
-    controller_state.input_header.ControllerType = ovrControllerType_TrackedRemote;
+    ovrInputStateTrackedRemote input_state;
+    input_state.Header.ControllerType = ovrControllerType_TrackedRemote;
+
     if (vrapi_GetCurrentInputState(ovr,
                                    controller_state.remote_capabilities.Header.DeviceID,
-                                   &controller_state.input_header) < 0) {
+                                   &input_state.Header) < 0) {
         return;
     }
 
-    ovrInputStateTrackedRemote &input_state = controller_state.input_tracked_remote;
+    controller_state.input_tracked_remote = input_state;
 
     // Update the controller axis.
     if (has_joystick(controller_state.remote_capabilities)) {
@@ -262,15 +269,16 @@ void OvrMobileController::update_controller_input_state_tracked_remote(
 
 void OvrMobileController::update_controller_input_state_hand(ovrMobile *ovr,
                                                              ControllerState &controller_state) {
-    controller_state.input_header.ControllerType = ovrControllerType_Hand;
+    ovrInputStateHand input_state;
+    input_state.Header.ControllerType = ovrControllerType_Hand;
 
     if (vrapi_GetCurrentInputState(ovr,
                                    controller_state.remote_capabilities.Header.DeviceID,
-                                   &controller_state.input_header) < 0) {
+                                   &input_state.Header) < 0) {
         return;
     }
 
-    ovrInputStateHand &input_state = controller_state.input_hand;
+    controller_state.input_hand = input_state;
 
     // we map pinch index and middle to button presses with same id as X/Y and A/B
     godot::arvr_api->godot_arvr_set_controller_button(
@@ -297,22 +305,22 @@ void OvrMobileController::update_controller_input_state_hand(ovrMobile *ovr,
     // without the need to query specific APIs
     godot::arvr_api->godot_arvr_set_controller_axis(
             controller_state.godot_controller_id,
-            kXAxis,
+            kIndexPinchStrengthAxis,
             input_state.PinchStrength[ovrHandPinchStrength_Index],
             false);
     godot::arvr_api->godot_arvr_set_controller_axis(
             controller_state.godot_controller_id,
-            kYAxis,
+            kMiddlePinchStrengthAxis,
             input_state.PinchStrength[ovrHandPinchStrength_Middle],
             false);
     godot::arvr_api->godot_arvr_set_controller_axis(
             controller_state.godot_controller_id,
-            kAnalogIndexTriggerAxis,
+            kRingPinchStrengthAxis,
             input_state.PinchStrength[ovrHandPinchStrength_Ring],
             false);
     godot::arvr_api->godot_arvr_set_controller_axis(
             controller_state.godot_controller_id,
-            kAnalogGripTriggerAxis,
+            kPinkyPinchStrengthAxis,
             input_state.PinchStrength[ovrHandPinchStrength_Pinky],
             false);
 }

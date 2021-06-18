@@ -55,17 +55,21 @@ func _initialize_ovr_mobile_arvr_interface():
 			ovr_system = load("res://addons/godot_ovrmobile/OvrSystem.gdns")
 
 			# And now instance the .gdns classes for use if load was successfull
-			
+
 			# Update the refresh rate based on the device type. The value could
-			# also be picked from the values returned by 
+			# also be picked from the values returned by
 			# ovr_display.get_supported_display_refresh_rates()
 			var refresh_rate = 72 # Default common value for Quest devices
 			if (ovr_system):
 				ovr_system = ovr_system.new()
+
+				# Display the vrapi driver version
+				print("VrApi driver version: " + ovr_system.get_driver_version())
+
 				if (ovr_system.is_oculus_quest_2_device()):
 					refresh_rate = 90 # Only supported on Quest 2 devices
-			
-			if (ovr_display): 
+
+			if (ovr_display):
 				ovr_display = ovr_display.new()
 				# Get the list of supported display refresh rates.
 				print("Display refresh rates: " + str(ovr_display.get_supported_display_refresh_rates()))
@@ -73,15 +77,14 @@ func _initialize_ovr_mobile_arvr_interface():
 				print("Device color space: " + str(ovr_display.get_color_space()))
 				# Update the refresh rate
 				ovr_display.set_display_refresh_rate(refresh_rate)
-				
-			if (ovr_performance): 
+
+			if (ovr_performance):
 				ovr_performance = ovr_performance.new()
-			if (ovr_vr_api_proxy): 
+			if (ovr_vr_api_proxy):
 				ovr_vr_api_proxy = ovr_vr_api_proxy.new()
 
 			get_viewport().arvr = true
-			Engine.iterations_per_second = refresh_rate
-			
+
 			# Connect to the plugin signals
 			_connect_to_signals()
 
@@ -100,6 +103,7 @@ func _connect_to_signals():
 		singleton.connect("InputFocusLost", self, "_on_input_focus_lost")
 		singleton.connect("EnterVrMode", self, "_on_enter_vr_mode")
 		singleton.connect("LeaveVrMode", self, "_on_leave_vr_mode")
+		singleton.connect("PoseRecentered", self, "_on_pose_recentered")
 	else:
 		print("Unable to load OVRMobile singleton...")
 
@@ -126,6 +130,10 @@ func _on_enter_vr_mode():
 
 func _on_leave_vr_mode():
 	print("Left Oculus VR mode")
+
+
+func _on_pose_recentered():
+	print("Pose recentered")
 
 
 # here we can react on the android specific notifications
