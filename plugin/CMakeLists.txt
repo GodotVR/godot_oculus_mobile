@@ -58,7 +58,7 @@ set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/libs/ovr_sdk_mobile")
 
 # Location to the Godot headers directory.
 set(GODOT_CPP_DIR "${CMAKE_SOURCE_DIR}/libs/godot-cpp")
-set(GODOT_HEADERS_DIR "${GODOT_CPP_DIR}/godot_headers")
+set(GODOT_HEADERS_DIR "${GODOT_CPP_DIR}/godot-headers")
 ###############################################################################
 
 set(OVR_HEADERS_DIR "${OVR_ROOT_DIR}/VrApi/Include" CACHE STRING "")

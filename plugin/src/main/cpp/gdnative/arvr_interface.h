@@ -54,8 +54,7 @@ void godot_arvr_process(void *p_data);
 void godot_arvr_notification(void *p_data, godot_int p_what);
 
 const godot_arvr_interface_gdnative interface_struct = {
-	{ GODOTVR_API_MAJOR,
-			GODOTVR_API_MINOR },
+	{ 1,1 },
 	godot_arvr_constructor,
 	godot_arvr_destructor,
 	godot_arvr_get_name,
