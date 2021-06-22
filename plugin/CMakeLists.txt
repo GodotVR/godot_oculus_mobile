@@ -56,12 +56,16 @@ project(godot_ovrmobile VERSION 2.0.0)
 # Sets the path to the VrApi containing directory. Update this variable if the api is in another location.
 set(OVR_ROOT_DIR "${CMAKE_SOURCE_DIR}/libs/ovr_sdk_mobile")
 
+# Sets the path to the Platform SDK. Update this variable if the SDK is in another location.
+set(OVR_PLATFORM_DIR "${CMAKE_SOURCE_DIR}/libs/ovr_platform_sdk")
+
 # Location to the Godot headers directory.
 set(GODOT_CPP_DIR "${CMAKE_SOURCE_DIR}/libs/godot-cpp")
 set(GODOT_HEADERS_DIR "${GODOT_CPP_DIR}/godot-headers")
 ###############################################################################
 
 set(OVR_HEADERS_DIR "${OVR_ROOT_DIR}/VrApi/Include" CACHE STRING "")
+set(OVR_PLATFORM_HEADERS_DIR "${OVR_PLATFORM_DIR}/Include" CACHE STRING "")
 
 set(GODOT_COMPILE_FLAGS)
 set(GODOT_LINKER_FLAGS)
@@ -93,6 +97,11 @@ endif (CMAKE_BUILD_TYPE MATCHES Debug)
 set(VRAPI_LIB_PATH "${OVR_ROOT_DIR}/VrApi/Libs/Android/${ANDROID_ABI}/${VRAPI_LIB_BUILD_TYPE}/libvrapi.so")
 add_library(vrapi SHARED IMPORTED GLOBAL)
 set_target_properties(vrapi PROPERTIES IMPORTED_LOCATION ${VRAPI_LIB_PATH})
+
+## OVR Platform library
+set(OVR_PLATFORM_LIB_PATH "${OVR_PLATFORM_DIR}/Android/libs/${ANDROID_ABI}/libovrplatformloader.so")
+add_library(ovr_platform SHARED IMPORTED GLOBAL)
+set_target_properties(ovr_platform PROPERTIES IMPORTED_LOCATION ${OVR_PLATFORM_LIB_PATH})
 
 ## godot-cpp library
 set(GODOT-CPP "godot-cpp")
@@ -128,7 +137,7 @@ file(GLOB_RECURSE HEADERS src/main/cpp/*.h**)
 
 add_library(${PROJECT_NAME}
         SHARED
-        ${SOURCES} ${HEADERS} VRAPI_SO_LIB)
+        ${SOURCES} ${HEADERS} VRAPI_SO_LIB OVR_PLATFORM_SO_LIB)
 
 target_include_directories(${PROJECT_NAME}
         PRIVATE
@@ -146,6 +155,7 @@ target_include_directories(${PROJECT_NAME}
         SYSTEM PUBLIC
         ${GODOT_HEADERS_DIR}
         ${OVR_HEADERS_DIR}
+        ${OVR_PLATFORM_HEADERS_DIR}
         )
 
 target_link_libraries(${PROJECT_NAME}
@@ -154,6 +164,7 @@ target_link_libraries(${PROJECT_NAME}
         EGL
         GLESv3
         vrapi
+        ovr_platform
         ${GODOT-CPP})
 
 # Add the compile flags
@@ -164,6 +175,11 @@ set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS ${GODOT_LI
 add_custom_command(OUTPUT VRAPI_SO_LIB
         COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${PROJECT_NAME}>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${VRAPI_LIB_PATH} $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+
+# Copy the Ovr Platform shared library to the output directory.
+add_custom_command(OUTPUT OVR_PLATFORM_SO_LIB
+        COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OVR_PLATFORM_LIB_PATH} $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 
 set(BITS 32)
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
