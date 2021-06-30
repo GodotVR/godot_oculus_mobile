@@ -4,6 +4,7 @@
 
 #include "api/ovr_input.h"
 #include "jni_common.h"
+#include "ovr_mobile_controller.h"
 #include <jni.h>
 
 #undef JNI_PACKAGE_NAME
@@ -20,6 +21,16 @@ JNIEXPORT void JNICALL JNI_METHOD(vibrateController)(JNIEnv *,
                                                      jint controller_id,
                                                      jint duration_in_ms,
                                                      jfloat intensity) {
+    ovrmobile::vibrate_controller(get_session(), controller_id, duration_in_ms, intensity);
+}
+
+JNIEXPORT void JNICALL JNI_METHOD(nativeVibrateControllerByHand)(JNIEnv *,
+                                                                 jclass,
+                                                                 jint controller_hand,
+                                                                 jint duration_in_ms,
+                                                                 jfloat intensity) {
+    int controller_id = ovrmobile::get_controller_id(get_session(),
+                                                     static_cast<ovrmobile::OvrMobileController::ControllerHand>(controller_hand));
     ovrmobile::vibrate_controller(get_session(), controller_id, duration_in_ms, intensity);
 }
 

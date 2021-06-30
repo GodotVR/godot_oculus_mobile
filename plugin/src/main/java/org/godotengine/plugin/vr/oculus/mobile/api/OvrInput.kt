@@ -10,7 +10,7 @@ import org.godotengine.plugin.vr.oculus.mobile.OvrMobilePlugin
 private const val PRIMARY_CONTROLLER_ID = -1
 
 /**
- * Specifies which controller is connected
+ * Specifies which controller type is connected
  */
 enum class ControllerType(internal val value: Int) {
     CONTROLLER_TYPE_NONE(0),
@@ -46,6 +46,14 @@ enum class ControllerType(internal val value: Int) {
 }
 
 /**
+ * Specifies which hands the controller supports.
+ */
+enum class ControllerHand(internal val value: Int) {
+    LEFT(0),
+    RIGHT(1)
+}
+
+/**
  * Vibrate the controller at the given intensity.
  * @param controllerId Id of the controller to vibrate. Defaults to the primary controller id.
  * @param durationInMs Vibration duration in milliseconds
@@ -53,6 +61,16 @@ enum class ControllerType(internal val value: Int) {
  */
 @JvmOverloads
 external fun OvrMobilePlugin.vibrateController(controllerId: Int = PRIMARY_CONTROLLER_ID, durationInMs: Int, intensity: Float)
+
+/**
+ * Vibrate the controller for the given hand at the given intensity.
+ * @param hand Hand for which the controller should be vibrated.
+ * @param durationInMs Vibration duration in milliseconds
+ * @param intensity Vibration intensity
+ */
+fun OvrMobilePlugin.vibrateController(hand: ControllerHand, durationInMs: Int, intensity: Float) {
+    nativeVibrateControllerByHand(hand.value, durationInMs, intensity)
+}
 
 /**
  * Return the id for the primary controller.
@@ -67,3 +85,5 @@ fun OvrMobilePlugin.getPrimaryControllerType() =
         ControllerType.toControllerType(nativeGetPrimaryControllerType())
 
 private external fun nativeGetPrimaryControllerType(): Int
+
+private external fun nativeVibrateControllerByHand(hand: Int, durationInMs: Int, intensity: Float)
