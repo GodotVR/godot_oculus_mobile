@@ -82,7 +82,7 @@ external fun OvrMobilePlugin.getPrimaryControllerId(): Int
  * Return the [ControllerType] type of the primary controller.
  */
 fun OvrMobilePlugin.getPrimaryControllerType() =
-        ControllerType.toControllerType(nativeGetPrimaryControllerType())
+    ControllerType.toControllerType(nativeGetPrimaryControllerType())
 
 private external fun nativeGetPrimaryControllerType(): Int
 

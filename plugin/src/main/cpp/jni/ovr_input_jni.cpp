@@ -29,8 +29,9 @@ JNIEXPORT void JNICALL JNI_METHOD(nativeVibrateControllerByHand)(JNIEnv *,
                                                                  jint controller_hand,
                                                                  jint duration_in_ms,
                                                                  jfloat intensity) {
-    int controller_id = ovrmobile::get_controller_id(get_session(),
-                                                     static_cast<ovrmobile::OvrMobileController::ControllerHand>(controller_hand));
+    int controller_id = ovrmobile::get_controller_id(
+            get_session(),
+            static_cast<ovrmobile::OvrMobileController::ControllerHand>(controller_hand));
     ovrmobile::vibrate_controller(get_session(), controller_id, duration_in_ms, intensity);
 }
 

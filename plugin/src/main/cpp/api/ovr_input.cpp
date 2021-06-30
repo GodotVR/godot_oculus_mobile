@@ -44,7 +44,8 @@ int get_primary_controller_id(OvrMobileSession *session) {
             []() { return kInvalidGodotControllerId; });
 }
 
-int get_controller_id(OvrMobileSession *session, OvrMobileController::ControllerHand controller_hand) {
+int get_controller_id(OvrMobileSession *session,
+                      OvrMobileController::ControllerHand controller_hand) {
     return check_session_initialized<int>(
             session,
             [&]() {
