@@ -9,7 +9,7 @@ android {
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 9
+        versionCode 30200
         versionName '3.2.0'
         setProperty("archivesBaseName", "gdovrmobile.${versionName}")
 
