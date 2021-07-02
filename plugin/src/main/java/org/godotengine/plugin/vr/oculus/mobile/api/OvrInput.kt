@@ -55,6 +55,7 @@ enum class ControllerHand(internal val value: Int) {
 
 /**
  * Vibrate the controller at the given intensity.
+ * This should be invoked on the gl thread.
  * @param controllerId Id of the controller to vibrate. Defaults to the primary controller id.
  * @param durationInMs Vibration duration in milliseconds
  * @param intensity Vibration intensity
@@ -64,6 +65,7 @@ external fun OvrMobilePlugin.vibrateController(controllerId: Int = PRIMARY_CONTR
 
 /**
  * Vibrate the controller for the given hand at the given intensity.
+ * This should be invoked on the gl thread.
  * @param hand Hand for which the controller should be vibrated.
  * @param durationInMs Vibration duration in milliseconds
  * @param intensity Vibration intensity
@@ -74,16 +76,36 @@ fun OvrMobilePlugin.vibrateController(hand: ControllerHand, durationInMs: Int, i
 
 /**
  * Return the id for the primary controller.
+ * This should be invoked on the gl thread.
  * Returns -1 if there is no primary controller.
  */
 external fun OvrMobilePlugin.getPrimaryControllerId(): Int
 
 /**
+ * Return the id of the controller for the given hand.
+ * This should be invoked on the gl thread.
+ * Returns -1 if the controller for that hand is not connected.
+ */
+fun OvrMobilePlugin.getControllerId(hand: ControllerHand) = nativeGetControllerId(hand.value)
+
+/**
  * Return the [ControllerType] type of the primary controller.
+ * This should be invoked on the gl thread.
  */
 fun OvrMobilePlugin.getPrimaryControllerType() =
     ControllerType.toControllerType(nativeGetPrimaryControllerType())
 
+/**
+ * Return the [ControllerType] type of the controller with the given id.
+ * This should be invoked on the gl thread.
+ */
+fun OvrMobilePlugin.getControllerType(controllerId: Int) =
+    ControllerType.toControllerType(nativeGetControllerType(controllerId))
+
 private external fun nativeGetPrimaryControllerType(): Int
 
 private external fun nativeVibrateControllerByHand(hand: Int, durationInMs: Int, intensity: Float)
+
+private external fun nativeGetControllerId(hand: Int): Int
+
+private external fun nativeGetControllerType(controllerId: Int): Int

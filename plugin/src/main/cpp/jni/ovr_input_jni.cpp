@@ -42,4 +42,14 @@ JNIEXPORT jint JNICALL JNI_METHOD(getPrimaryControllerId)(JNIEnv *, jclass, jobj
 JNIEXPORT jint JNICALL JNI_METHOD(nativeGetPrimaryControllerType)(JNIEnv *, jclass) {
     return ovrmobile::get_primary_controller_type(get_session());
 }
+
+JNIEXPORT jint JNICALL JNI_METHOD(nativeGetControllerId)(JNIEnv *, jclass, jint controller_hand) {
+    return ovrmobile::get_controller_id(
+            get_session(),
+            static_cast<ovrmobile::OvrMobileController::ControllerHand>(controller_hand));
+}
+
+JNIEXPORT jint JNICALL JNI_METHOD(nativeGetControllerType)(JNIEnv *, jclass, jint controller_id) {
+    return ovrmobile::get_controller_type(get_session(), controller_id);
+}
 };
