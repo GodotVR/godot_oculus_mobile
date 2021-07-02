@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 30201
-        versionName '3.2.1'
+        versionCode 30202
+        versionName '3.2.2'
         setProperty("archivesBaseName", "gdovrmobile.${versionName}")
 
         externalNativeBuild {
