@@ -50,7 +50,13 @@ enum class ColorSpace(internal val value: Int) {
  * This is a constant for each device type.
  * @see https://developer.oculus.com/documentation/native/android/mobile-colorspace/
  */
-fun OvrMobilePlugin.getColorSpace() = ColorSpace.toColorSpace(nativeGetColorSpace())
+fun OvrMobilePlugin.getColorSpace(): ColorSpace {
+    return if (isSharedLibLoaded()) {
+        ColorSpace.toColorSpace(nativeGetColorSpace())
+    } else {
+        ColorSpace.COLOR_SPACE_UNMANAGED
+    }
+}
 
 /**
  * Used to update the device color space.
@@ -58,12 +64,24 @@ fun OvrMobilePlugin.getColorSpace() = ColorSpace.toColorSpace(nativeGetColorSpac
  * @param[colorSpace] The new target color space.
  * @return True if the device's color space was updated, false otherwise.
  */
-fun OvrMobilePlugin.setColorSpace(colorSpace: ColorSpace) = nativeSetColorSpace(colorSpace.value)
+fun OvrMobilePlugin.setColorSpace(colorSpace: ColorSpace): Boolean {
+    return if (isSharedLibLoaded()) {
+        nativeSetColorSpace(colorSpace.value)
+    } else {
+        false
+    }
+}
 
 /**
  * Used to access the display refresh rates supported by the device.
  */
-fun OvrMobilePlugin.getSupportedDisplayRefreshRates() = nativeGetSupportedDisplayRefreshRates()
+fun OvrMobilePlugin.getSupportedDisplayRefreshRates(): FloatArray {
+    return if (isSharedLibLoaded()) {
+        nativeGetSupportedDisplayRefreshRates()
+    } else {
+        floatArrayOf()
+    }
+}
 
 /**
  * Used to update the device display refresh rate.
@@ -71,7 +89,13 @@ fun OvrMobilePlugin.getSupportedDisplayRefreshRates() = nativeGetSupportedDispla
  * @param[refreshRate] Target refresh rate. Must be one of the supported values returned by
  * [getSupportedDisplayRefreshRates].
  */
-fun OvrMobilePlugin.setDisplayRefreshRate(refreshRate: Float) = nativeSetDisplayRefreshRate(refreshRate)
+fun OvrMobilePlugin.setDisplayRefreshRate(refreshRate: Float): Boolean {
+    return if (isSharedLibLoaded()) {
+        nativeSetDisplayRefreshRate(refreshRate)
+    } else {
+        false
+    }
+}
 
 private external fun nativeSetColorSpace(colorSpace: Int): Boolean
 

@@ -46,20 +46,20 @@ task generatePluginBinary(type: Copy) {
  * This is mostly to be used by maintainers to update the https://github.com/GodotVR/godot-oculus-mobile-asset repo.
  */
 task generateSharedLibs(type: Copy) {
-    dependsOn(":OVRMobile:externalNativeBuildDebug")
-    dependsOn(":OVRMobile:externalNativeBuildRelease")
+    dependsOn(":OVRMobile:externalNativeBuildFullDebug")
+    dependsOn(":OVRMobile:externalNativeBuildFullRelease")
 
     // Specify the base directory. All following 'into' targets will be relative
     // to this directory.
     into("$outputDir/sharedLibs")
 
     // Copy the generated debug shared libs into the outputs directory
-    from("plugin/build/intermediates/cmake/debug/obj") {
+    from("plugin/build/intermediates/cmake/fullDebug/obj") {
         into("debug")
     }
 
     // Copy the generated release shared libs into the outputs directory
-    from("plugin/build/intermediates/cmake/release/obj") {
+    from("plugin/build/intermediates/cmake/fullRelease/obj") {
         into("release")
     }
 }

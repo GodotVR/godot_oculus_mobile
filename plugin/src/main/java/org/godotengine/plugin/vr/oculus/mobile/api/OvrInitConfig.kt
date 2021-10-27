@@ -12,7 +12,12 @@ import org.godotengine.plugin.vr.oculus.mobile.OvrMobilePlugin
 /**
  * Set the factor by which to multiply the recommended render target size for the app.
  */
-fun OvrMobilePlugin.setRenderTargetSizeMultiplier(multiplier: Double) =
-    nativeSetRenderTargetSizeMultiplier(multiplier)
+fun OvrMobilePlugin.setRenderTargetSizeMultiplier(multiplier: Double): Boolean {
+    return if (isSharedLibLoaded()) {
+        nativeSetRenderTargetSizeMultiplier(multiplier)
+    } else {
+        false
+    }
+}
 
 private external fun nativeSetRenderTargetSizeMultiplier(multiplier: Double): Boolean

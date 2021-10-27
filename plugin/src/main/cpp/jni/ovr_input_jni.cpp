@@ -15,9 +15,8 @@
 
 extern "C" {
 
-JNIEXPORT void JNICALL JNI_METHOD(vibrateController)(JNIEnv *,
+JNIEXPORT void JNICALL JNI_METHOD(nativeVibrateController)(JNIEnv *,
                                                      jclass,
-                                                     jobject,
                                                      jint controller_id,
                                                      jint duration_in_ms,
                                                      jfloat intensity) {
@@ -35,7 +34,7 @@ JNIEXPORT void JNICALL JNI_METHOD(nativeVibrateControllerByHand)(JNIEnv *,
     ovrmobile::vibrate_controller(get_session(), controller_id, duration_in_ms, intensity);
 }
 
-JNIEXPORT jint JNICALL JNI_METHOD(getPrimaryControllerId)(JNIEnv *, jclass, jobject) {
+JNIEXPORT jint JNICALL JNI_METHOD(nativeGetPrimaryControllerId)(JNIEnv *, jclass) {
     return ovrmobile::get_primary_controller_id(get_session());
 }
 

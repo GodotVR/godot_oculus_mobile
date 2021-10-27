@@ -38,12 +38,24 @@ enum class DeviceType(internal val rangeStart: Int, internal val rangeEnd: Int =
 /**
  * Return the current [DeviceType] type.
  */
-fun OvrMobilePlugin.getDeviceType() = DeviceType.toDeviceType(nativeGetDeviceType())
+fun OvrMobilePlugin.getDeviceType(): DeviceType {
+    return if (isSharedLibLoaded()) {
+        DeviceType.toDeviceType(nativeGetDeviceType())
+    } else {
+        DeviceType.UNKNOWN
+    }
+}
 
 /**
  * Return the current driver version.
  */
-fun OvrMobilePlugin.getDriverVersion() = nativeGetDriverVersion()
+fun OvrMobilePlugin.getDriverVersion(): String {
+    return if (isSharedLibLoaded()) {
+        nativeGetDriverVersion()
+    } else {
+        ""
+    }
+}
 
 private external fun nativeGetDeviceType(): Int
 
