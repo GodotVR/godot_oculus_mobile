@@ -8,7 +8,9 @@ reloadable=false
 [entry]
 
 Android.arm64-v8a="res://addons/godot_ovrmobile/libs/arm64-v8a/libgodot_ovrmobile.so"
+Android.armeabi-v7a="res://addons/godot_ovrmobile/libs/armeabi-v7a/libgodot_ovrmobile.so"
 
 [dependencies]
 
 Android.arm64-v8a=[ "res://addons/godot_ovrmobile/libs/arm64-v8a/libvrapi.so" ]
+Android.armeabi-v7a=[ "res://addons/godot_ovrmobile/libs/armeabi-v7a/libvrapi.so" ]
