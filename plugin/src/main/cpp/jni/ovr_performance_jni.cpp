@@ -39,9 +39,8 @@ JNIEXPORT jboolean JNICALL JNI_METHOD(nativeSetSwapInterval)(JNIEnv *env,
     return static_cast<jboolean>(ovrmobile::set_swap_interval(get_session(), swap_interval));
 }
 
-JNIEXPORT jboolean JNICALL JNI_METHOD(enableDynamicFoveation)(JNIEnv *,
+JNIEXPORT jboolean JNICALL JNI_METHOD(nativeEnableDynamicFoveation)(JNIEnv *,
                                                               jclass,
-                                                              jobject,
                                                               jboolean enable) {
     return static_cast<jboolean>(ovrmobile::set_enable_dynamic_foveation(get_session(), enable));
 }

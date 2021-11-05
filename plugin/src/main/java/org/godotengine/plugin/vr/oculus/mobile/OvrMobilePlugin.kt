@@ -2,6 +2,7 @@
 
 package org.godotengine.plugin.vr.oculus.mobile
 
+import android.util.Log
 import org.godotengine.godot.Godot
 import org.godotengine.godot.plugin.GodotPlugin
 import org.godotengine.godot.plugin.SignalInfo
@@ -55,8 +56,18 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
     }
 
     companion object {
+
+        private val TAG = OvrMobilePlugin::class.java.simpleName
+        private var loadedSharedLib = false
+
         init {
-            System.loadLibrary("godot_ovrmobile")
+            try {
+                System.loadLibrary("godot_ovrmobile")
+                loadedSharedLib = true
+            } catch (e: UnsatisfiedLinkError) {
+                Log.e(TAG, "Unable to load the godot_ovrmobile shared library")
+                loadedSharedLib = false
+            }
         }
 
         // Set of plugin signals
@@ -86,15 +97,21 @@ class OvrMobilePlugin(godot: Godot) : GodotPlugin(godot) {
         POSE_RECENTERED_SIGNAL,
     )
 
+    internal fun isSharedLibLoaded() = loadedSharedLib
+
     override fun onGLSurfaceCreated(gl: GL10, config: EGLConfig) {
         super.onGLSurfaceCreated(gl, config)
-        initializeWrapper()
+        if (loadedSharedLib) {
+            initializeWrapper()
+        }
     }
 
     override fun onMainDestroy() {
         super.onMainDestroy()
-        runOnRenderThread {
-            uninitializeWrapper()
+        if (loadedSharedLib) {
+            runOnRenderThread {
+                uninitializeWrapper()
+            }
         }
     }
 

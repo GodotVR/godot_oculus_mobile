@@ -18,60 +18,130 @@ enum class OvrEye(internal val eyeIndex: Int) {
 /**
  * Uses the internal left and right view matrix to compute the IPD.
  */
-fun OvrMobilePlugin.getIpd() =
-    nativeGetIpd()
+fun OvrMobilePlugin.getIpd(): Float {
+    return if (isSharedLibLoaded()) {
+        nativeGetIpd()
+    } else {
+        0F
+    }
+}
 
-fun OvrMobilePlugin.getRenderTargetWidth() = nativeGetRenderTargetWidth()
+fun OvrMobilePlugin.getRenderTargetWidth(): Int {
+   return if (isSharedLibLoaded()) {
+       nativeGetRenderTargetWidth()
+   } else {
+       1024
+   }
+}
 
-fun OvrMobilePlugin.getRenderTargetHeight() = nativeGetRenderTargetHeight()
+fun OvrMobilePlugin.getRenderTargetHeight(): Int {
+    return if (isSharedLibLoaded()) {
+        nativeGetRenderTargetHeight()
+    } else {
+        1024
+    }
+}
 
 /**
  * Returns the fov for the given [OvrEye] in degrees.
  */
 fun OvrMobilePlugin.getEyeFov(eye: OvrEye): RectF {
-    val fovArray = nativeGetEyeFov(eye.eyeIndex)
-    return RectF(fovArray[0], fovArray[3], fovArray[1], fovArray[2])
+    if (isSharedLibLoaded()) {
+        val fovArray = nativeGetEyeFov(eye.eyeIndex)
+        return RectF(fovArray[0], fovArray[3], fovArray[1], fovArray[2])
+    } else {
+        return RectF()
+    }
 }
 
 /**
  * Return the viewport bounds for the given [OvrEye].
  */
 fun OvrMobilePlugin.getEyeViewportBounds(eye: OvrEye): RectF {
-    val boundsArray = nativeGetEyeViewportBounds(eye.eyeIndex)
-    return RectF(boundsArray[0], boundsArray[3], boundsArray[2], boundsArray[1])
+    if (isSharedLibLoaded()) {
+        val boundsArray = nativeGetEyeViewportBounds(eye.eyeIndex)
+        return RectF(boundsArray[0], boundsArray[3], boundsArray[2], boundsArray[1])
+    } else {
+        return RectF()
+    }
 }
 
-fun OvrMobilePlugin.setDefaultLayerColorScale(color: Int) =
-    nativeSetDefaultLayerColorScale(
-        Color.red(color).toFloat(),
-        Color.green(color).toFloat(),
-        Color.blue(color).toFloat(),
-        Color.alpha(color).toFloat()
-    )
+fun OvrMobilePlugin.setDefaultLayerColorScale(color: Int): Boolean {
+    return if (isSharedLibLoaded()) {
+        nativeSetDefaultLayerColorScale(
+            Color.red(color).toFloat(),
+            Color.green(color).toFloat(),
+            Color.blue(color).toFloat(),
+            Color.alpha(color).toFloat()
+        )
+    } else {
+        false
+    }
+}
 
-fun OvrMobilePlugin.getControllerAngularVelocity(controllerId: Int) =
-    nativeGetControllerAngularVelocity(controllerId)
+fun OvrMobilePlugin.getControllerAngularVelocity(controllerId: Int): FloatArray {
+    return if (isSharedLibLoaded()) {
+        nativeGetControllerAngularVelocity(controllerId)
+    } else {
+        floatArrayOf()
+    }
+}
 
-fun OvrMobilePlugin.getControllerLinearVelocity(controllerId: Int) =
-    nativeGetControllerLinearVelocity(controllerId)
+fun OvrMobilePlugin.getControllerLinearVelocity(controllerId: Int): FloatArray {
+    return if (isSharedLibLoaded()) {
+        nativeGetControllerLinearVelocity(controllerId)
+    } else {
+        floatArrayOf()
+    }
+}
 
-fun OvrMobilePlugin.getControllerAngularAcceleration(controllerId: Int) =
-    nativeGetControllerAngularAcceleration(controllerId)
+fun OvrMobilePlugin.getControllerAngularAcceleration(controllerId: Int): FloatArray {
+    return if (isSharedLibLoaded()) {
+        nativeGetControllerAngularAcceleration(controllerId)
+    } else {
+        floatArrayOf()
+    }
+}
 
-fun OvrMobilePlugin.getControllerLinearAcceleration(controllerId: Int) =
-    nativeGetControllerLinearAcceleration(controllerId)
+fun OvrMobilePlugin.getControllerLinearAcceleration(controllerId: Int): FloatArray {
+    return if (isSharedLibLoaded()) {
+        nativeGetControllerLinearAcceleration(controllerId)
+    } else {
+        floatArrayOf()
+    }
+}
 
-fun OvrMobilePlugin.getHeadAngularVelocity() =
-    nativeGetHeadAngularVelocity()
+fun OvrMobilePlugin.getHeadAngularVelocity(): FloatArray {
+    return if (isSharedLibLoaded()) {
+        nativeGetHeadAngularVelocity()
+    } else {
+        floatArrayOf()
+    }
+}
 
-fun OvrMobilePlugin.getHeadLinearVelocity() =
-    nativeGetHeadLinearVelocity()
+fun OvrMobilePlugin.getHeadLinearVelocity(): FloatArray {
+    return if (isSharedLibLoaded()) {
+        nativeGetHeadLinearVelocity()
+    } else {
+        floatArrayOf()
+    }
+}
 
-fun OvrMobilePlugin.getHeadAngularAcceleration() =
-    nativeGetHeadAngularAcceleration()
+fun OvrMobilePlugin.getHeadAngularAcceleration(): FloatArray {
+    return if (isSharedLibLoaded()) {
+        nativeGetHeadAngularAcceleration()
+    } else {
+        floatArrayOf()
+    }
+}
 
-fun OvrMobilePlugin.getHeadLinearAcceleration() =
-    nativeGetHeadLinearAcceleration()
+fun OvrMobilePlugin.getHeadLinearAcceleration(): FloatArray {
+    return if (isSharedLibLoaded()) {
+        nativeGetHeadLinearAcceleration()
+    } else {
+        floatArrayOf()
+    }
+}
 
 private external fun nativeGetIpd(): Float
 

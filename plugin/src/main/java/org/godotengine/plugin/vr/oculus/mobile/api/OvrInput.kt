@@ -10,7 +10,7 @@ import org.godotengine.plugin.vr.oculus.mobile.OvrMobilePlugin
 private const val PRIMARY_CONTROLLER_ID = -1
 
 /**
- * Specifies which controller is connected
+ * Specifies which controller type is connected
  */
 enum class ControllerType(internal val value: Int) {
     CONTROLLER_TYPE_NONE(0),
@@ -46,24 +46,98 @@ enum class ControllerType(internal val value: Int) {
 }
 
 /**
+ * Specifies which hands the controller supports.
+ */
+enum class ControllerHand(internal val value: Int) {
+    LEFT(0),
+    RIGHT(1)
+}
+
+/**
  * Vibrate the controller at the given intensity.
+ * This should be invoked on the gl thread.
  * @param controllerId Id of the controller to vibrate. Defaults to the primary controller id.
  * @param durationInMs Vibration duration in milliseconds
  * @param intensity Vibration intensity
  */
 @JvmOverloads
-external fun OvrMobilePlugin.vibrateController(controllerId: Int = PRIMARY_CONTROLLER_ID, durationInMs: Int, intensity: Float)
+fun OvrMobilePlugin.vibrateController(controllerId: Int = PRIMARY_CONTROLLER_ID, durationInMs: Int, intensity: Float) {
+    if (isSharedLibLoaded()) {
+        nativeVibrateController(controllerId, durationInMs, intensity)
+    }
+}
+
+/**
+ * Vibrate the controller for the given hand at the given intensity.
+ * This should be invoked on the gl thread.
+ * @param hand Hand for which the controller should be vibrated.
+ * @param durationInMs Vibration duration in milliseconds
+ * @param intensity Vibration intensity
+ */
+fun OvrMobilePlugin.vibrateController(hand: ControllerHand, durationInMs: Int, intensity: Float) {
+    if (isSharedLibLoaded()) {
+        nativeVibrateControllerByHand(hand.value, durationInMs, intensity)
+    }
+}
 
 /**
  * Return the id for the primary controller.
+ * This should be invoked on the gl thread.
  * Returns -1 if there is no primary controller.
  */
-external fun OvrMobilePlugin.getPrimaryControllerId(): Int
+fun OvrMobilePlugin.getPrimaryControllerId(): Int {
+    return if (isSharedLibLoaded()) {
+        nativeGetPrimaryControllerId()
+    } else {
+        PRIMARY_CONTROLLER_ID
+    }
+}
+
+/**
+ * Return the id of the controller for the given hand.
+ * This should be invoked on the gl thread.
+ * Returns -1 if the controller for that hand is not connected.
+ */
+fun OvrMobilePlugin.getControllerId(hand: ControllerHand): Int {
+    return if (isSharedLibLoaded()) {
+        nativeGetControllerId(hand.value)
+    } else {
+        PRIMARY_CONTROLLER_ID
+    }
+}
 
 /**
  * Return the [ControllerType] type of the primary controller.
+ * This should be invoked on the gl thread.
  */
-fun OvrMobilePlugin.getPrimaryControllerType() =
+fun OvrMobilePlugin.getPrimaryControllerType(): ControllerType {
+    return if (isSharedLibLoaded()) {
         ControllerType.toControllerType(nativeGetPrimaryControllerType())
+    } else {
+        ControllerType.CONTROLLER_TYPE_NONE
+    }
+}
+
+/**
+ * Return the [ControllerType] type of the controller with the given id.
+ * This should be invoked on the gl thread.
+ */
+fun OvrMobilePlugin.getControllerType(controllerId: Int): ControllerType {
+    return if (isSharedLibLoaded()) {
+        ControllerType.toControllerType(nativeGetControllerType(controllerId))
+    } else {
+        ControllerType.CONTROLLER_TYPE_NONE
+    }
+}
+
+private external fun nativeVibrateController(controllerId: Int, durationInMs: Int, intensity: Float)
+
+private external fun nativeGetPrimaryControllerId(): Int
 
 private external fun nativeGetPrimaryControllerType(): Int
+
+private external fun nativeVibrateControllerByHand(hand: Int, durationInMs: Int, intensity: Float)
+
+private external fun nativeGetControllerId(hand: Int): Int
+
+private external fun nativeGetControllerType(controllerId: Int): Int

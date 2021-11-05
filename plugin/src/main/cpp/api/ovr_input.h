@@ -18,8 +18,15 @@ bool vibrate_controller(OvrMobileSession *session,
 /// Return the id for the primary controller.
 int get_primary_controller_id(OvrMobileSession *session);
 
+/// Return the id for the controller corresponding to the given hand.
+int get_controller_id(OvrMobileSession *session,
+                      OvrMobileController::ControllerHand controller_hand);
+
 /// Return the type for the primary controller.
 ovrControllerType get_primary_controller_type(OvrMobileSession *session);
+
+/// Return the type for the controller corresponding to the given id.
+ovrControllerType get_controller_type(OvrMobileSession *session, int controller_id);
 
 class OvrInput : public Reference {
     GODOT_CLASS(OvrInput, Reference)
@@ -39,6 +46,11 @@ class OvrInput : public Reference {
 
     inline int get_primary_controller_type() {
         return ovrmobile::get_primary_controller_type(OvrMobileSession::get_singleton_instance());
+    }
+
+    inline int get_controller_type(int controller_id) {
+        return ovrmobile::get_controller_type(OvrMobileSession::get_singleton_instance(),
+                                              controller_id);
     }
 };
 } // namespace ovrmobile

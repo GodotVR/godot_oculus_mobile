@@ -35,15 +35,25 @@ enum class FoveationLevel(internal val value: Int) {
  * Levels will be clamped to the expected range.
  * Default clock levels are cpuLevel = 2, gpuLevel = 2.
  */
-fun OvrMobilePlugin.setClockLevels(cpuLevel: Int, gpuLevel: Int) =
+fun OvrMobilePlugin.setClockLevels(cpuLevel: Int, gpuLevel: Int): Boolean {
+    return if (isSharedLibLoaded()) {
         nativeSetClockLevels(cpuLevel, gpuLevel)
+    } else {
+        false
+    }
+}
 
 /**
  * If [ExtraLatencyMode.ON] specified, adds an extra frame of latency for full GPU
  * utilization. Default is [ExtraLatencyMode.OFF].
  */
-fun OvrMobilePlugin.setExtraLatencyMode(latencyMode: ExtraLatencyMode) =
+fun OvrMobilePlugin.setExtraLatencyMode(latencyMode: ExtraLatencyMode): Boolean {
+    return if (isSharedLibLoaded()) {
         nativeSetExtraLatencyMode(latencyMode.value)
+    } else {
+        false
+    }
+}
 
 /**
  * Set the fixed foveated rendering level if it's available.
@@ -53,22 +63,41 @@ fun OvrMobilePlugin.setExtraLatencyMode(latencyMode: ExtraLatencyMode) =
  *
  * [Additional docs](https://developer.oculus.com/documentation/quest/latest/concepts/mobile-ffr/)
  */
-fun OvrMobilePlugin.setFoveationLevel(foveationLevel: FoveationLevel) =
+fun OvrMobilePlugin.setFoveationLevel(foveationLevel: FoveationLevel): Boolean {
+    return if (isSharedLibLoaded()) {
         nativeSetFoveationLevel(foveationLevel.value)
+    } else {
+        false
+    }
+}
 
 /**
  * Sets the swap interval to control the application frame timing.
  *
  * [Additional docs](https://developer.oculus.com/documentation/mobilesdk/latest/concepts/mobile-vrapi#frame-timing)
  */
-fun OvrMobilePlugin.setSwapInterval(swapInterval: Int) = nativeSetSwapInterval(swapInterval)
+fun OvrMobilePlugin.setSwapInterval(swapInterval: Int): Boolean {
+    return if (isSharedLibLoaded()) {
+        nativeSetSwapInterval(swapInterval)
+    } else {
+        false
+    }
+}
 
 /**
  * Enable dynamic foveation.
  *
  * [Additional docs](https://developer.oculus.com/documentation/native/android/mobile-ffr/)
  */
-external fun OvrMobilePlugin.enableDynamicFoveation(enable: Boolean): Boolean
+fun OvrMobilePlugin.enableDynamicFoveation(enable: Boolean): Boolean {
+    return if (isSharedLibLoaded()) {
+        nativeEnableDynamicFoveation(enable)
+    } else {
+        false
+    }
+}
+
+private external fun nativeEnableDynamicFoveation(enable: Boolean): Boolean
 
 private external fun nativeSetClockLevels(cpuLevel: Int, gpuLevel: Int): Boolean
 

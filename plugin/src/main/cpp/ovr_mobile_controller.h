@@ -41,6 +41,8 @@ class OvrMobileController {
         ovrHandPose hand_pose;
     };
 
+    enum ControllerHand { LEFT_HAND, RIGHT_HAND, MAX_HANDS };
+
     OvrMobileController();
 
     ~OvrMobileController();
@@ -89,14 +91,22 @@ class OvrMobileController {
         return kInvalidGodotControllerId;
     }
 
+    int get_controller_id(ControllerHand hand) {
+        if (LEFT_HAND <= hand && hand < MAX_HANDS) {
+            auto *controller = &controllers[hand];
+            if (controller->connected) {
+                return controller->godot_controller_id;
+            }
+        }
+        return kInvalidGodotControllerId;
+    }
+
  private:
     struct ControllerVibration {
         float intensity;
         double end_time_in_ms;
         bool is_vibrating;
     };
-
-    enum ControllerHand { LEFT_HAND, RIGHT_HAND, MAX_HANDS };
 
     ControllerState controllers[MAX_HANDS];
     std::map<int, ControllerVibration> controllers_vibrations;

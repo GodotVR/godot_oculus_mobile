@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        package="org.godotengine.plugin.vr.oculus.mobile">
+        package="org.godotengine.plugin.vr.oculus.mobile"
+        android:versionCode="30300"
+        android:versionName="3.3.0">
+
+    <uses-sdk android:minSdkVersion="19"
+        android:targetSdkVersion="30" />
 
     <uses-feature
         android:name="android.hardware.vr.headtracking"

@@ -43,17 +43,28 @@ enum class TrackingSpace(internal val value: Int) {
     LOCAL_FIXED_YAW(7)
 }
 
-fun OvrMobilePlugin.getTrackingSpace() = when (nativeGetTrackingSpace()) {
-    TrackingSpace.LOCAL.value -> TrackingSpace.LOCAL
-    TrackingSpace.LOCAL_FLOOR.value -> TrackingSpace.LOCAL_FLOOR
-    TrackingSpace.LOCAL_TILTED.value -> TrackingSpace.LOCAL_TILTED
-    TrackingSpace.STAGE.value -> TrackingSpace.STAGE
-    TrackingSpace.LOCAL_FIXED_YAW.value -> TrackingSpace.LOCAL_FIXED_YAW
-    else -> TrackingSpace.UNKNOWN
+fun OvrMobilePlugin.getTrackingSpace(): TrackingSpace {
+    return if (isSharedLibLoaded()) {
+        when (nativeGetTrackingSpace()) {
+            TrackingSpace.LOCAL.value -> TrackingSpace.LOCAL
+            TrackingSpace.LOCAL_FLOOR.value -> TrackingSpace.LOCAL_FLOOR
+            TrackingSpace.LOCAL_TILTED.value -> TrackingSpace.LOCAL_TILTED
+            TrackingSpace.STAGE.value -> TrackingSpace.STAGE
+            TrackingSpace.LOCAL_FIXED_YAW.value -> TrackingSpace.LOCAL_FIXED_YAW
+            else -> TrackingSpace.UNKNOWN
+        }
+    } else {
+        TrackingSpace.UNKNOWN
+    }
 }
 
-fun OvrMobilePlugin.setTrackingSpace(trackingSpace: TrackingSpace) =
-    nativeSetTrackingSpace(trackingSpace.value)
+fun OvrMobilePlugin.setTrackingSpace(trackingSpace: TrackingSpace): Boolean {
+    return if (isSharedLibLoaded()) {
+        nativeSetTrackingSpace(trackingSpace.value)
+    } else {
+        false
+    }
+}
 
 private external fun nativeGetTrackingSpace(): Int
 
