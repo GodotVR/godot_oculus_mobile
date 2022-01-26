@@ -25,10 +25,10 @@
                 android:name="org.godotengine.plugin.v1.OVRMobile"
                 android:value="org.godotengine.plugin.vr.oculus.mobile.OvrMobilePlugin" />
 
-        <!-- List of Supported Devices. "delmar" is the codename for Quest 2. -->
+        <!-- List of Supported Devices. -->
         <meta-data
                 android:name="com.oculus.supportedDevices"
-                android:value="quest|delmar"
+                android:value="all"
                 tools:node="replace" />
 
         <!-- Enable Android views rendering. -->
