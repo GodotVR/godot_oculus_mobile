@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         package="org.godotengine.plugin.vr.oculus.mobile"
-        android:versionCode="30300"
-        android:versionName="3.3.0">
+        android:versionCode="30301"
+        android:versionName="3.3.1">
 
     <uses-sdk android:minSdkVersion="19"
         android:targetSdkVersion="30" />
