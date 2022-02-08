@@ -1,7 +1,7 @@
 # Oculus Mobile Godot plugin
 
 This repository contains the source code for the Godot Oculus Mobile plugin.
-See the [intro documentation](https://docs.godotengine.org/en/stable/tutorials/vr/developing_for_oculus_quest.html)
+See the [intro documentation](https://docs.godotengine.org/en/stable/tutorials/vr/oculus_mobile/developing_for_oculus_quest.html)
 for a reference on how to use the plugin.
 
 This is a Godot Android plugin that supports the [Oculus Quest 1 & 2 standalone headsets](https://www.oculus.com/quest).
@@ -11,7 +11,7 @@ The use of this plugin require [Godot 3.2.2](https://godotengine.org/article/mai
 ## License
 
 - This project is released under the MIT license.
-- Please check the [Oculus Mobile SDK license](https://developer.oculus.com/licenses) for information
+- Please check the [Oculus SDK license agreement](https://developer.oculus.com/licenses/oculussdk/) for information
 about the Oculus Mobile SDK used in this project.
 
 ## Getting the plugin
@@ -62,9 +62,9 @@ Clone the repository and **initialise the submodules** with `git submodule updat
   `plugin/CMakeLists.txt` build file to point to the Oculus Mobile SDK install location.
 
 #### Godot libraries
-- Checkout the [godot-cpp](https://github.com/GodotNativeTools/godot-cpp) repo as a submodule by running the following command: `git submodule update --init --recursive`.
-  - The [godot-cpp](https://github.com/GodotNativeTools/godot-cpp) repo will checkout under the `plugin/libs/godot-cpp` directory.
-- Navigate to the `plugin/libs/godot-cpp` directory and follow [these steps](https://github.com/GodotNativeTools/godot-cpp/tree/master#compiling-the-cpp-bindings-library) to generate the cpp bindings.
+- Checkout the [godot-cpp](https://github.com/godotengine/godot-cpp) repo as a submodule by running the following command: `git submodule update --init --recursive`.
+  - The [godot-cpp](https://github.com/godotengine/godot-cpp) repo will checkout under the `plugin/libs/godot-cpp` directory.
+- Navigate to the `plugin/libs/godot-cpp` directory and follow [these steps](https://github.com/godotengine/godot-cpp/tree/836676193031b706a9151f74959de7ae2fc1279b#compiling-the-c-bindings-library) to generate the cpp bindings.
 
 #### Android SDK & NDK
 - Download and setup
@@ -105,7 +105,7 @@ onready var ovrTrackingTransform = preload("res://addons/godot_ovrmobile/OvrTrac
 onready var ovrGuardianSystem = preload("res://addons/godot_ovrmobile/OvrGuardianSystem.gdns").new()
 
 func _process(delta):
-	print("GetTrackingSpace: " , ovrTrackingTransform.get_tracking_space())
+	print("GetTrackingSpace: ", ovrTrackingTransform.get_tracking_space())
 
 	print("GetBoundaryVisible: ", ovrGuardianSystem.get_boundary_visible())
 	print("GetBoundaryOrientedBoundingBox: ", ovrGuardianSystem.get_boundary_oriented_bounding_box())
