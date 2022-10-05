@@ -1,5 +1,8 @@
-# Oculus Mobile Godot plugin
+# Oculus Mobile Godot plugin (DEPRECATED)
 
+DEPRECATED - The [OpenXR plugin](https://docs.godotengine.org/en/stable/tutorials/vr/openxr/index.html#openxr-plugin) is the recommended option.
+
+## About
 This repository contains the source code for the Godot Oculus Mobile plugin.
 See the [intro documentation](https://docs.godotengine.org/en/stable/tutorials/vr/oculus_mobile/developing_for_oculus_quest.html)
 for a reference on how to use the plugin.
